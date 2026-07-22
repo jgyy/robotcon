@@ -3,6 +3,7 @@
 ## ROS2 Navigation
 *Learn how make robots autonomously navigate using Nav2*
 **Rating:** 4.5 (142 reviews)
+📂 **Detailed lessons:** [`04intermediateros2/ros2-navigation/`](04intermediateros2/ros2-navigation/README.md)
 
 ### Overview
 This course teaches how to use the Nav2 package of ROS2 to make a robot autonomously navigate. You will understand how all the parts work together so you can adapt it to your own robot
@@ -88,6 +89,7 @@ This course teaches how to use the Nav2 package of ROS2 to make a robot autonomo
 ## Behavior Trees for ROS2
 *Learn to use Behavior Trees in ROS2.*
 **Rating:** 4.2 (30 reviews)
+📂 **Detailed lessons:** [`04intermediateros2/behavior-trees-for-ros2/`](04intermediateros2/behavior-trees-for-ros2/README.md)
 
 ### Overview
 Understand the concept of the Behavior Trees framework. Learn how to use the Behavior Trees framework in practice and how to apply them with ROS2.
@@ -110,6 +112,7 @@ Understand the concept of the Behavior Trees framework. Learn how to use the Beh
 ## Distributing ROS Apps with Snaps
 *Distribute robotics applications like a global software vendor*
 **Rating:** 4.5 (2 reviews)
+📂 **Detailed lessons:** [`04intermediateros2/distributing-ros-apps-with-snaps/`](04intermediateros2/distributing-ros-apps-with-snaps/README.md)
 
 ### Overview
 While developing is usually handled well by robotics developers, deploying a robotics application can be confusing. One might compile the code on robots, copy/paste compiled packages, and end up with unknown versions of software Snap offers a solution to build and distribute robotics applications and, more generally, any software. You will learn how to use snaps to automatize robot applications distribution
@@ -123,6 +126,7 @@ While developing is usually handled well by robotics developers, deploying a rob
 ## Intermediate ROS2
 *Take your ROS2 knowledge to the next level.*
 **Rating:** 4.5 (40 reviews)
+📂 **Detailed lessons:** [`04intermediateros2/intermediate-ros2/`](04intermediateros2/intermediate-ros2/README.md)
 
 ### Overview
 In this course, take a deep dive into more advanced ROS2 learning topics.
@@ -151,6 +155,7 @@ In this course, take a deep dive into more advanced ROS2 learning topics.
 ## Advanced ROS2 Navigation
 *Take a deeper look at Navigation for ROS2*
 **Rating:** 4.5 (58 reviews)
+📂 **Detailed lessons:** [`04intermediateros2/advanced-ros2-navigation/`](04intermediateros2/advanced-ros2-navigation/README.md)
 
 ### Overview
 Do you want a more advanced understanding of ROS2 Navigation? This course covers advanced topics that are not part of the basic Nav2 course.
@@ -222,6 +227,7 @@ Do you want a more advanced understanding of ROS2 Navigation? This course covers
 ## ROS2 Security
 *Learn to enable and manage security with ROS2*
 **Rating:** 4.4 (8 reviews)
+📂 **Detailed lessons:** [`04intermediateros2/ros2-security/`](04intermediateros2/ros2-security/README.md)
 
 ### Overview
 How ROS2 can be executed in a trustee area without letting other people access to the same network? The answer is here, ROS2 has been released with security tools that allow it to secure the robotics systems. They are disabled by default, but they can be enabled in order to make robots safer. This course will endow you with the knowledge to work with the ROS2 security layer. You are going to learn how to enable security, how to work with specific security packages, and also how to make a turtlebot3 environment work in a safe layout.
@@ -244,6 +250,7 @@ How ROS2 can be executed in a trustee area without letting other people access t
 ## URDF for Robot Modeling in ROS2
 *Understanding robot modeling using URDF in ROS 2*
 **Rating:** 4.5 (136 reviews)
+📂 **Detailed lessons:** [`04intermediateros2/urdf-for-robot-modeling-in-ros2/`](04intermediateros2/urdf-for-robot-modeling-in-ros2/README.md)
 
 ### Overview
 As human beings, we learn from a very young age about our body's structure: which bones and muscles are part of it, how they are connected between them, how we can move each articulation, etc. For a robot, though, how can we know all this information? Well, this is exactly what URDF files are going to tell us. URDF files define the structure of a robot, the connection between all the different parts, etc. In this course, you will understand how URDF files work and how to create them for any robot.
@@ -335,6 +342,7 @@ As human beings, we learn from a very young age about our body's structure: whic
 ## ROS2 Control Framework
 *Understand ROS 2 Control to add feedback control to your robot.*
 **Rating:** 4.5 (101 reviews)
+📂 **Detailed lessons:** [`04intermediateros2/ros2-control-framework/`](04intermediateros2/ros2-control-framework/README.md)
 
 ### Overview
 Understand ROS2 Control to add feedback control to your robot
@@ -467,6 +475,7 @@ Understand ROS2 Control to add feedback control to your robot
 ## TF ROS2
 *To finally understand TF in ROS 2*
 **Rating:** 4.6 (61 reviews)
+📂 **Detailed lessons:** [`04intermediateros2/tf-ros2/`](04intermediateros2/tf-ros2/README.md)
 
 ### Overview
 Imagine this scenario: you have a drone equipped with a camera that needs to follow a subject to capture footage correctly. How do you instruct the robot where to point the camera? How should it follow the subject and maintain the right distance—all dynamically? What is the exact distance between the camera and the subject? Is the orientation correct? ROS 2 TFs manage the relationships between different parts (frames) of a robot, providing the necessary transformations to track positions and orientations. In this ROS 2 TF course, you will learn how TF works through hands-on exercises designed to help you practice and apply these concepts effectively.
@@ -521,6 +530,7 @@ Imagine this scenario: you have a drone equipped with a camera that needs to fol
 ## Intermediate ROS2 (C++)
 *Take your ROS 2 knowledge to the next level.*
 **Rating:** 0 (0 reviews)
+📂 **Detailed lessons:** [`04intermediateros2/intermediate-ros2-cpp/`](04intermediateros2/intermediate-ros2-cpp/README.md)
 
 ### Overview
 In this course, take a deep dive into more advanced ROS 2 learning topics.

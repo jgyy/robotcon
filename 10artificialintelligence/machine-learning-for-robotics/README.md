@@ -1,0 +1,10 @@
+# Machine Learning for Robotics
+
+This course teaches machine learning through the lens of a single running project: a TurtleBot4 in simulation, starting stationary and unprogrammed, that you progressively turn into a robot capable of learned navigation and camera-based perception. It moves from classical ML foundations (classification, regression, clustering, dimensionality reduction, and a first pass at neural networks) into hands-on work with real LiDAR and odometry data — collecting it, cleaning it, engineering features from it, augmenting it, and training both Ridge Regression and TensorFlow neural network models that drive the robot directly — before finishing with RGB-camera object detection using YOLOv5 and multi-object tracking with SORT.
+
+1. [Introduction](01-introduction.md) — Course overview and roadmap: what the finished TurtleBot4 navigator and perception stack will look like, and why ML belongs in robotics.
+2. [Machine Learning Overview](02-machine-learning-overview.md) — Classical ML foundations: classification, training/regularization, decision trees, dimensionality reduction, clustering, and a first build-up of neural networks.
+3. [Supervised Learning](03-supervised-learning.md) — Setting up the ROS 2 project, collecting real LiDAR/odometry data from TurtleBot4, and exploring the raw dataset.
+4. [Supervised Learning II](04-supervised-learning-ii.md) — Preprocessing, feature engineering, and mirroring-based augmentation, followed by training and deploying Ridge Regression and TensorFlow neural network models as live ROS 2 nodes.
+5. [Data Augmentation and Feature Engineering](05-data-augmentation-and-feature-engineering.md) — Auditing dataset quality, advanced augmentation (noise injection, synthetic data), and clustering-based obstacle features from LiDAR geometry.
+6. [Object Detection, Classification and Tracking](06-object-detection-classification-and-tracking.md) — Real-time object detection with YOLOv5 on TurtleBot4's RGB camera, confidence-threshold tuning, and multi-object tracking with SORT.

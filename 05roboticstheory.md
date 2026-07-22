@@ -4,6 +4,8 @@
 *Learn various methods and techniques of modern robot control.*
 **Rating:** 4.1 (32 reviews)
 
+📂 **Detailed lessons:** [`05roboticstheory/robot-control-basics/`](05roboticstheory/robot-control-basics/README.md)
+
 ### Overview
 This course includes teaching the fundamental bases of control applied in robotics, starting from different control laws and applying different control methods to optimize the output of our systems. Using experimental results gain insights about the influence of each term within a PID controller.
 
@@ -63,6 +65,8 @@ This course includes teaching the fundamental bases of control applied in roboti
 *Learn to develop dynamic models and intelligent control systems for simple robots.*
 **Rating:** 3.8 (20 reviews)
 
+📂 **Detailed lessons:** [`05roboticstheory/robot-dynamics-and-control/`](05roboticstheory/robot-dynamics-and-control/README.md)
+
 ### Overview
 Robot Dynamics is really important since it will give you a complete understanding not only of how the robots move (kinematics) but also WHY they move (dynamics). In this course, you will learn to develop the dynamics models of basic robotic systems, as well as create intelligent controllers for them.
 
@@ -81,6 +85,8 @@ Robot Dynamics is really important since it will give you a complete understandi
 ## Basic Kinematics of Mobile Robots
 *Learn the basic kinematics of mobile robots.*
 **Rating:** 4.6 (63 reviews)
+
+📂 **Detailed lessons:** [`05roboticstheory/basic-kinematics-of-mobile-robots/`](05roboticstheory/basic-kinematics-of-mobile-robots/README.md)
 
 ### Overview
 The aim of the course is to provide you with the concepts and tools for controlling a mobile robot along a pre-defined path. This is the cornerstone of robot mobility, as it can be later expanded with the addition of external sensors in other courses.
@@ -144,6 +150,8 @@ The aim of the course is to provide you with the concepts and tools for controll
 *Learn how Kalman filters work and how to apply them to mobile robots using ROS.*
 **Rating:** 4.5 (119 reviews)
 
+📂 **Detailed lessons:** [`05roboticstheory/kalman-filters/`](05roboticstheory/kalman-filters/README.md)
+
 ### Overview
 One of the most common problems in robot navigation is to know where your robot is localized in the environment (known as robot localization). In this field, Kalman Filters are one of the most important tools that we can use. With this course, you will understand the importance of Kalman Filters for robotics, and how they work. You will learn the theoretical meaning, but also the Python implementation. Finally, you will also apply the studied filters to mobile robots using ROS.
 
@@ -169,6 +177,8 @@ One of the most common problems in robot navigation is to know where your robot 
 ## Basic Maths for Robotics
 *Learn the most useful Mathematics: the ones we can apply to Robotics!*
 **Rating:** 4.5 (93 reviews)
+
+📂 **Detailed lessons:** [`05roboticstheory/basic-maths-for-robotics/`](05roboticstheory/basic-maths-for-robotics/README.md)
 
 ### Overview
 Mathematics are the key to describe everything we can appreciate or interact with in nature. Thus, a robot also needs the abilities to move its mechanisms (locomotion), sense the environment (perception), reason accordingly (cognition), and take actions in the environment (navigation). A good understanding of what geometry stands for, basic linear algebra, calculus and operations with numbers, and some probability theory will be necessary to become a robotics developer.
@@ -234,6 +244,8 @@ Mathematics are the key to describe everything we can appreciate or interact wit
 ## Path Planning Basics
 *Learn the theory behind the most used path planning algorithms.*
 **Rating:** 4.6 (176 reviews)
+
+📂 **Detailed lessons:** [`05roboticstheory/path-planning-basics/`](05roboticstheory/path-planning-basics/README.md)
 
 ### Overview
 Path planning is a key component required to solve the larger problem of “autonomous robot navigation”. In this course, you will learn about the most used path planning algorithms.
@@ -314,6 +326,8 @@ Path planning is a key component required to solve the larger problem of “auto
 *Learn the kinematics concepts through theory and hands on experience.*
 **Rating:** 4.4 (49 reviews)
 
+📂 **Detailed lessons:** [`05roboticstheory/basic-arm-kinematics/`](05roboticstheory/basic-arm-kinematics/README.md)
+
 ### Overview
 Robot Kinematics is vital for robot manipulation and locomotion. Knowing how to define the frames of reference and create the Inverse Kinematics equations is key to being able to move the robot end effector to the needed position and orientation.
 
@@ -366,6 +380,8 @@ Robot Kinematics is vital for robot manipulation and locomotion. Knowing how to 
 ## Kalman Filters in ROS 2
 *Learn how Kalman filters work and how to apply them to mobile robots using ROS.*
 **Rating:** 5 (5 reviews)
+
+📂 **Detailed lessons:** [`05roboticstheory/kalman-filters-in-ros-2/`](05roboticstheory/kalman-filters-in-ros-2/README.md)
 
 ### Overview
 One of the most common problems in robot navigation is to know where your robot is localized in the environment (known as robot localization). In this field, Kalman Filters are one of the most important tools that we can use. With this course, you will understand the importance of Kalman Filters for robotics, and how they work. You will learn the theoretical meaning, but also the Python implementation. Finally, you will also apply the studied filters to mobile robots using ROS 2.

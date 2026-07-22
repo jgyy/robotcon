@@ -4,6 +4,8 @@
 *Learn how to make your robot navigate autonomously by using the ROS Navigation Stack.*
 **Rating:** 4.6 (321 reviews)
 
+📂 **Detailed lessons:** [`06navigation/ros-navigation-in-5-days/`](06navigation/ros-navigation-in-5-days/README.md)
+
 ### Overview
 Navigation is one of the most essential tools in ROS. It allows mobile robots to move around autonomously. This is used in many robotics fields: logistic robots for warehouses, domestic robots that perform certain household tasks, entertainment robots, etc. In ROS NAVIGATION IN 5 DAYS course, You will learn the key concepts involved in ROS Navigation, and how to use it in real robot projects.
 
@@ -27,6 +29,8 @@ Navigation is one of the most essential tools in ROS. It allows mobile robots to
 *Learn how to fuse GPS, IMU, odometry and other sources of localization.*
 **Rating:** 4.5 (40 reviews)
 
+📂 **Detailed lessons:** [`06navigation/fuse-sensor-data-to-improve-localization/`](06navigation/fuse-sensor-data-to-improve-localization/README.md)
+
 ### Overview
 How can you improve the localization of your robot, when you have multiple localization sensors? We will solve that localization problem by using the robot localization package. On this course, you are going to work on the following scenarios: * Use robot_localization to merge different sensor inputs (IMU, Encoders, etc...). * Use robot_localization alongside with an external localization system (AMCL). * Use robot_localization alongside with GPS data.
 
@@ -46,6 +50,8 @@ How can you improve the localization of your robot, when you have multiple local
 *Learn how to use the rtabmap_ros package for performing RGB-D SLAM*
 **Rating:** 4.1 (47 reviews)
 
+📂 **Detailed lessons:** [`06navigation/rtab-map-in-ros-101/`](06navigation/rtab-map-in-ros-101/README.md)
+
 ### Overview
 RTAB-Map (Real-Time Appearance-Based Mapping) is a RGB-D SLAM approach based on a loop closure detector. The loop closure detector uses a bag-of-words approach in order to determinate if a new image detected by an RGB-D sensor it is from a new location or from a location that it has been already visited. Of course, this is a very summarized explanation, you will get more details on how this loop closure detector works inside this Course.
 
@@ -60,6 +66,8 @@ RTAB-Map (Real-Time Appearance-Based Mapping) is a RGB-D SLAM approach based on 
 ## TEB Local Planner
 *Learn how to set up the TEB Local Planner for your Navigation system, including set up for car-like robots.*
 **Rating:** 4.5 (18 reviews)
+
+📂 **Detailed lessons:** [`06navigation/teb-local-planner/`](06navigation/teb-local-planner/README.md)
 
 ### Overview
 In this small Course you are going to learn how to set up the TEB Local Planner for your ROS Navigation system, including set up for car-like robots, and customization and optimization of the parameters for a better performance.

@@ -3,6 +3,7 @@
 ## Mastering Mobile Manipulation with LIMO-Robot
 *Master Mobile Manipulation with LIMO, your interactive learning companion in a hands-on course designed for beginners.*
 **Rating:** 4.2 (10 reviews)
+📂 **Detailed lessons:** [`12courseofproduct/mastering-mobile-manipulation-with-limo-robot/`](12courseofproduct/mastering-mobile-manipulation-with-limo-robot/README.md)
 
 ### Overview
 This course offers an in-depth exploration of mobile manipulation using ROS2 (Robot Operating System 2) with a specialized robot named LIMO. Participants will delve into the intricacies of combining mobility and manipulation functionalities within robotics. Through hands-on exercises, participants will gain proficiency in ROS2 concepts, including navigation, perception, and manipulation. The curriculum covers topics such as motion planning, obstacle avoidance, object detection, and grasping techniques. By the end of the course, participants will have the skills and knowledge to confidently design and implement mobile manipulation tasks in real-world scenarios using the LIMO robot platform.
@@ -18,6 +19,7 @@ This course offers an in-depth exploration of mobile manipulation using ROS2 (Ro
 ## Mastering with ROS: SUMMIT XL
 *Learn all the basics to work with the Summit XL robot from Robotnik.*
 **Rating:** 4.8 (4 reviews)
+📂 **Detailed lessons:** [`12courseofproduct/mastering-with-ros-summit-xl/`](12courseofproduct/mastering-with-ros-summit-xl/README.md)
 
 ### Overview
 Learn all the basics to work with the Summit XL robot from Robotnik.
@@ -42,6 +44,7 @@ Learn all the basics to work with the Summit XL robot from Robotnik.
 ## Mastering with ROS: Jackal
 *Learn how to create real world applications for a real robot. In this case Jackal robot from ClearPathRobotics.*
 **Rating:** 5 (3 reviews)
+📂 **Detailed lessons:** [`12courseofproduct/mastering-with-ros-jackal/`](12courseofproduct/mastering-with-ros-jackal/README.md)
 
 ### Overview
 Learn how to create real world applications for a real robot. In this case Jackal robot from ClearPathRobotics.
@@ -66,6 +69,7 @@ Learn how to create real world applications for a real robot. In this case Jacka
 ## Mastering with ROS: Turtlebot3
 *Learn how to work with a Turtlebot3 robot.*
 **Rating:** 4.8 (4 reviews)
+📂 **Detailed lessons:** [`12courseofproduct/mastering-with-ros-turtlebot3/`](12courseofproduct/mastering-with-ros-turtlebot3/README.md)
 
 ### Overview
 Within this Course, you are going to learn how you can start working with a Turtlebot3 robot using its both versions, Burger and Waffle.
@@ -92,6 +96,7 @@ Within this Course, you are going to learn how you can start working with a Turt
 ## Mastering with ROS: TIAGo - Melodic
 *Learn how to work with a TIAGo robot from PAL Robotics.*
 **Rating:** 3.8 (5 reviews)
+📂 **Detailed lessons:** [`12courseofproduct/mastering-with-ros-tiago-melodic/`](12courseofproduct/mastering-with-ros-tiago-melodic/README.md)
 
 ### Overview
 Within this Course, you are going to learn how you can start working with a TIAGo robot from PAL Robotics.
@@ -117,6 +122,7 @@ Within this Course, you are going to learn how you can start working with a TIAG
 ## Mastering ROS 2 with LIMO-Robot
 *Master ROS2 and practical robotics with LIMO in a beginner-friendly, hands-on course.*
 **Rating:** 4.7 (3 reviews)
+📂 **Detailed lessons:** [`12courseofproduct/mastering-ros-2-with-limo-robot/`](12courseofproduct/mastering-ros-2-with-limo-robot/README.md)
 
 ### Overview
 Designed for beginners and enthusiasts alike, this course offers a comprehensive introduction to the Robot Operating System 2 (ROS2), the next-generation framework for developing sophisticated and scalable robot applications. You'll learn the core concepts and tools of ROS2, all while working with LIMO, an interactive robot designed to enhance your learning experience. LIMO, with its versatile capabilities, serves as the perfect platform to apply your knowledge in real-world scenarios.
@@ -139,6 +145,7 @@ Designed for beginners and enthusiasts alike, this course offers a comprehensive
 ## Basics of Robotics with LIMO
 *Learn robotics programming with Python and the Limo robot, covering sensors, actuators, and odometry in an immersive course.*
 **Rating:** 4.7 (6 reviews)
+📂 **Detailed lessons:** [`12courseofproduct/basics-of-robotics-with-limo/`](12courseofproduct/basics-of-robotics-with-limo/README.md)
 
 ### Overview
 Explore the fundamentals of robotics programming with Python alongside Limo, your virtual robot companion. Dive into the intricate world of robotics as we dissect the components of robots and their seamless coordination. From sensors such as lidars, encoders, and cameras to actuators receiving commands, we unravel the intricate web of robot functionalities. Understand the language of ROS messages, mastering concepts like twist and joints. Delve into robot frames of reference, navigating between wheeled and arm robots with Limo's guidance. Discover the realm of robot kinematics, from Ackermann to omnidirectional modes, and learn to seamlessly switch between them. Finally, grasp the significance of odometry and its computation, culminating in a final project where you'll craft visual representations of Limo's sensor data and compute its odometry using Python. Get ready to embark on a journey into the heart of robotics, armed with Python and Limo as your trusty companions."
@@ -161,6 +168,7 @@ Explore the fundamentals of robotics programming with Python alongside Limo, you
 ## Mastering Deep Learning with LIMO-Robot
 *Master deep learning with hands-on aproach using the LIMO robot.*
 **Rating:** 4 (1 reviews)
+📂 **Detailed lessons:** [`12courseofproduct/mastering-deep-learning-with-limo-robot/`](12courseofproduct/mastering-deep-learning-with-limo-robot/README.md)
 
 ### Overview
 This course offers a comprehensive introduction to deep learning with a focus on practical applications using the LIMO robot. You'll start by understanding the fundamental structure of deep learning models, exploring essential concepts such as neural networks, convolutional layers, and activation functions. The course will guide you through using pre-trained deep learning models, providing hands-on experience in implementing and adapting these models for various tasks. Additionally, you will learn how to train your own deep learning models, from data collection and preprocessing to model training and evaluation. By the end of the course, you will be equipped with the skills to deploy deep learning models on the LIMO robot for real-world obstacle avoidance and object detection
@@ -182,6 +190,7 @@ This course offers a comprehensive introduction to deep learning with a focus on
 ## Mastering ROS: RB-Car
 *In this course you will learn the basics for autonomous driving using the Robotnik Autonomous Car*
 **Rating:** 5 (1 reviews)
+📂 **Detailed lessons:** [`12courseofproduct/mastering-ros-rb-car/`](12courseofproduct/mastering-ros-rb-car/README.md)
 
 ### Overview
 Autonomous driving is exploding in popularity and Robotnik has created a great robotics platform for developing your algorithms and test your autonomous driving systems.
@@ -201,6 +210,7 @@ Autonomous driving is exploding in popularity and Robotnik has created a great r
 ## Mastering ROS : RB-Vogui+
 *Learn the basic operation for the RB-Vogui+ Robot from Robotnik. Learn how navigation, manipulation and perception can be done with RB-Vogui+.*
 **Rating:** 3.5 (4 reviews)
+📂 **Detailed lessons:** [`12courseofproduct/mastering-ros-rb-vogui-plus/`](12courseofproduct/mastering-ros-rb-vogui-plus/README.md)
 
 ### Overview
 RB-Vogui+ manual to learn the basics of Vigui operation.

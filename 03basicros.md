@@ -3,6 +3,7 @@
 ## ROS Basics in 5 Days (Python)
 *Learn the fundamentals of ROS to understand and be able to program robots.*
 **Rating:** 4.5 (858 reviews)
+📂 **Detailed lessons:** [`03basicros/ros-basics-in-5-days-python/`](03basicros/ros-basics-in-5-days-python/README.md)
 
 ### Overview
 Interested in learning how to program robots with ROS, but don’t know where to get started? The ROS BASICS IN 5 DAYS course will take you quickly and smoothly into ROS. You will learn the essential concepts and tools to be able to understand and create any basic ROS related projects.
@@ -117,6 +118,7 @@ Interested in learning how to program robots with ROS, but don’t know where to
 ## ROS Basics in 5 Days (C++)
 *Learn the fundamentals of ROS to understand and be able to program robots.*
 **Rating:** 4.5 (91 reviews)
+📂 **Detailed lessons:** [`03basicros/ros-basics-in-5-days-cpp/`](03basicros/ros-basics-in-5-days-cpp/README.md)
 
 ### Overview
 Interested in learning how to program robots with ROS, but don’t know where to get started? The ROS BASICS IN 5 DAYS course will take you quickly and smoothly into ROS. You will learn the essential concepts and tools to be able to understand and create any basic ROS related projects.
@@ -144,6 +146,7 @@ Interested in learning how to program robots with ROS, but don’t know where to
 ## Programming Drones with ROS
 *Learn all the basics you need in order to start programming autnomous drones.*
 **Rating:** 4.5 (47 reviews)
+📂 **Detailed lessons:** [`03basicros/programming-drones-with-ros/`](03basicros/programming-drones-with-ros/README.md)
 
 ### Overview
 In this Course, you are going to learn all the basics you need in order to start programming autnomous drones. You are going to use a Parrot AR Drone.
@@ -163,6 +166,7 @@ In this Course, you are going to learn all the basics you need in order to start
 ## FlexBe with ROS
 *Learn the basics of how to use FlexBe with ROS.*
 **Rating:** 4.5 (8 reviews)
+📂 **Detailed lessons:** [`03basicros/flexbe-with-ros/`](03basicros/flexbe-with-ros/README.md)
 
 ### Overview
 FlexBE is a powerful and user-friendly high-level behavior engine, that helps you to create complex robot behaviors without the need for manually coding them. In this Course, you are going to learn how to use FlexBe with ROS systems.

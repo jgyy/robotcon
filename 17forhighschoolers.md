@@ -4,6 +4,8 @@
 *Learn the Linux fundamentals you'll need for robotics development*
 **Rating:** 4.8 (12 reviews)
 
+📂 **Detailed lessons:** [`17forhighschoolers/robotics-introduction-for-high-schoolers-part-1/`](17forhighschoolers/robotics-introduction-for-high-schoolers-part-1/README.md)
+
 ### Overview
 Do you want to become a Robotics Developer? If the answer is yes, then knowing how to work with Linux is mandatory. At present, ROS is fully support only by Linux systems. This means any ROS-based robot uses Linux, so if you want to create programs for these robots, you have to get ready with Linux. In the Linux for Robotics course, you will master essential Linux knowledge in order to get started with ROS.
 
@@ -26,6 +28,8 @@ Do you want to become a Robotics Developer? If the answer is yes, then knowing h
 *Master the basics of Python 3 for robot programming*
 **Rating:** 5 (8 reviews)
 
+📂 **Detailed lessons:** [`17forhighschoolers/robotics-introduction-for-high-schoolers-part-2/`](17forhighschoolers/robotics-introduction-for-high-schoolers-part-2/README.md)
+
 ### Overview
 Python is the most popular programming language for robots, and it is also the faster and easier way to learn robot programming. In the Python for Robotics course, you will master essential Python 3 knowledge in order to get started with robot programming smoothly.
 
@@ -46,6 +50,8 @@ Python is the most popular programming language for robots, and it is also the f
 ## Robotics Introduction For High Schoolers Part 3
 *Learn robotics programming with Python , covering sensors, actuators, and odometry in an immersive course.*
 **Rating:** 3.5 (2 reviews)
+
+📂 **Detailed lessons:** [`17forhighschoolers/robotics-introduction-for-high-schoolers-part-3/`](17forhighschoolers/robotics-introduction-for-high-schoolers-part-3/README.md)
 
 ### Overview
 Explore the fundamentals of robotics programming with Python alongside Limo, your virtual robot companion. Dive into the intricate world of robotics as we dissect the components of robots and their seamless coordination. From sensors such as lidars, encoders, and cameras to actuators receiving commands, we unravel the intricate web of robot functionalities. Understand the language of ROS messages, mastering concepts like twist and joints. Delve into robot frames of reference, navigating between wheeled and arm robots with Limo's guidance. Discover the realm of robot kinematics, from Ackermann to omnidirectional modes, and learn to seamlessly switch between them. Finally, grasp the significance of odometry and its computation, culminating in a final project where you'll craft visual representations of Limo's sensor data and compute its odometry using Python. Get ready to embark on a journey into the heart of robotics, armed with Python and Limo as your trusty companions."

@@ -1,44 +1,95 @@
 # 08 Manipulation
 
-## Why this matters
-Manipulation is what turns a robot from something that moves through the world into something that changes it — picking a part off a conveyor, opening a door, assembling components. It's where the kinematics and control theory from 05roboticstheory.md meet hardware reality: joint limits, singularities, self-collision, and the physical uncertainty of actually touching something. MoveIt2 is the de facto ROS2 framework for arm motion planning, so understanding its architecture pays off across almost any arm you touch, commercial or homebrew.
+## ROS Manipulation in 5 Days
+*Learn how to make your manipulator interact with the environment using ROS*
+**Rating:** 4.5 (76 reviews)
 
-## Core concepts
-- Forward kinematics — computing end-effector pose from joint angles via the kinematic chain defined in a robot's URDF (see 05roboticstheory.md for the DH-parameter math)
-- Inverse kinematics (IK) — solving for joint angles that reach a target end-effector pose; analytical closed-form solutions vs numerical/iterative solvers, and handling multiple or zero solutions
-- Kinematic redundancy and singularities — extra-DOF arms give solution freedom, but singular configurations (Jacobian rank loss) break velocity-level control and need explicit handling
-- MoveIt2 architecture — the move_group node, planning scene, robot model/robot state, and how RViz2's MotionPlanning plugin drives it
-- MoveIt2 Setup Assistant — generating a MoveIt config package from a URDF: planning groups, end effectors, virtual joints, self-collision matrix, controller config
-- Sampling-based motion planning — RRT, RRT-Connect, PRM and friends via OMPL, and how arm planners differ in intent from the mobile-base path planners in 05roboticstheory.md
-- Joint-space vs Cartesian-space planning — planning to a joint-angle goal vs a straight-line end-effector path (computeCartesianPath), and why Cartesian planning fails more often
-- Planning scene and collision checking — representing the world (known objects, octomaps/point clouds) so planners avoid hitting the environment and the robot's own links
-- IK solver plugins — KDL as the default, TRAC-IK and others as drop-in replacements with different speed/success tradeoffs
-- Programmatic control — the MoveGroupInterface (C++) and moveit_py/moveit_commander (Python) for scripting planning and execution instead of clicking through RViz2
-- Grasp strategy — antipodal/force-closure grasps, choosing approach and retreat vectors, and structuring a grasp as pre-grasp → grasp → lift stages
-- End-effectors and grippers — parallel-jaw, suction, and underactuated/adaptive grippers, and which object classes each suits
-- Gripper control — the GripperCommand action interface, and treating the gripper as its own MoveIt planning group alongside the arm
-- Perception-to-grasp pipeline — turning segmented point clouds or detections (07perception.md) into candidate grasp poses, e.g. via simple_grasping-style object-to-grasp packages
-- ros2_control as the actuation layer — MoveIt2 hands off planned trajectories to controllers running under ros2_control (04intermediateros2.md covers that layer in depth)
+📂 **Detailed lessons:** [`08manipulation/ros-manipulation-in-5-days/`](08manipulation/ros-manipulation-in-5-days/README.md)
 
-## Resources
-- MoveIt2 official documentation — moveit.picknik.ai
-- moveit2_tutorials on GitHub — worked examples building up a Panda-arm MoveIt config and Move Group API usage
-- ROS2 documentation — docs.ros.org, for URDF/SRDF and general ROS2 reference
-- ros2_control documentation — control.ros.org
-- OMPL (Open Motion Planning Library) documentation — ompl.kavrakilab.org
-- Orocos KDL (Kinematics and Dynamics Library) — orocos.org, the default kinematics/IK backend behind MoveIt2
-- Beeson & Kuindersma, "TRAC-IK: An Open-Source Library for Improved Solving of Generic Inverse Kinematics" (IROS 2015) — the paper behind the popular TRAC-IK plugin
-- Craig, "Introduction to Robotics: Mechanics and Control" — classic textbook on forward/inverse kinematics and the DH convention
-- Siciliano, Sciavicco, Villani, Oriolo, "Robotics: Modelling, Planning and Control" — covers manipulator kinematics, dynamics, and grasping in depth
-- Murray, Li, Sastry, "A Mathematical Introduction to Robotic Manipulation" — freely available PDF, rigorous treatment of manipulation kinematics using screw theory
-- GraspIt! — grasp analysis/planning simulator for exploring grasp quality outside of ROS (search for the current project page/repo)
+### Overview
+ROS Manipulation is the term used to refer to any robot that manipulates something in its environment. The main goal of this Course is to teach you the basic tools you need to know in order to be able to understand how `ROS Manipulation` works, and teach you how to implement it for any manipulator robot.
 
-## Hands-on checkpoints
-- [ ] Work out forward kinematics by hand for a small 2-3 DOF planar arm, then verify it against a URDF loaded in RViz2 with joint_state_publisher_gui
-- [ ] Run the MoveIt2 Setup Assistant against a URDF (a stock arm like the Panda, or your own) and produce a working MoveIt config package
-- [ ] Plan and execute a joint-space goal and a pose goal from RViz2's MotionPlanning panel, then repeat both programmatically via the Move Group interface
-- [ ] Add a collision object to the planning scene and confirm the planner routes around it instead of through it
-- [ ] Plan a Cartesian path for a straight-line end-effector motion and compare its success rate to an equivalent joint-space plan
-- [ ] Swap the IK solver plugin (e.g. KDL for TRAC-IK) and compare solve time and success rate across several target poses
-- [ ] Command a gripper open/close through its action interface, then add it as a second planning group alongside the arm
-- [ ] Build a minimal pick-and-place pipeline: detect an object's pose, plan an approach, grasp it, lift, and place it at a target location
+### What you'll learn
+At the end of this Course you will feel comfortable about the following subjects:
+- Basics of `ROS Manipulation`
+- How to create and configure a `MoveIt!` package for a manipulator robot
+- How to perform Motion Planning.
+- How to perform Grasping.
+
+### Course outline
+1. **Introduction to the Course** — A brief introduction to the contents of the Course. Includes a demo.
+2. **Basic Concepts** — Some basic concepts you need to know in order to complete the Course.
+3. **Motion Planning using Graphical Interfaces Part 1** — How to build a MoveIt package for your Manipulator robot.
+4. **Motion Planning using Graphical Interfaces Part 2** — Add Perception to your MoveIt package
+5. **Perform Motion Planning programmatically** — How to perform Motion Planning with code (Python)
+6. **Grasping** — How to perform a basic pick and place task.
+7. **Project** — A Project to test what you've learned.
+
+## ROS2 Manipulation Basics
+*Learn the ROS2 manipulation essentials. Learn how to configure and use MoveIt2 for controlling manipulator robots.*
+**Rating:** 4.5 (66 reviews)
+
+📂 **Detailed lessons:** [`08manipulation/ros2-manipulation-basics/`](08manipulation/ros2-manipulation-basics/README.md)
+
+### Overview
+In robotics, manipulation refers to the process in which a robot interacts with objects in its environment. This involves physically altering or manipulating items, such as moving them from their initial position to a new one. The primary objective of this course is to provide you with essential tools to understand the principles of manipulation in ROS2. You will learn the fundamentals necessary to comprehend how manipulation works and gain the skills to implement it for any manipulator robot.
+
+### What you'll learn
+- How to set up a MoveIt2 configuration package for a manipultor robot
+- How to use MoveIt2 in ROS2 programmatically in C++
+- Different types of motion planning
+- How to use Perception to find object coordinates in the environment
+- How to create a Pick and Place task in ROS2
+
+### Course outline
+1. **Introduction to the Course** — A brief introduction to the Course. It contains a practical Demo controlling a manipulator robot!
+   - Introduction: What will you learn in this course?
+   - Move a robotic arm using MoveIt2: Use Moveit2 to plan and execute trajectories for a robotic arm!
+   - What will you learn in this course?: Outline of all the ROS 2 Manipulation skills you will learn in this course.
+   - Minimum requirements: What are the minimum requirements before starting this course?
+   - Special Thanks: Special thanks to all the parties involved in making this course possible.
+2. **Create a MoveIt2 configuration package** — Learn how to create and configure a Moveit2 configuration package for your manipulator robot.
+   - Introduction: What will you learn in this unit?
+   - What is MoveIt2?: Learn about MoveIt2 and its role in robot motion planning and control in ROS2.
+   - Launch the MoveIt2 Setup Assistant: Learn how to launch the MoveIt2 Setup Assistant.
+   - Loading your robot's URDF file: Learn how to load your robot's URDF file into the MoveIt 2 Setup Assistant.
+   - Define the self-collision matrix: Learn how to define and configure the self-collision matrix for your robot in MoveIt2.
+   - Define virtual joints: Learn how to define virtual joints in MoveIt2 for your robot.
+   - Define Planning Groups: Learn how to define planning groups in MoveIt2 to organize and control different parts of your robot for motion planning.
+   - Define Robot Poses: Learn how to define robot poses in MoveIt2 to set predefined positions for motion planning and execution.
+   - Define End Effector: Learn how to define an end effector in MoveIt2 to specify the robot's tool for manipulation tasks.
+   - Setup MoveIt Controllers: Learn how to configure MoveIt controllers to manage and execute robot motions efficiently.
+   - Generate the MoveIt2 package: Finish the process by generating the MoveIt2 package for your robotic arm.
+   - Fine tune the generated MoveIt2 package: Do some final adjustments to properly configure the generated MoevIt2 for your robot.
+   - Basic Motion Planning with RViz2: Use the generated MoveIt2 package with RViz2 to easily plan and execute motions for your robotic arm.
+   - MoveIt2 architecture: Understand the key components and structure of the MoveIt2 architecture.
+   - Conclusions: What did you learn in this unit?
+3. **Motion Planning with C++** — Learn how to use the Move Group C++ Interface to interact with your manipulator robot in order to generate complex motions.
+   - Introduction: What will you learn in this unit?
+   - Planning a trajectory: Learn about the 2 main basic methods for planning trajectories.
+   - Planning to a joint-space goal: Learn how to use the Move Group C++ Interface to plan trajectories to a joint-space goal.
+   - Planning to an end-effector pose: Learn how to use the Move Group C++ Interface to plan trajectories to an end-effector pose.
+   - Executing a trajectory: Learn how to use the Move Group C++ Interface to execute a previously planned trajectory.
+   - Hands-on Practice!: Apply everything you've learned so far in a hands-on exercise.
+   - Get your robot arms positioned fast and easy: Learn how to use rqt_joint_trajectory_controller to easily move and control a robotic arm through a graphical interface.
+   - Controlling the gripper: Learn how to use the GripperCommand action to open and close the gripper.
+   - Controlling the gripper with MoveIt2: Learn to use the Move Group C++ Interface to control the gripper from a ROS 2 program.
+   - Approach & Retreat: Learn about the approach and retreat motions for picking objects.
+   - Conclusions: What did you learn in this unit?
+4. **Cartesian Paths & Kinematics Plugin** — Learn how to use the Cartesian Paths and Kinematics Plugins to control the movement of a robotic arm.
+   - Introduction: What will you learn in this unit?
+   - Cartesian Paths: Complete a practical example to better understand the concept of cartesian path planning.
+   - Hands-on Practice!: Apply everything you've learned so far in a hands-on exercise.
+   - Kinematics Plugin: Learn about the Kinematics Plugin and how to change it to optimize motion planning for your robot.
+   - Full Pick & Place pipeline: Apply all the new concepts to successfully complete a full pick and place pipeline.
+   - Conclusions: What did you learn in this unit?
+5. **Object Detection with ROS2** — Learn how to perform Object Detection with ROS 2 in order to pick objects with a manipulator robot.
+   - Introduction: What will you learn in this unit?
+   - The simple_grasping package: Learn about the simple_grasping ROS 2 package and how to use it for object detection.
+   - Depth Camera Sensor: Learn how to visualize the PointCloud from a Depth Camera Sensor.
+   - Running the Object Detection action: Learn how to use the action server provided by the simple_grasping package to perform object detection.
+   - Reviewing the code: Review and understand the code used for object detection.
+   - Getting the object position: Learn to extract the object position data after detecting it.
+   - Detecting multiple objects: Learn how to properly handle multiple object detections.
+   - Pick & Place with Perception: Update your Pick & Place code to incorporate object detection for improved robustness.
+   - Conclusions: What did you learn in this unit?

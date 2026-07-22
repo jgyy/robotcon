@@ -4,6 +4,8 @@
 *Learn how to set up a robot fleet and manage it with the RMF infrastructure.*
 **Rating:** 5 (5 reviews)
 
+📂 **Detailed lessons:** [`16enterprisecourses/robot-fleet-management-in-ros2-v2/`](16enterprisecourses/robot-fleet-management-in-ros2-v2/README.md)
+
 ### Overview
 Managing fleets of robots is tough work. That's why having a high-level API for managing fleets of different robots and systems is key. RMF allows you to do that. It gives you the tools to: * Manage different fleets of robots * Assign tasks to the robot best suited for the job based on criteria like the type of robot and the time spent doing that task or battery level. * Integrate already existing robot systems through API calls and ROS2 topics. * Integrate non-robot systems like doors, lifts, and humans.
 
@@ -40,6 +42,8 @@ Managing fleets of robots is tough work. That's why having a high-level API for 
 *Learn how DDS works for ROS2-based robots.*
 **Rating:** 5 (1 reviews)
 
+📂 **Detailed lessons:** [`16enterprisecourses/dds-for-robotics/`](16enterprisecourses/dds-for-robotics/README.md)
+
 ### Overview
 Learn how DDS works for ROS2-based robots and solve DDS-related problems when your robotics system is not working.
 
@@ -63,6 +67,8 @@ Learn how DDS works for ROS2-based robots and solve DDS-related problems when yo
 ## Mastering Mobile Manipulators
 *Master how to create ROS applications for autonomous mobile manipulators*
 **Rating:** 5 (2 reviews)
+
+📂 **Detailed lessons:** [`16enterprisecourses/mastering-mobile-manipulators/`](16enterprisecourses/mastering-mobile-manipulators/README.md)
 
 ### Overview
 Robot manipulators are mobile robots equipped with mobility, one or several robotics arms, and a gripper. They have the ability to autonomously move within an environment, detect objects to grasp, and grasp them to bring them to the proper location. They are widely used in warehouses to locate and bring stuff, in malls and airports to clean, in nuclear areas to access dangerous zones, and even underwater to reach difficult locations. Robot manipulators will be used even more in the near future as their skills improve. In this course, you will learn how to build a complete ROS application to make a mobile manipulator fill a box with the proper objects obtained from another location.

@@ -1,0 +1,10 @@
+# Kalman Filters
+
+Robot localization — knowing where a robot actually is despite noisy motion and noisy sensors — is one of the central problems in mobile robotics, and Kalman filters (along with their relatives, the Bayes filter and particle filter) are the standard toolkit for solving it. This course builds that toolkit from the ground up: starting with the general recursive Bayesian estimation framework, specializing it to the closed-form Gaussian case (the Kalman filter itself, in both 1D and multivariate form), extending it to handle the nonlinear motion and sensor models real robots actually have (EKF and UKF), and finally dropping the Gaussian assumption entirely with the particle filter for cases where belief can be multimodal. Both theory and practical ROS packages (`robot_localization`, AMCL) are covered, and the final unit ties it all together in a hands-on localization project.
+
+1. [Introduction](01-introduction.md) — Why robot localization is hard, the core idea of belief-as-a-distribution, and a first hand-built sensor fusion example.
+2. [Bayesian Filter](02-bayesian-filter.md) — The general predict/update recursion, sensor and motion models, and a 1D discrete Bayes filter implementation.
+3. [Kalman Filters](03-kalman-filters.md) — The Gaussian special case of the Bayes filter: 1D Kalman filter equations and their generalization to multivariate state via matrices.
+4. [Extended Kalman Filter and Unscented Kalman Filter](04-extended-kalman-filter-and-unscented-kalman-filter.md) — Handling nonlinear motion/sensor models via Jacobian linearization (EKF) or sigma-point sampling (UKF), plus the `robot_localization` ROS package.
+5. [Particle Filter](05-particle-filter.md) — Representing belief as a weighted particle swarm, the sample/weight/resample cycle, and Adaptive Monte Carlo Localization (AMCL).
+6. [Project](06-project.md) — A hands-on simulated localization pipeline comparing dead reckoning against an EKF fusing noisy odometry and landmark range measurements.

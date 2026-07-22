@@ -3,6 +3,7 @@
 ## OpenCV Basics for Robotics
 *Learn how to work with OpenCV in ROS.*
 **Rating:** 4.4 (48 reviews)
+📂 **Detailed lessons:** [`07perception/opencv-basics-for-robotics/`](07perception/opencv-basics-for-robotics/README.md)
 
 ### Overview
 Relate to the environment, recognize patterns, understand concepts of pixels, colors, borders, detection of objects, detection of people, faces, etc. They make this combination one of extraordinary potential when it comes to obtaining useful information for a robot about the system that surrounds it. A clear example is the use of cameras in robotics, from drones to mobile robots. The use of cameras has been a constant for quite some time, and it is a tool that cannot be underestimated.
@@ -25,6 +26,7 @@ Relate to the environment, recognize patterns, understand concepts of pixels, co
 ## ROS 2 Perception in 5 Days
 *Elevate Your ROS 2 Expertise with Sensor Intelligence*
 **Rating:** 4.8 (21 reviews)
+📂 **Detailed lessons:** [`07perception/ros-2-perception-in-5-days/`](07perception/ros-2-perception-in-5-days/README.md)
 
 ### Overview
 This course will embark on an exciting journey into the realm of perception in robotics using ROS 2. Through a series of structured units and hands-on projects, you will explore various aspects of sensor data processing and perception techniques.
@@ -109,6 +111,7 @@ This course will embark on an exciting journey into the realm of perception in r
 ## ROS Perception in 5 Days
 *Learn OpenCV, FaceRecognition, Person tracking and object recognition in ROS1Noetic system*
 **Rating:** 4.3 (12 reviews)
+📂 **Detailed lessons:** [`07perception/ros-perception-in-5-days/`](07perception/ros-perception-in-5-days/README.md)
 
 ### Overview
 Perception is probably one of the most important things when we talk about autonomy. In this course you will learn how perception is performed by robots using the ROS Framework.

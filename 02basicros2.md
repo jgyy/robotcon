@@ -4,6 +4,8 @@
 *Learn ROS2 basics now. It doesn't matter if you are new to ROS or a veteran, ROS2 is here to stay. C++ is vital for professionals.*
 **Rating:** 4.6 (14 reviews)
 
+📂 **Detailed lessons:** [`02basicros2/ros2-basics-in-5-days-cpp/`](02basicros2/ros2-basics-in-5-days-cpp/README.md)
+
 ### Overview
 ROS 2 is finally here! This introductory course is designed for both new ROS users and experienced ROS 1 users looking to transition to ROS 2. ROS 2 introduces many new features that will gain traction in the coming years. This course focuses on the fundamental concepts needed to get started with ROS 2, rather than diving into its more advanced features, which will be covered in specialized courses.
 
@@ -111,6 +113,8 @@ ROS 2 is finally here! This introductory course is designed for both new ROS use
 *Learn ROS2 basics now. It doesn't matter if you are new to ROS or a veteran, ROS2 is here to stay.*
 **Rating:** 4.4 (258 reviews)
 
+📂 **Detailed lessons:** [`02basicros2/ros2-basics-in-5-days-python/`](02basicros2/ros2-basics-in-5-days-python/README.md)
+
 ### Overview
 ROS2 is finally here! This introductory course is intended not only for new ROS users but also ROS1 old users that want to start with ROS2. ROS2 adds a lot of new features that will get traction in the next year. This course will give you the basics for starting ROS2, more than the bells and whistles of ROS2 that are much more advanced topics and will be addressed in their respective specialized courses.
 
@@ -211,6 +215,8 @@ ROS2 is finally here! This introductory course is intended not only for new ROS 
 ## ROS2 Basics in 3 Days (Rust)
 *Be at the forefront of robotics engineering by combining ROS2 and Rust.*
 **Rating:** 3 (6 reviews)
+
+📂 **Detailed lessons:** [`02basicros2/ros2-basics-in-3-days-rust/`](02basicros2/ros2-basics-in-3-days-rust/README.md)
 
 ### Overview
 We'll start with the fundamentals, building a strong foundation that will enable you to confidently work with ROS2 in Rust. From creating a package to understanding publishers and subscribers, you'll get the knowledge and skills you need to bring your robotics projects to life.

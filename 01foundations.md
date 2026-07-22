@@ -3,6 +3,7 @@
 ## Linux for Robotics
 *Learn the Linux fundamentals you'll need for robotics development*
 **Rating:** 4.8 (6473 reviews)
+📂 **Detailed lessons:** [`01foundations/linux-for-robotics/`](01foundations/linux-for-robotics/README.md)
 
 ### Overview
 Do you want to become a ROS Developer? If the answer is yes, then knowing how to work with Linux is mandatory. At present, ROS is fully support only by Linux systems. This means any ROS-based robot uses Linux, so if you want to create programs for these robots, you have to get ready with Linux. In the Linux for Robotics course, you will master essential Linux knowledge in order to get started with ROS.
@@ -40,6 +41,7 @@ Do you want to become a ROS Developer? If the answer is yes, then knowing how to
 ## Python 3 for Robotics
 *Master the basics of Python 3 for robot programming*
 **Rating:** 4.8 (4006 reviews)
+📂 **Detailed lessons:** [`01foundations/python-3-for-robotics/`](01foundations/python-3-for-robotics/README.md)
 
 ### Overview
 Do you want to become a ROS Developer? If the answer is yes, then learning Python is mandatory for you. Python is the most popular programming language for robots, and it is also the faster and easier way to learn ROS. In the Python for Robotics course, you will master essential Python 3 knowledge in order to get started with ROS smoothly.
@@ -61,6 +63,7 @@ Do you want to become a ROS Developer? If the answer is yes, then learning Pytho
 ## C++ for Robotics
 *Master the basics of C++ for robot programming*
 **Rating:** 4.7 (1322 reviews)
+📂 **Detailed lessons:** [`01foundations/cpp-for-robotics/`](01foundations/cpp-for-robotics/README.md)
 
 ### Overview
 Do you want to become a ROS Developer? If the answer is yes, then learning C++ is mandatory for you. C++ is one of the most popular programming languages for robots, especially when working with industrial or non-educational robots. In the C++ for Robotics course, you will master essential C++ knowledge in order to get started with ROS smoothly.
@@ -84,6 +87,7 @@ Do you want to become a ROS Developer? If the answer is yes, then learning C++ i
 ## Advanced Modern C++ for Robotics
 *Master the basics of C++ for robot programming*
 **Rating:** 4.5 (78 reviews)
+📂 **Detailed lessons:** [`01foundations/advanced-modern-cpp-for-robotics/`](01foundations/advanced-modern-cpp-for-robotics/README.md)
 
 ### Overview
 Do you want to become a ROS Developer? If the answer is yes, then learning C++ is mandatory for you. C++ is one of the most popular programming languages for robots, especially when working with industrial or non-educational robots. In the C++ for Robotics course, you will master essential C++ knowledge to get started with ROS smoothly.
