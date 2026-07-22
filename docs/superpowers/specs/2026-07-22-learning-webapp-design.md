@@ -17,7 +17,7 @@ content itself, to support active recall alongside reading.
 
 - 711 markdown files total
 - 17 root topic abstracts (`NNtopic.md`) + 1 root `README.md`
-- 98 course directories, each with a course `README.md` (overview + unit list)
+- 93 course directories, each with a course `README.md` (overview + unit list)
 - 600 unit files (the actual lesson content), word count 428–1302, median 649,
   average 667; only 26 files are under 500 words (none under 300)
 - Units already contain GitHub-flavored markdown, fenced code blocks, and Mermaid
@@ -62,7 +62,7 @@ runs on every app load or every dev server start.
    multiple-choice questions grounded in that file's content: 4 answer options, 1
    correct index, a short explanation (why the correct answer is correct), and tags
    `{topicId, courseId, unitId}`. Target raw pool: ~1800 questions.
-4. **Verify** — one agent per course (98 total). Each reviews every question generated
+4. **Verify** — one agent per course (93 total). Each reviews every question generated
    from that course's own units together (so it can catch cross-unit duplicates and
    near-duplicates within the course) and checks: answerable from the cited unit's
    text, exactly one unambiguously correct option, three plausible-but-wrong
