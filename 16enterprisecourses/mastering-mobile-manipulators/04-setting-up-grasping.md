@@ -2,6 +2,17 @@
 
 Planning to a pose is only half of pick-and-place — the other half is deciding *which* pose to plan to (the grasp), coordinating the gripper with the arm's motion, and making sure MoveIt's collision checker knows about the object you're about to touch. This unit builds the full pick-and-place sequence.
 
+The diagram below lays out the six discrete steps of the pick-and-place sequence as a pipeline, so each stage can be tested and debugged on its own.
+
+```mermaid
+flowchart TD
+    A[Approach:<br/>move to pre-grasp pose] --> B[Grasp Approach:<br/>Cartesian path to grasp pose]
+    B --> C[Close Gripper &<br/>Attach Object to Scene]
+    C --> D[Retreat:<br/>lift to clear pose]
+    D --> E[Transport:<br/>plan to pre-place pose]
+    E --> F[Place Approach, Release &<br/>Detach Object, Retreat]
+```
+
 ## Anatomy of a pick-and-place task
 
 Break it into discrete, individually testable steps rather than one monolithic motion:

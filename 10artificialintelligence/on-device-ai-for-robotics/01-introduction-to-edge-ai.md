@@ -2,6 +2,18 @@
 
 This unit sets the stage for the whole course: what Edge AI actually is, why a robot benefits from running inference locally instead of phoning home to the cloud, and what hardware you'll be assembling to make that happen. Everything that follows — quantization, pruning, on-device LLMs — only matters once you understand the constraint this unit introduces: real robots operate under latency, connectivity, power, and privacy limits that cloud AI was never designed around.
 
+The diagram below contrasts the cloud-inference round trip with the edge-inference path this course optimizes for.
+
+```mermaid
+flowchart LR
+    subgraph Cloud Inference
+        C1[Capture Frame] --> C2[Compress and Upload] --> C3[Server Runs Model] --> C4[Download Result] --> C5[Robot Acts]
+    end
+    subgraph Edge Inference
+        E1[Capture Frame] --> E2[Run Model on Local Silicon] --> E3[Robot Acts]
+    end
+```
+
 ## What is Edge AI
 Edge AI means running a trained model's inference step directly on the device that captured the data — a Raspberry Pi, a microcontroller, a phone SoC — rather than shipping the raw sensor data to a remote server and waiting for a response. The training usually still happens elsewhere (a workstation or the cloud, where you have GPUs and large datasets); it's the *inference* that moves to the edge.
 

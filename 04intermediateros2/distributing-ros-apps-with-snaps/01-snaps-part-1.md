@@ -2,6 +2,17 @@
 
 Robotics teams often ship software the way it was built ten years ago: copy a compiled workspace onto the robot over SSH, hope the target has the right `apt` packages, and pray nobody upgrades the OS. This unit introduces snaps as a repeatable, self-contained packaging format for ROS and ROS 2 applications, and walks through building your first one.
 
+The diagram below traces the pipeline this unit builds, from a plain ROS 2 workspace to a confined app running identically across a fleet:
+
+```mermaid
+flowchart LR
+    A[ROS/ROS 2 workspace] --> B["snap/snapcraft.yaml<br/>parts + apps + confinement"]
+    B --> C[snapcraft build]
+    C --> D[".snap package<br/>(squashfs)"]
+    D --> E["snap install<br/>--dangerous"]
+    E --> F[Confined app running<br/>identically across the fleet]
+```
+
 ## What a snap actually is
 
 A snap is a compressed, read-only filesystem image (a squashfs) containing your application plus every library and runtime dependency it needs, mounted read-only at `/snap/<name>/<revision>` and run under confinement (a restricted set of kernel and filesystem permissions, similar in spirit to a container). Because the snap carries its own dependencies, it runs the same way on Ubuntu Server, Ubuntu Core (the IoT/robotics-focused OS), and any of the dozens of Linux distributions that support `snapd` — you are not relying on the target machine having the right `ros-humble-*` packages already installed.

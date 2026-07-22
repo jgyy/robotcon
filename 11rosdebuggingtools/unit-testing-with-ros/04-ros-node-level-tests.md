@@ -2,6 +2,25 @@
 
 Library tests (Unit 3) verify plain functions, but most bugs in practice live at the boundary where that logic gets wired into a ROS node — wrong topic name, wrong QoS, a callback that never gets called, a service that returns the wrong type. This unit tests a single node as a ROS citizen, still without bringing up a whole system.
 
+The sequence diagram below shows how a test harness node and the node under test exchange messages inside a single test process.
+
+```mermaid
+sequenceDiagram
+    participant Test as Test method
+    participant Harness as harness node
+    participant Node as GoalCheckerNode
+
+    Test->>Harness: publish current_position
+    loop spin_once until received
+        Test->>Node: rclpy.spin_once(node)
+        Node->>Node: on_position() callback
+        Node->>Harness: publish goal_reached
+        Test->>Harness: rclpy.spin_once(harness)
+    end
+    Harness-->>Test: received[0].data
+    Test->>Test: assertTrue(received[0].data)
+```
+
 ## The node under test
 Wrap the Unit 2/3 logic in a minimal node:
 

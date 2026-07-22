@@ -2,6 +2,16 @@
 
 Tensors are the single data structure every other part of PyTorch is built on — datasets, model weights, activations, gradients, and outputs are all tensors. This unit gets you fluent with creating, inspecting, and manipulating them before Units 3-5 put them to work on real data.
 
+The diagram below shows the progression of tensor skills this unit builds, from creation to device placement:
+
+```mermaid
+flowchart TD
+    A[Create a tensor] --> B["Inspect: shape, dtype, ndim"]
+    B --> C["Manipulate: reshape / index / cat / stack"]
+    C --> D["Reduce: min / max / argmax"]
+    D --> E["Place on device: .to(cpu or cuda)"]
+```
+
 ## Why PyTorch, and what this unit covers
 PyTorch exists because NumPy-style array code alone can't train neural networks efficiently: you need automatic differentiation (computing gradients for you) and transparent GPU acceleration, without changing how you write code. A PyTorch tensor looks and behaves almost exactly like a NumPy array, but it optionally tracks the operations applied to it (for `autograd`) and can live on a GPU. The mission of this unit is narrow and mechanical on purpose: get comfortable creating tensors, reading their shape and dtype, reshaping them, and reducing them with operations like `min`/`max` — because every bug you'll debug later ("shape mismatch", "wrong dtype", "tensor on wrong device") traces back to these fundamentals.
 

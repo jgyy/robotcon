@@ -2,6 +2,17 @@
 
 This course assumes you can already write a ROS 2 publisher, subscriber, service, and a basic launch file. What it adds is everything that separates a toy node from a node that survives in a real system: a proper build system, real launch files, parameters, threading, QoS, DDS, and lifecycle management. This unit sets expectations and gives you a single practical demo that foreshadows almost every later unit at once.
 
+The diagram below traces how the simple counter node from this unit's demo accumulates each capability as the course progresses.
+
+```mermaid
+flowchart LR
+    A[Basic counter node<br/>hardcoded rate & topic] --> B[+ Declared parameter<br/>for rate]
+    B --> C[+ Launch file<br/>with per-env overrides]
+    C --> D[+ Dedicated callback group<br/>can't be blocked]
+    D --> E[+ Explicit QoS profile<br/>for the data carried]
+    E --> F[Lifecycle node<br/>only publishes once activated]
+```
+
 ## Why "basic" ROS2 isn't enough
 
 A minimal ROS 2 node — one publisher, one timer callback, default QoS, no parameters — works fine in isolation. It falls over the moment you need any of the following, which is to say almost immediately in a real project: multiple nodes started together with different arguments per environment (dev laptop vs. robot vs. CI), values that need to change without a rebuild, more than one thing happening inside a node at once without blocking the executor, a topic that must survive a dropped connection or must never buffer stale data, or a node that needs to be started, configured, and activated as separate, controllable steps rather than "on process launch." Every one of those is a unit in this course.

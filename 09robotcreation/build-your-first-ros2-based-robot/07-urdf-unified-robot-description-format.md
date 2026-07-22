@@ -2,6 +2,16 @@
 
 Your CAD assembly is correct geometry, but ROS 2 doesn't read CAD files — it reads URDF, an XML format that describes a robot as links and joints. This unit turns your physical design into that digital model and gets ROS 2 publishing its state.
 
+The diagram below shows how the static URDF file and the live `/joint_states` topic both feed `robot_state_publisher`, which outputs the transform tree the rest of ROS 2 relies on.
+
+```mermaid
+flowchart LR
+    URDF["URDF: links + joints"] --> RSP[robot_state_publisher]
+    JS["/joint_states (moving joints)"] --> RSP
+    RSP --> TF["/tf (moving frames)"]
+    RSP --> TFS["/tf_static (fixed frames)"]
+```
+
 ## Basic structure of a URDF file
 A URDF describes your robot as a tree of `<link>` elements (rigid bodies — chassis, wheel, sensor mount) connected by `<joint>` elements (how one link moves relative to its parent). A minimal two-link example:
 ```xml

@@ -2,6 +2,20 @@
 
 This unit gets MuJoCo installed and running on your machine, explains why it has become a default choice for physics-based robot simulation, and previews the arc of the course so you know where each later unit fits.
 
+The flow below traces the path from installing the package to a running simulation loop, showing how `MjModel` and `MjData` feed the `mj_step`/`viewer.sync` cycle introduced in this unit.
+
+```mermaid
+flowchart TD
+    A[pip install mujoco] --> B[Load MJCF: MjModel.from_xml_path]
+    B --> C[Create MjData from MjModel]
+    C --> D[launch_passive viewer]
+    D --> E{viewer.is_running}
+    E -->|yes| F[mj_step: advance physics]
+    F --> G[viewer.sync: render frame]
+    G --> E
+    E -->|no| H[Exit]
+```
+
 ## What MuJoCo Is and Why It Matters
 MuJoCo ("Multi-Joint dynamics with Contact") is a physics engine purpose-built for fast, accurate simulation of articulated bodies — robots, in other words. It solves rigid-body dynamics with a soft-constraint contact model that is both stable at large timesteps and cheap enough to run thousands of simulation steps per second, which is why it dominates in robot learning (reinforcement learning, trajectory optimization) as well as classic model-based control. It was developed at the University of Washington, later maintained by Roboti LLC and DeepMind, and has been free and open source (Apache 2.0) since 2022. Compared to general-purpose game engines, MuJoCo trades visual polish for numerical accuracy and speed — you will notice this the first time you see its default renderer.
 

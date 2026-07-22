@@ -2,6 +2,19 @@
 
 With manual driving under your belt, this unit gets RB-CAR moving on its own: build a map of an outdoor area, localize the robot in it, and send it navigation goals it plans and drives to itself. This is the first unit where you'll bring up the full navigation stack rather than a single node.
 
+The diagram below traces the end-to-end workflow this unit builds, from manually driving to build a map through to sending an autonomous navigation goal.
+
+```mermaid
+flowchart TD
+    A[Drive robot manually] --> B[SLAM builds occupancy map]
+    B --> C[Save map: .pgm + .yaml]
+    C --> D[Launch AMCL localization]
+    D --> E[Set initial pose in RViz]
+    E --> F[Bring up Nav2 stack: planner, costmaps, recovery]
+    F --> G[Send NavigateToPose goal]
+    G --> H[Robot plans & drives to goal]
+```
+
 ## Why outdoor navigation is different from indoor
 
 Indoor navigation courses lean on walls: LIDAR-based SLAM works beautifully in corridors and rooms because there's dense, stable geometry everywhere. Outdoors, RB-CAR often faces open fields, long straight paths, and sparse or repetitive geometry (a featureless field looks the same everywhere to a LIDAR scan-matcher). That's part of why real outdoor rigs — RB-CAR included — carry GPS: it supplies an absolute position reference that pure LIDAR SLAM can't. This unit focuses on building and using a map the same way you would indoors; Unit 5 comes back to add GPS into the mix for when geometry alone isn't enough.

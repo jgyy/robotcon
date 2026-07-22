@@ -2,6 +2,19 @@
 
 The Kalman filter from Unit 3 assumes motion and measurement models are *linear* (`x = F x`, `z = H x`). Almost no real mobile robot satisfies that: a differential-drive robot's heading turns its linear velocity into nonlinear x/y motion. This unit covers the two standard fixes — EKF and UKF — and the ROS 2 package that implements both for you in practice.
 
+The diagram below shows the two different strategies branching off the same nonlinear-model problem and converging into the `robot_localization` package.
+
+```mermaid
+flowchart LR
+    NL[Nonlinear motion/sensor model] --> EKF[EKF: linearize via Jacobian F, H]
+    NL --> UKF[UKF: propagate sigma points]
+    EKF --> LinKF[Run linear KF predict/correct equations]
+    UKF --> Recombine[Recombine weighted mean & covariance]
+    LinKF --> Fused[Fused state estimate]
+    Recombine --> Fused
+    Fused --> RL[robot_localization: ekf_node / ukf_node]
+```
+
 ## Why linear Kalman filters aren't enough
 
 For a unicycle/diff-drive robot, the motion model is `x' = x + v cos(θ) dt`, `y' = y + v sin(θ) dt`, `θ' = θ + ω dt`. The `cos`/`sin` terms make this nonlinear in `θ`. Feed a nonlinear model through the linear Kalman equations and the Gaussian-stays-Gaussian guarantee breaks — the true posterior can become a curved, non-Gaussian shape that a single mean/covariance pair fits poorly. EKF and UKF are two different strategies for coping with exactly this.

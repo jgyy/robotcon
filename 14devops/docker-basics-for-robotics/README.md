@@ -2,6 +2,21 @@
 
 A hands-on introduction to Docker aimed squarely at robotics work: pulling and running images, building your own, managing containers and persistent volumes, coordinating multi-container systems with Compose, and applying all of it to the specific challenges of ROS — networking, GUI tools, GPU access, reproducible dev environments, and shipping a container stack to a real robot's onboard computer.
 
+The diagram below shows how each unit builds on the ones before it, from core Docker mechanics through ROS-specific application to production deployment.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Introduction] --> U2[Unit 2: Docker Basics]
+    U2 --> U3[Unit 3: Images]
+    U3 --> U4[Unit 4: Containers]
+    U4 --> U5[Unit 5: Volumes]
+    U5 --> U6[Unit 6: Compose & Network]
+    U6 --> U7[Unit 7: ROS Part 1]
+    U7 --> U8[Unit 8: ROS Part 2]
+    U8 --> U9[Unit 9: Dev Containers]
+    U9 --> U10[Unit 10: Deployment]
+```
+
 1. [Introduction to the Course](01-introduction-to-the-course.md) — Course roadmap, why Docker matters for robotics, and a first practical demo.
 2. [Introduction to Docker](02-introduction-to-docker.md) — Images vs. containers, pulling public images, and the core `docker run`/`ps`/`exec`/`logs` workflow.
 3. [Docker Images](03-docker-images.md) — Writing Dockerfiles, building and tagging images, layer caching, and pushing to a registry.

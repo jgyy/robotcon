@@ -2,6 +2,20 @@
 
 Everything so far has moved the base. This unit introduces the manipulator — the OpenManipulator arm fitted to a Waffle-class Turtlebot3 — and MoveIt, the standard ROS motion-planning framework, so you can plan and execute arm trajectories instead of driving joints by hand.
 
+The diagram below shows the basic pick sequence this unit builds up to, composed from independent planning calls across the arm and gripper groups.
+
+```mermaid
+flowchart TD
+    A[Add planning-scene collision objects: table, base] --> B[Plan arm to pre-grasp pose above object]
+    B --> C[Open gripper]
+    C --> D[Plan arm down to grasp pose]
+    D --> E[Close gripper]
+    E --> F[Plan arm back to home]
+    B -.collision-checked.-> A
+    D -.collision-checked.-> A
+    F -.collision-checked.-> A
+```
+
 ## What MoveIt actually does for you
 
 MoveIt takes a kinematic description of the arm (from its URDF/SRDF, generated once via the MoveIt Setup Assistant) and gives you planning against that model: given a target — a joint configuration or an end-effector pose — it searches for a collision-free trajectory through the arm's configuration space and hands it to a controller for execution. Without MoveIt you'd be solving inverse kinematics, collision checking, and trajectory generation yourself; with it, you describe *what* you want and it works out *how*.

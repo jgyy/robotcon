@@ -2,6 +2,17 @@
 
 This capstone unit combines several skills from the course — 3D perception, object detection, and tracked motion — into one integrated project running on a PhantomX hexapod, an eighteen-degree-of-freedom six-legged platform that makes a good testbed because its motion (yaw, sway, uneven gait) stresses perception pipelines that assume a smooth wheeled base.
 
+The diagram below shows the coordinator node's state machine that turns a tracked target position into hexapod motion commands.
+
+```mermaid
+stateDiagram-v2
+    [*] --> SEARCHING
+    SEARCHING --> APPROACHING: target detected & centered
+    APPROACHING --> ARRIVED: within 20cm, centered within 10px
+    APPROACHING --> SEARCHING: target lost
+    ARRIVED --> SEARCHING: new task / target lost
+```
+
 ## Defining the project scope
 Rather than "do perception on the hexapod" as a vague goal, pick a concrete, testable objective built from earlier units, for example: *the hexapod detects a target object on a nearby surface (Units 4-5), walks toward it while keeping it centered in frame (Unit 2's steering logic, applied to a leg-based gait command), and stops within a set distance.* Writing the objective as a single sentence with a clear success condition ("stops within 20cm of the object, centered within 10 pixels") is what turns this into a testable project rather than an open-ended demo.
 

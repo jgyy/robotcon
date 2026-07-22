@@ -2,6 +2,24 @@
 
 This unit takes a standalone person detector — the kind of script you'd normally run in a notebook and eyeball the output of — and "rosifies" it: turning it into a proper node that publishes structured detections any other node in the system can consume, then building a follower behavior on top of that data.
 
+The sequence below shows how a single camera frame turns into a person detection message and then a follow command, with detection and behavior kept as separate ROS nodes.
+
+```mermaid
+sequenceDiagram
+    participant Cam as Camera
+    participant Det as PersonDetectorNode
+    participant Topic as person_detection topic
+    participant Fol as PersonFollower
+    participant Motors as cmd_vel
+
+    Cam->>Det: Image (camera/image_raw)
+    Det->>Det: run detector, pick largest person
+    Det->>Topic: publish PersonDetection
+    Topic->>Fol: PersonDetection
+    Fol->>Fol: compute turn + forward/back from offset & area
+    Fol->>Motors: publish Twist (cmd_vel)
+```
+
 ## Choosing a detector that fits the Nano's budget
 
 Full-size detectors (large YOLO variants, Faster R-CNN) will run too slowly on the Nano's GPU for a live control loop. Two practical options: NVIDIA's `jetson-inference` library, which ships pre-optimized TensorRT detection models (`detectNet`) tuned for Jetson hardware, or a lightweight model (e.g. a small YOLO variant or MobileNet-SSD) you convert with TensorRT yourself, as in Unit 3. Either way, filter detections down to the `person` class and measure the actual achieved rate on-device with `tegrastats` running alongside — don't trust a desktop benchmark.

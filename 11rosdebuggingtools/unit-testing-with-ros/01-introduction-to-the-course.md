@@ -2,6 +2,14 @@
 
 This unit previews the course: why testing matters for robotics code specifically, and how the three levels of testing you'll build — plain Python, single ROS node, and multi-node integration — fit together into one coherent workflow.
 
+The diagram below shows the test pyramid this course follows: each level trades speed for realism as you move up it.
+
+```mermaid
+flowchart TD
+    A["Library Unit Tests (Unit 3)<br/>milliseconds, no ROS, most tests"] --> B["ROS-Node Level Tests (Unit 4)<br/>single node, in-process, fewer tests"]
+    B --> C["ROS Integration Tests (Unit 5)<br/>multiple real processes, fewest tests"]
+```
+
 ## Why robotics code needs a testing discipline
 Robotics software fails in ways that are expensive to reproduce: a race condition that only shows up on real hardware, a coordinate frame mixup that only matters once a physical arm is bolted to a table, a callback that silently drops messages under load. You cannot always attach a debugger to a robot that's about to run into a wall, and re-running a physical experiment costs time, batteries, and sometimes parts. Automated tests let you catch a large class of these bugs on your laptop, before anything moves, and let you catch *regressions* — old bugs coming back — automatically every time you change code.
 

@@ -2,6 +2,20 @@
 
 Every generative language model operates on integers, not text. Tokenization is the process that turns raw strings into those integers (and back again), and the choices made here — vocabulary size, granularity, how unknown words are handled — shape everything downstream: model size, training speed, and how well the model generalizes. This unit builds that understanding from first principles before you touch a pretrained model.
 
+The diagram below traces the path this unit follows, from a raw corpus down to the granularity choices (character, BPE, WordPiece, Unigram) that a production tokenizer library packages up.
+```mermaid
+flowchart TD
+    Corpus[Raw text corpus] --> Char[Character-level tokenizer\none integer per character]
+    Corpus --> Sub[Subword tokenization]
+    Sub --> BPE[BPE: merge frequent pairs]
+    Sub --> WP[WordPiece: merge by likelihood]
+    Sub --> Uni[Unigram: prune from a large vocab]
+    BPE --> HF[Hugging Face tokenizers library]
+    WP --> HF
+    Uni --> HF
+    HF --> IDs[Model-ready token IDs]
+```
+
 ## Why tokenization matters
 A tokenizer defines the model's vocabulary: the fixed set of symbols it can read and write. Too coarse (whole words) and the vocabulary explodes and can't handle typos or new words. Too fine (raw bytes) and sequences become very long, making training and inference slower and harder to learn long-range structure from. Every modern LLM uses something in between — **subword** tokenization — so common words stay as single tokens while rare words split into meaningful pieces (`tokenization` → `token` + `##ization`).
 

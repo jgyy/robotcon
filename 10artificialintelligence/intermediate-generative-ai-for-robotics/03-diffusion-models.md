@@ -2,6 +2,18 @@
 
 Diffusion models are the generative technique behind most modern image synthesis systems, but their core mechanism — learning to reverse a gradual noising process — is equally useful for robotics tasks like predicting plausible next states or scoring how well a candidate view matches a goal. This unit builds that intuition from scratch and applies it to Mars rover navigation.
 
+The diagram below shows the forward/reverse noising process alongside the cosine-similarity goal comparison this unit uses for rover navigation:
+
+```mermaid
+flowchart LR
+    x0["x0: clean frame"] -->|"add noise over T steps"| xT["x_T: pure noise"]
+    xT -->|"epsilon_theta predicts noise"| denoise["Iteratively subtract<br/>predicted noise"]
+    denoise -->|"reverse process"| x0b["Recovered / sampled frame"]
+    cur["Current view embedding"] --> cos{"Cosine similarity<br/>vs. goal embedding"}
+    goal["Goal image embedding"] --> cos
+    cos -->|"near 1.0"| reached["Goal reached:<br/>steer to increase similarity"]
+```
+
 ## What are diffusion models
 A diffusion model is trained on a deceptively simple task: given data with some amount of noise added to it, predict the noise so it can be removed. Two processes define the approach:
 

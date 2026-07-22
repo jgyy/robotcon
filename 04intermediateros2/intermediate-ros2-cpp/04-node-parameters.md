@@ -2,6 +2,21 @@
 
 Parameters are how a ROS 2 node exposes tunable state without hardcoding it or wiring up a bespoke service. This unit covers how they work, how to declare and read them in C++, how to manage them from the outside, and how to react when they change at runtime.
 
+The sequence diagram below shows what happens when an external tool sets a parameter on a node that has a validation callback registered.
+
+```mermaid
+sequenceDiagram
+    participant CLI as ros2 param / launch
+    participant Node as Node's parameter server
+    participant CB as on_set_parameters callback
+
+    CLI->>Node: declare_parameter("max_speed", 1.0)
+    CLI->>Node: set_parameters(max_speed = 2.5)
+    Node->>CB: invoke callback with new value
+    CB-->>Node: SetParametersResult(successful / rejected)
+    Node-->>CLI: result of the set request
+```
+
 ## How parameters work in ROS 2
 
 Every node has its own parameter server built into it — unlike ROS 1, where a single global parameter server held everything, ROS 2 parameters are local to the node that declared them and are exposed over a small set of standard services (`list_parameters`, `get_parameters`, `set_parameters`, `describe_parameters`) that any other node or CLI tool can call. A parameter must be declared, with a name, a default value, and (optionally) a `ParameterDescriptor` describing its type and constraints, before it can be get or set — reading an undeclared parameter is an error, which catches typos early.

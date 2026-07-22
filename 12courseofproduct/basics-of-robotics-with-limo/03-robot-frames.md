@@ -2,6 +2,17 @@
 
 Every sensor reading and every command you issue is only meaningful relative to some coordinate frame — "0.5 meters forward" is meaningless until you say forward *relative to what*. This unit covers how ROS represents multiple, moving coordinate frames at once and how to reason with them.
 
+The diagram below shows LIMO's `tf2` transform tree, from the world frame down to individual sensor frames.
+
+```mermaid
+flowchart TD
+    map --> odom
+    odom --> base_link
+    base_link --> base_scan
+    base_link --> base_camera
+    base_link --> arm_link["arm links (if equipped)"]
+```
+
 ## Why one global frame isn't enough
 
 A robot has several frames that all matter simultaneously and move relative to each other: a frame fixed to the lidar (where scan points are naturally expressed), a frame fixed to the camera, a frame fixed to the robot's chassis (`base_link`), and a frame fixed to the world (`odom` or `map`). A point detected by the lidar needs to be reasoned about in the robot's frame to plan a path, and in the world frame to be placed on a persistent map. Doing this transformation by hand with rotation matrices everywhere would be tedious and error-prone at scale — this is exactly the problem `tf2` solves.

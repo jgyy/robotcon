@@ -2,6 +2,16 @@
 
 This closing unit ties the course together by applying Dijkstra's algorithm — the very first thing you implemented in Unit 2 — to a real road network instead of a synthetic grid, using OpenStreetMap data. It's a deliberate full-circle exercise: same algorithm, much messier and more realistic input.
 
+The diagram below shows the data-processing pipeline this project builds, from raw OSM extract to a routed path.
+```mermaid
+flowchart LR
+    OSM[.osm XML extract] --> Parse[Parse nodes and ways with defusedxml]
+    Parse --> Filter[Filter to highway ways, apply oneway rules]
+    Filter --> Graph[Adjacency graph: node id to weighted edges]
+    Graph --> Search[Unit 2 Dijkstra or Unit 3 A*]
+    Search --> Route[Shortest route between two coordinates]
+```
+
 ## Why roadmap-based planning is different
 A city street network is naturally a graph already — intersections are nodes, road segments between them are edges weighted by distance (or travel time) — so it doesn't need the grid discretization step Units 2-3 relied on. That makes it a clean testbed for revisiting Dijkstra without the added complexity of RRT/APF-style continuous space, while still being a meaningfully harder and messier graph than a hand-drawn grid: roads are one-way, intersections have irregular degree, and the "shortest" path by distance often isn't the best path by travel time.
 

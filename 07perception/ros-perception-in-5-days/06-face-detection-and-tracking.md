@@ -2,6 +2,20 @@
 
 Faces are a specialized case of object detection: fast, well-supported detectors exist, and turning a detected face into a servo/base motion that keeps it centered is a direct rerun of the P-controller idea from Units 2-3, now aimed at people instead of colored balls.
 
+The diagram below shows the Haar-cascade detection pipeline feeding a two-axis pan/tilt controller, including the explicit branch for when no face is found.
+
+```mermaid
+flowchart TD
+    A[Camera frame] --> B[Grayscale]
+    B --> C[Haar cascade detectMultiScale]
+    C --> D{Face detected?}
+    D -->|Yes| E[Select face: largest / most-centered]
+    E --> F["bbox center (cx, cy)"]
+    F --> G[error_x, error_y]
+    G --> H[Pan/tilt or base Twist command]
+    D -->|No, several frames| I[Hold / re-center / scan]
+```
+
 ## Detecting faces with Haar cascades
 OpenCV ships pretrained Haar cascade classifiers that are lightweight enough to run in real time on modest hardware — a good default before reaching for a heavier deep-learning face detector:
 ```python

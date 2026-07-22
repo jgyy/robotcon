@@ -2,6 +2,16 @@
 
 This unit is the heart of the course: taking wheel odometry and an IMU and fusing them with `robot_localization`'s `ekf_node` into a single, smoother, drift-resistant pose estimate on the `odom` → `base_link` transform chain.
 
+The diagram below shows how the two continuous sensor topics flow into `ekf_node` and out as the filtered odometry and transform this unit builds.
+
+```mermaid
+flowchart LR
+    OD["/wheel/odometry<br/>(vx, vy, vyaw)"] --> EKF["ekf_node<br/>(predict + update)"]
+    IMU["/imu/data<br/>(roll, pitch, yaw, angular vel)"] --> EKF
+    EKF --> OUT["/odometry/filtered"]
+    EKF --> TF["TF: odom → base_link"]
+```
+
 ## How the EKF fuses data
 
 The Extended Kalman Filter alternates two steps. The **predict** step advances the state estimate using a motion model (robot_localization defaults to a constant-velocity model) and grows the state's uncertainty (covariance) to reflect the fact that nothing was measured in between. The **update** step folds in a new sensor reading, using that reading's own covariance to decide how much it should pull the state estimate toward it — a low-covariance (confident) measurement pulls hard, a high-covariance (noisy) one barely moves the estimate. Because the filter tracks covariance for every state variable, it naturally handles sensors that only observe *some* of the state — an IMU reports orientation and angular velocity but not position, and that's fine.

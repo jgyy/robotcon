@@ -2,6 +2,16 @@
 
 Before writing a single test, you need the vocabulary and a running example. This unit covers the core testing terminology you'll reuse throughout the course, and sets up the small Python module you'll test in every subsequent unit.
 
+The diagram below traces how the `robot_math.py` module set up in this unit gets tested at each later course level.
+
+```mermaid
+flowchart LR
+    RM[robot_math.py] --> T3[test_robot_math.py - Unit 3]
+    RM --> GC[GoalCheckerNode - Unit 4]
+    GC --> T4[test_goal_checker_node.py - Unit 4]
+    GC --> T5[test_integration.launch.py - Unit 5]
+```
+
 ## Core testing vocabulary
 A few terms recur constantly in ROS testing discussions, borrowed from general software testing but applied to robots:
 

@@ -2,6 +2,15 @@
 
 A short, focused project to consolidate everything from Unit 2 by building a complete, self-contained robot model from nothing rather than following along tag by tag.
 
+The diagram below sketches the link/joint tree you're about to build: one chassis link with three child links, each attached by a different joint type.
+
+```mermaid
+flowchart TD
+    base[base_link chassis] -->|continuous joint| left[left_wheel]
+    base -->|continuous joint| right[right_wheel]
+    base -->|fixed or continuous joint| caster[caster_wheel]
+```
+
 ## The robot you're building
 
 The target is a minimal differential-drive robot: a rectangular `base_link` chassis, two `continuous`-jointed drive wheels mounted on the left and right sides, and one free-spinning `caster_wheel` at the front (or back) for balance, attached with a `fixed` or `continuous` joint depending on how much realism you want. This is the "hello world" of mobile robot modeling — nearly every mobile robot tutorial you'll encounter elsewhere starts from this same shape because it exercises every core URDF concept (links, joints, origins, axes, visual vs. collision geometry) without the complexity of a multi-link arm.

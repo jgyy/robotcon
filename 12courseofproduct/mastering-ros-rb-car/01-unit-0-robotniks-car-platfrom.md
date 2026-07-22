@@ -8,6 +8,23 @@ Unlike the differential-drive robots common in intro ROS courses (TurtleBot, LIM
 
 RB-CAR is built for outdoor use: rugged suspension, weatherproofed electronics, and sensors chosen for range and robustness rather than indoor precision.
 
+The diagram below shows how RB-CAR's raw sensors and low-level controller are wrapped by the onboard PC and driver packages into standard ROS topics.
+
+```mermaid
+flowchart LR
+    subgraph Sensors
+        LIDAR[3D LIDAR]
+        GPS[GNSS/GPS Receiver]
+        IMU[IMU]
+        ENC[Wheel Encoders]
+        CAM[Stereo/RGB Camera]
+    end
+    Sensors --> PC[Onboard PC / ROS Stack]
+    PC -->|serial/CAN bus| CTRL[Low-level Motor & Steering Controller]
+    PC --> DRV[robotnik_msgs & Driver Packages]
+    DRV --> TOPICS[Standard ROS Topics]
+```
+
 ## Hardware anatomy
 
 A typical RB-CAR sensor and compute suite includes:

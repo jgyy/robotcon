@@ -2,6 +2,15 @@
 
 A single hardcoded job is rarely enough. This unit covers parameterizing jobs so they're reusable, and chaining multiple jobs together so a robotics pipeline can be split into composable stages.
 
+The diagram below shows a parameterized build triggering a chain of downstream jobs, passing data forward at each step.
+
+```mermaid
+flowchart LR
+    A["Build with Parameters<br/>(ROS_DISTRO, RUN_TESTS)"] --> B[build-job runs]
+    B -->|Post-build: Build other projects<br/>only if success/unstable| C[test-job triggered]
+    C -->|Archived artifacts or<br/>Parameterized Trigger: GIT_SHA| D[deploy-job triggered]
+```
+
 ## Parameterized builds
 A parameterized job asks for input at trigger time instead of hardcoding values. Enable it via **This project is parameterized** in the job configuration, then add parameters of various types:
 

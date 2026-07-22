@@ -2,6 +2,21 @@
 
 Topics stream continuously and services return instantly — but a lot of robot behavior (navigate to a waypoint, close the gripper, run a full sensor sweep) takes noticeable time, can be cancelled, and should report progress along the way. Actions are ROS 2's answer to that gap, and are the last core communication primitive this course covers.
 
+The sequence below shows the `Fibonacci` action example from this unit, including the repeated feedback stream between the accepted goal and the final result:
+
+```mermaid
+sequenceDiagram
+    participant Client as FibClient
+    participant Server as FibServer
+    Client->>Server: send_goal_async(Fibonacci.Goal)
+    Server-->>Client: goal accepted
+    loop until order is reached
+        Server-->>Client: publish_feedback(partial_sequence)
+    end
+    Server->>Server: goal_handle.succeed()
+    Server-->>Client: result(sequence)
+```
+
 ## What is an action in ROS 2?
 An action is a long-running, goal-oriented, preemptible request. It's built out of the two primitives you already know — goal submission and cancellation use service-like request/response calls, and progress feedback plus the eventual result stream over topic-like channels — bundled into a standard interaction pattern with a `.action` file (goal / result / feedback, separated by `---`). Compared to a service: a service is "do this and tell me the answer now," while an action is "start this, keep me posted while it runs, and tell me when it's done (or if it failed, or if I cancelled it)."
 

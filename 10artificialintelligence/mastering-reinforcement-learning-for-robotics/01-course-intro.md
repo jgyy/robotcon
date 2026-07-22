@@ -2,6 +2,17 @@
 
 Reinforcement learning (RL) is the branch of machine learning where an agent learns by *doing* rather than by being shown labeled examples — it acts, observes the consequences, and adjusts its behavior to get more of what it wants. This unit sets the frame for the whole course: what RL actually is, why it's a natural fit for robot control, and what you'll be able to build by the end.
 
+The diagram below captures the decision that leads to RL in the first place — whether the "correct" action can be labeled at all — and the sim-to-real path that follows once you commit to it:
+
+```mermaid
+flowchart TD
+    P[Robotics control problem] --> Q{Can you label the<br/>correct action directly?}
+    Q -->|"Yes (e.g. classifying an image)"| SL[Supervised learning:<br/>learn from labeled input/output pairs]
+    Q -->|"No — only long-term outcome matters<br/>(balance, grasp, navigate)"| RL[Reinforcement learning:<br/>agent acts, observes reward, adapts]
+    RL --> Sim[Train the policy in simulation]
+    Sim --> Real[Carefully transfer to real hardware]
+```
+
 ## Why RL, and why for robotics
 Supervised learning (covered elsewhere in this repo) needs a labeled dataset of "correct" input-output pairs. For a lot of robotics problems — balancing, grasping, navigating around unpredictable obstacles — nobody can hand-label the "correct" motor torque at every instant; the notion of "correct" only makes sense in terms of long-term outcome (did the robot stay upright, did it reach the goal, did it avoid the wall). RL formalizes exactly this: an agent takes actions in an environment, receives a scalar **reward** signal, and learns a policy that maximizes cumulative reward over time. That framing matches robot control almost perfectly, which is why RL shows up throughout modern robotics — from legged locomotion to dexterous manipulation to autonomous driving.
 

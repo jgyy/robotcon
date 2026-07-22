@@ -2,6 +2,17 @@
 
 This is where TEB stops being a black box. You'll learn how the optimization node actually works, which parameters matter most, and how to use RViz to watch the planner think — which turns tuning from guesswork into an iterative, observable process.
 
+The diagram below shows the iterative tuning workflow this unit sets up: since every parameter is a cost-function weight, changes must be made and observed one at a time.
+
+```mermaid
+flowchart TD
+    A[Change one parameter or group] --> B[Reload params or relaunch]
+    B --> C[Re-run the same test scenario]
+    C --> D[Watch RViz for the target behavior]
+    D --> E[Record what changed]
+    E -->|Move to next parameter| A
+```
+
 ## How the optimizer works, briefly
 
 TEB represents the local trajectory as a graph of poses and time differences between them, then formulates trajectory quality as a sum of weighted cost terms (edges in the graph): obstacle clearance, path-following, kinodynamic feasibility, goal attraction, and more. It hands this graph to **g2o**, a general-purpose graph optimization library, which iteratively adjusts the poses to minimize total cost. The result is a locally optimal trajectory, re-optimized every control cycle as new sensor data arrives.

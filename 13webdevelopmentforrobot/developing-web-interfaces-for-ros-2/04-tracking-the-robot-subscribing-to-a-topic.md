@@ -2,6 +2,25 @@
 
 Publishing let you send commands out; this unit covers the reverse direction — pulling live telemetry (odometry, battery, sensor readings) into your page and rendering it as it arrives.
 
+The sequence below shows the reverse flow from Unit 3: a continuous stream of odometry messages arriving over rosbridge, updating reactive Vue state, which the DOM re-renders automatically.
+
+```mermaid
+sequenceDiagram
+    participant T as /odom topic
+    participant R as rosbridge (WebSocket)
+    participant P as Web page callback
+    participant V as Vue reactive state
+    participant D as DOM
+
+    P->>R: odomTopic.subscribe(callback)
+    loop every odometry message
+        T->>R: nav_msgs/Odometry
+        R->>P: forwards message as JS object
+        P->>V: posX.value = message.pose.pose.position.x
+        V->>D: template re-renders automatically
+    end
+```
+
 ## Subscribing to a topic with roslibjs
 Subscribing mirrors publishing almost exactly: describe the topic, then hand it a callback instead of calling `.publish()`.
 

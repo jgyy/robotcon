@@ -2,6 +2,17 @@
 
 Every client from Unit 6 needs something on the other end. This unit builds the server side, and covers designing your own service message from scratch — a skill you'll reuse constantly once you start wiring real robot behaviors together.
 
+The flowchart below captures the three-step design loop this unit walks through, repeating until the request/response round-trips correctly.
+
+```mermaid
+flowchart TD
+    A["1. Write .srv file<br/>request fields --- response fields"] --> B["2. Wire generation into<br/>CMakeLists.txt / package.xml"]
+    B --> C["3. Implement server callback<br/>+ throwaway test client"]
+    C --> D{Round-trips correctly?}
+    D -->|No| A
+    D -->|Yes| E[Build real logic on top]
+```
+
 ## Anatomy of a service server
 A server registers a name and a callback; when a request arrives, ROS invokes the callback with the request and a response object for you to fill in and return. Unlike a subscriber callback (which returns nothing), a service callback's job is specifically to produce the response — the caller is blocked (or waiting on a future) until you do.
 

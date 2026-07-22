@@ -2,6 +2,16 @@
 
 Most local planners are built assuming a differential-drive robot that can rotate in place. Car-like (Ackermann-steered) robots can't — they have a minimum turning radius and can only move along curvature-limited arcs. TEB is one of the few mainstream local planners with first-class support for this constraint, and this unit is about turning that support on correctly.
 
+The diagram below contrasts how TEB treats differential-drive versus car-like kinematics, and the kind of trajectory each produces.
+
+```mermaid
+flowchart TD
+    Kin{Robot kinematic type} -->|Differential-drive| Diff[Independent v and omega, can rotate in place]
+    Kin -->|Car-like / Ackermann| Car[Steering angle plus wheelbase constraint, cannot rotate in place]
+    Diff --> DiffTraj[TEB may plan in-place pivots]
+    Car --> CarTraj[TEB plans curvature-limited arcs respecting min_turning_radius]
+```
+
 ## Differential-drive vs. car-like kinematics
 
 A differential-drive robot's velocity is `(v, ω)` — linear and angular velocity, independently commandable, including `ω` with `v = 0` (pure rotation in place). A car-like robot instead has a **non-holonomic** constraint tying its turning rate to a steering angle and a fixed wheelbase: it cannot spin in place, and its achievable curvature is bounded by the mechanical limits of the steering linkage.

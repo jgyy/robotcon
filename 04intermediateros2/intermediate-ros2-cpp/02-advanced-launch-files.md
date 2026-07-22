@@ -2,6 +2,17 @@
 
 A single `ros2 launch` file for a whole robot quickly turns into an unreadable wall of nodes, remappings, and hardcoded values. This unit covers the two techniques that keep launch files manageable as a system grows: composing them out of smaller reusable pieces, and driving their behavior with arguments instead of literals.
 
+The diagram below shows a top-level launch file including two smaller ones and threading a launch argument down through them to the nodes they start.
+
+```mermaid
+flowchart TD
+    Arg["DeclareLaunchArgument: use_sim_time"] --> Top["bringup.launch.py"]
+    Top -->|IncludeLaunchDescription + launch_arguments| Driver["driver.launch.py"]
+    Top -->|IncludeLaunchDescription + launch_arguments| Sensor["sensor.launch.py"]
+    Driver --> DriverNode["Node: driver_node"]
+    Sensor --> SensorNode["Node: sensor_node"]
+```
+
 ## Why launch files get complex
 
 A real robot brings up perception nodes, drivers, controllers, and a navigation stack, often with slightly different configuration per robot variant or per environment (simulation vs. real hardware). If you write that all as one flat `LaunchDescription`, every variant means duplicating and hand-editing the whole file. The fix mirrors how you already avoid duplication in code: extract shared pieces into their own files and parameterize the differences.

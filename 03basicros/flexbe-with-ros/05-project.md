@@ -2,6 +2,19 @@
 
 This unit ties together everything from Units 2-4 into a small, self-contained project: two FlexBE states that command a drone to take off and land, wired into a behavior and covered by unit tests.
 
+The diagram below shows the `TakeoffAndLandBehavior` state machine this project builds, including both the success path and the failure path from each state.
+
+```mermaid
+stateDiagram-v2
+    [*] --> TAKEOFF
+    TAKEOFF --> LAND: done
+    TAKEOFF --> mission_failed: failed
+    LAND --> mission_complete: done
+    LAND --> mission_failed: failed
+    mission_complete --> [*]
+    mission_failed --> [*]
+```
+
 ## Project goal
 
 Build:

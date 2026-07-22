@@ -2,6 +2,17 @@
 
 This unit is the technical core of the course: bridging topics and services between Gazebo Sim's own transport layer and ROS 2, then using Gazebo plugins so your URDF robot actually drives, senses, and reports data like a real ROS 2 node.
 
+The diagram below shows data flowing in both directions through `ros_gz_bridge`, plus the direct `gz service` path used when no bridge mapping exists.
+
+```mermaid
+flowchart LR
+    CmdVel["ROS 2: /cmd_vel"] -->|ROS 2 to Gazebo| BridgeOut[ros_gz_bridge<br/>parameter_bridge]
+    BridgeOut --> DiffDrive[Gazebo DiffDrive plugin]
+    Lidar[Gazebo lidar sensor] --> BridgeIn[ros_gz_bridge<br/>parameter_bridge]
+    BridgeIn -->|Gazebo to ROS 2| LidarTopic["ROS 2: /lidar"]
+    GzServiceCli["gz service CLI"] -.->|direct call, no bridge needed| GzTransportSvc["gz-transport service<br/>e.g. /world/default/set_pose"]
+```
+
 ## The ros_gz_bridge: Connecting Two Worlds
 Gazebo Sim doesn't speak ROS 2 natively. It has its own pub/sub layer, `gz-transport`, and its own message definitions, `gz.msgs`. The `ros_gz_bridge` package translates between the two for message types that have a known mapping (odometry, laser scans, IMU readings, twist commands, clock, and more — see the `ros_gz_bridge` package documentation for the full table). You launch one bridge per topic using a compact syntax: `<topic>@<ros_type>@<gz_type>`, where the middle character controls direction:
 

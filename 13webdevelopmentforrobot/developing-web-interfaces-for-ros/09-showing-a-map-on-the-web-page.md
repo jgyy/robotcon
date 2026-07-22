@@ -2,6 +2,23 @@
 
 Occupancy grid maps are just 2D arrays of numbers wrapped in a ROS message — this unit turns that array into pixels on an HTML `<canvas>`, the foundation of any browser-based navigation or localization dashboard.
 
+The diagram below shows how OccupancyGrid cell values become canvas pixels, plus the separate pose-to-pixel overlay path.
+
+```mermaid
+flowchart TD
+    A["/map topic<br/>OccupancyGrid"] --> B[width, height, resolution, origin]
+    B --> C[Loop flat data array]
+    C --> D{cell value}
+    D -->|-1| E[Gray: unknown]
+    D -->|0| F[White: free]
+    D -->|1-100| G[Shade: occupied]
+    E --> H[ImageData --> canvas]
+    F --> H
+    G --> H
+    Pose["/odom or /amcl_pose"] --> I[worldToPixel using resolution/origin]
+    I --> J[Draw marker on overlay canvas]
+```
+
 ## Anatomy of an OccupancyGrid message
 `nav_msgs/OccupancyGrid` carries a header, a `MapMetaData` (resolution in meters/cell, width and height in cells, and the origin pose), and a flat `data` array of length `width * height`. Each cell value is `-1` (unknown), `0` (free), or `1-100` (probability of occupied). Understanding this layout is the whole trick to rendering it — everything else is a nested loop.
 

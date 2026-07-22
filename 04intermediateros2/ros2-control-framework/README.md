@@ -2,6 +2,19 @@
 
 `ros2_control` is the standard framework for closing the loop between ROS 2 and real actuators: it defines a common way to describe hardware, load pluggable hardware interfaces, and run controllers against them at real-time rates. This course takes you from configuring an existing pipeline through writing your own hardware interface and controller in C++, then applies all of it to a torque-controlled quadruped in a final project — by the end you should be able to design, wire, and debug a `ros2_control` pipeline for a robot you've never seen before.
 
+The diagram below shows how each unit builds on the one before it, from core concepts through to the capstone project.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Course<br/>Introduction] --> U2[Unit 2: ROS2 Control<br/>Basics]
+    U2 --> U3[Unit 3: Controller<br/>Manager]
+    U3 --> U4[Unit 4: HW Interface<br/>Template]
+    U4 --> U5[Unit 5: Dynamixel<br/>HW Interface]
+    U5 --> U6[Unit 6: ros2_controllers<br/>Repository]
+    U6 --> U7[Unit 7: Custom<br/>Controller]
+    U7 --> U8[Unit 8: Final Project<br/>Solo 8]
+```
+
 1. [Course Introduction](01-course-introduction.md) — What "control" means in robotics, the ros2_control architecture, and what this course expects from you.
 2. [ROS2 Control Basics](02-ros2-control-basics.md) — Configure a complete ros2_control pipeline: URDF hardware declaration, controller YAML, launch file, and testing.
 3. [The Controller Manager](03-the-controller-manager.md) — How the controller manager works internally, and how to drive it via CLI, services, and the spawner script.

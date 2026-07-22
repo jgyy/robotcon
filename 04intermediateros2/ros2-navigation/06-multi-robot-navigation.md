@@ -2,6 +2,17 @@
 
 Everything so far assumed exactly one robot. This unit covers what changes — and what doesn't — when you have a fleet, closing out the course by extending the single-robot Nav2 stack you've built to run several instances side by side.
 
+The diagram below shows how one shared map feeds two fully independent, namespaced Nav2 stacks that only interact indirectly, through what each robot's own sensors see of the other.
+
+```mermaid
+flowchart LR
+    Map[shared_map.yaml] --> R1[robot1/map_server]
+    Map --> R2[robot2/map_server]
+    R1 --> A1[robot1/amcl] --> N1[robot1 planner + controller]
+    R2 --> A2[robot2/amcl] --> N2[robot2 planner + controller]
+    N1 <-.->|seen in local costmap| N2
+```
+
 ## Multi-robot setup: namespacing and TF
 
 The core trick for running multiple independent Nav2 stacks on one ROS 2 system is **namespacing**. Every node, topic, and TF frame for a given robot gets prefixed with a unique robot name, so `robot1`'s `/scan` and `robot2`'s `/scan` become `/robot1/scan` and `/robot2/scan`, and their `base_link` frames become `robot1/base_link` and `robot2/base_link`. This is essential for TF in particular — TF frame IDs are global by default, so two robots both publishing an unprefixed `base_link` would collide and corrupt each other's transform tree. Nav2's launch files accept a `namespace` argument for exactly this purpose:

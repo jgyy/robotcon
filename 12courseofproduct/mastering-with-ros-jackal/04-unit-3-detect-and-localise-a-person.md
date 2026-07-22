@@ -2,6 +2,24 @@
 
 Navigation gets Jackal from A to B; this unit gives it eyes for what's around it. You'll detect people with two independent sensors — the laser and the stereo camera — and turn either detection into a 3D position the rest of the robot can act on.
 
+The diagram below shows the two independent detection pipelines — laser and stereo camera — converging on a common map-frame position.
+
+```mermaid
+flowchart LR
+    subgraph Laser Pipeline
+        Scan["/scan LaserScan"] --> Cluster[Cluster into leg-width blobs]
+        Cluster --> LaserPos[Person position in laser frame]
+    end
+    subgraph Camera Pipeline
+        Image[Stereo Left Image] --> HOG[HOG pedestrian detector]
+        HOG --> Crop[Crop point cloud to bounding box]
+        Crop --> CamPos[Person position in camera frame]
+    end
+    LaserPos --> Transform[tf2 transform to map frame]
+    CamPos --> Transform
+    Transform --> MapPos[Fused position in map frame]
+```
+
 ## Detecting People with the Laser Scanner
 
 A 2D laser scan doesn't "see" a person, but a person's legs produce a very recognizable pattern in the range data: two small, roughly circular clusters of similar range, spaced 10-50 cm apart, moving together. A minimal leg detector clusters the scan into contiguous blobs and filters by width:

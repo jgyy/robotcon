@@ -2,6 +2,17 @@
 
 Unit 2 used networks with one or two hidden layers hardcoded directly. This unit generalizes that to an **L-layer network** — a network whose depth and width are parameters you choose, not baked into the code — and covers the two idiomatic ways to build one in Keras.
 
+The diagram below shows how a `layer_dims` list drives the shape of the network built by `build_l_layer_model`, with `L` hidden layers generated programmatically instead of hardcoded:
+
+```mermaid
+flowchart LR
+    IN[Input Layer] --> H1["Hidden Layer 1<br/>layer_dims[0]"]
+    H1 --> H2["Hidden Layer 2<br/>layer_dims[1]"]
+    H2 --> DOTS[...]
+    DOTS --> HL["Hidden Layer L<br/>layer_dims[L-1]"]
+    HL --> OUT[Output Layer]
+```
+
 ## Why "L-layer" instead of a fixed architecture
 
 In practice you rarely know the right number of layers or units up front; you experiment. Writing your model-building code so that `L` (the number of layers) and the width of each layer are variables — rather than copy-pasted `Dense` calls — makes that experimentation fast and lets you loop over architectures programmatically, which you'll want in Unit 4 when tuning hyperparameters.

@@ -2,6 +2,16 @@
 
 This is the capstone unit: everything from the earlier units — waypoint navigation, GPS goals, and person detection — comes together into one reactive patrol behavior that loops through a route and responds when it spots someone.
 
+The diagram below shows the patrol robot's two-state machine and the transitions between its states.
+
+```mermaid
+stateDiagram-v2
+    [*] --> PATROLLING
+    PATROLLING --> PATROLLING: waypoint reached, advance to next
+    PATROLLING --> REACTING: person detected
+    REACTING --> PATROLLING: hold timer elapses, resume route
+```
+
 ## Designing the Patrol Behavior
 
 The whole project reduces to a small state machine with two states: `PATROLLING`, where Jackal drives its waypoint loop, and `REACTING`, where it stops and responds to a detected person before resuming. Keep it explicit rather than burying the logic in nested conditionals — it makes the behavior easy to reason about and easy to extend later (e.g. adding a `RETURNING_HOME` or `LOW_BATTERY` state):

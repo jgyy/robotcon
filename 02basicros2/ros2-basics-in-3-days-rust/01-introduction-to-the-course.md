@@ -2,6 +2,19 @@
 
 This unit orients you before any code is written: why Rust is a serious choice for ROS 2 development, what the three-day arc looks like, and what has to be installed and verified on your machine first. Treat it as a checklist and a map, not a lecture.
 
+The flow below captures the environment-check logic you'll work through before Unit 2:
+
+```mermaid
+flowchart TD
+    A[Start] --> B{ros2 doctor --report OK?}
+    B -- No --> B1[Fix ROS 2 install] --> B
+    B -- Yes --> C{cargo --version OK?}
+    C -- No --> C1[Install Rust via rustup] --> C
+    C -- Yes --> D{ros2_rust built?}
+    D -- No --> D1[Build ros2_rust in workspace] --> D
+    D -- Yes --> E[Ready for Unit 2]
+```
+
 ## Why Rust for ROS 2
 ROS 2's official client libraries are `rclcpp` (C++) and `rclpy` (Python), but a community-maintained binding, `rclrs` (part of the `ros2_rust` project), exposes the same underlying `rcl` C API to Rust. The appeal for someone who already knows Rust is the same appeal Rust has everywhere else: no garbage collector, memory and data-race safety enforced at compile time, and a strict type system — properties that matter in robotics, where a node that panics mid-flight or leaks memory over a 12-hour mission is a real failure mode, not an inconvenience. The trade-off is ecosystem maturity: `ros2_rust` covers nodes, topics, services, and parameters solidly, but some higher-level tooling (rich launch introspection, some client library conveniences) is still ahead of where C++/Python are. This course sticks to the well-supported core.
 

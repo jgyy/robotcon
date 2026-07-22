@@ -2,6 +2,20 @@
 
 Unit 1 gave you the parts list. This unit zooms into the piece that orchestrates everything else — `move_base` in ROS 1, or its behavior-tree-driven equivalent in ROS 2 — and explains what it needs from you to run at all.
 
+The diagram below shows move_base as the central orchestrator: it owns both costmaps, calls out to the planner plugins, escalates to recovery when stuck, and reports back to whoever sent the goal:
+
+```mermaid
+flowchart TD
+    Goal[Goal: PoseStamped / NavigateToPose] --> MB[move_base / bt_navigator]
+    MB --> GC[Global Costmap]
+    MB --> LC[Local Costmap]
+    MB --> GPlanner[Global Planner Plugin]
+    MB --> LPlanner[Local Planner Plugin]
+    LPlanner --> Recovery[Recovery Behaviors]
+    Recovery --> MB
+    MB --> Result[Feedback / Result]
+```
+
 ## What the Navigation Stack actually is
 
 The Navigation Stack is a *framework*, not a fixed algorithm. It defines interfaces — costmap layers, global planner plugins, local planner (controller) plugins, recovery behavior plugins — and ships default implementations for each. This is why you'll see wildly different-looking robots (a warehouse AGV, a vacuum, a research rover) all built on "the same" nav stack: they're using the same skeleton with different plugins and parameters plugged in. Understanding it means understanding the skeleton, not memorizing one robot's config file.

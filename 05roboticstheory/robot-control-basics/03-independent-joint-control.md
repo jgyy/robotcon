@@ -2,6 +2,22 @@
 
 Independent joint control is the practical way most industrial and hobby manipulators are actually controlled: instead of solving one big coupled multivariable problem, you run a separate PID (or similar) loop on each joint, treating cross-joint coupling as a disturbance. This unit covers setpoint tracking and — just as important — how to generate the setpoints (trajectories) that those loops track.
 
+The diagram below shows each joint getting its own trajectory and its own PID loop, with the physical coupling between joints in the shared arm left uncompensated.
+
+```mermaid
+flowchart LR
+    subgraph J1[Joint 1]
+        T1[Trajectory q1_desired t] --> P1[PID Joint 1]
+    end
+    subgraph J2[Joint 2]
+        T2[Trajectory q2_desired t] --> P2[PID Joint 2]
+    end
+    P1 --> ARM[Coupled 2DOF Arm]
+    P2 --> ARM
+    ARM -. cross-joint coupling ignored .-> P1
+    ARM -. cross-joint coupling ignored .-> P2
+```
+
 ## Quick recap: controlling joint angles
 Recall from Unit 2 that a single joint's torque command is `tau = Kp*e + Ki*integral(e) + Kd*de/dt`. "Independent joint control" means you instantiate one of these loops per joint (`n` joints -> `n` independent PID controllers), each running against its own `q_desired[i]`, `q[i]`, `q_dot[i]`. This is an approximation: joint `i`'s true dynamics depend on the whole arm's configuration and motion (the `C(q,q_dot)` coupling term from Unit 2), but for many arms — especially those with high gear ratios where each joint's own actuator inertia dominates — the approximation works well enough in practice.
 

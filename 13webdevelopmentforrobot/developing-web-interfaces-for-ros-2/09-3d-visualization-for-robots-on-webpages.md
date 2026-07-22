@@ -2,6 +2,17 @@
 
 The course closes with the most visually impressive widget: a full 3D rendering of the robot itself, posed and moving in real time inside the browser, using `ros3djs`.
 
+The diagram below shows how the URDF's static geometry and the live `/tf` transform tree combine inside `ros3djs` to produce a continuously re-posed 3D robot in the browser.
+
+```mermaid
+flowchart LR
+    URDF[Robot URDF + mesh files] --> UrdfClient[ROS3D.UrdfClient]
+    TF["/tf transform tree"] --> TFClient[ROSLIB.TFClient]
+    TFClient --> UrdfClient
+    UrdfClient --> Scene[viewer.scene, three.js]
+    Scene --> Render[Rendered, posed 3D robot]
+```
+
 ## How ros3djs works
 `ros3djs` is the 3D counterpart to `ros2djs`, built on top of the general-purpose WebGL library `three.js` instead of a 2D canvas library. Rather than drawing shapes from scratch, it knows how to interpret the same description ROS already uses for a robot's geometry — the URDF (Unified Robot Description Format), the mesh files it references, and the live transform tree (`/tf`) — and turn all three into a moving 3D scene. Concretely, it subscribes to the robot's transforms via a `ROSLIB.TFClient`, loads the URDF's link geometry (boxes, cylinders, or mesh files) through a `ROS3D.UrdfClient`, and re-poses each link every time a new transform arrives, so the on-screen model tracks the real robot's joints and base pose continuously.
 

@@ -2,6 +2,20 @@
 
 Q-Learning's lookup table breaks down the moment state becomes continuous or high-dimensional — a robot's joint angles, a LiDAR scan, or a camera frame can't be enumerated into table rows. Deep Q-Learning (DQN) fixes this by replacing the table with a neural network that approximates `Q(s,a)`, which is what makes the algorithm actually usable on realistic robot state spaces.
 
+The diagram below shows how the pieces this unit introduces — replay buffer and target network — sit around the Q-network to keep training stable:
+
+```mermaid
+flowchart LR
+    Env[Environment] -->|"(s, a, r, s', done)"| Buffer[("Replay buffer")]
+    Buffer -->|random mini-batch| QNet["Q-network Q_θ(s)"]
+    QNet -->|"predicted Q(s,a)"| Loss[MSE loss]
+    Buffer -->|"s'"| TargetNet["Target network Q_θ⁻(s')"]
+    TargetNet -->|"max Q target"| Loss
+    Loss -->|gradient step| QNet
+    QNet -.->|sync every N steps| TargetNet
+    QNet -->|epsilon-greedy action| Env
+```
+
 ## From table to function approximator
 Instead of `Q[s, a]` as an array lookup, DQN uses a neural network `Q_θ(s)` parameterized by weights `θ` that takes a state vector as input and outputs one Q-value per discrete action simultaneously:
 

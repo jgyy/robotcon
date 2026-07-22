@@ -2,6 +2,18 @@
 
 This unit is a preview: it explains why a robotics course starts with Linux instead of robots, and lays out the map for the three units that follow.
 
+The flowchart below traces the reasoning from "robots run on Linux" through to why this course starts with the shell instead of ROS:
+
+```mermaid
+flowchart TD
+    A[Robot hardware: arms, sensors, mobile bases] --> B[Runs its brains on Linux]
+    B --> C[ROS / ROS 2 middleware assumes a Linux shell]
+    C --> D["Tutorials open with terminal commands<br/>e.g. ros2 topic list"]
+    D --> E{Comfortable with<br/>shell fundamentals?}
+    E -->|Not yet| F[This course: Units 2-4]
+    E -->|Yes| G[Ready for Part 2: ROS / ROS 2 concepts]
+```
+
 ## Why robots and Linux go together
 Almost every serious robot you'll encounter — from a university research arm to a warehouse mobile robot — runs its brains on Linux. The dominant robotics middleware, ROS (Robot Operating System) and its successor ROS 2, is developed and tested primarily on Linux, and most of its tooling, drivers, and community tutorials assume a Linux shell. That doesn't mean robots can't touch Windows or macOS at all, but the moment you SSH into an onboard computer, flash firmware, or debug why a sensor driver won't start, you are almost always typing into a Linux terminal. Learning the shell first means every later robotics unit can focus on robotics concepts instead of fighting the operating system.
 

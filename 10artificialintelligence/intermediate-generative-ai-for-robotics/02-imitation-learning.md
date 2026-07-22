@@ -2,6 +2,18 @@
 
 Imitation learning is often the fastest path to a working autonomous policy: instead of hand-designing a controller or waiting on a reinforcement learning agent to discover behavior through trial and error, you record an expert driving the rover and train a model to reproduce those actions directly. This unit builds that full pipeline, from raw ROS recordings to a deployed policy.
 
+The diagram below shows the four-stage behavioral cloning pipeline and where covariate shift creeps in once the trained policy leaves the expert's own trajectory:
+
+```mermaid
+flowchart TD
+    A["1. Collect expert demonstrations<br/>(ros2 bag record)"] --> B["2. Extract & align data<br/>(image to cmd_vel pairs)"]
+    B --> C["3. Train policy<br/>(behavioral cloning, MSE loss)"]
+    C --> D["4. Deploy as ROS node<br/>(subscribe camera, publish /cmd_vel)"]
+    D --> E{"Rover state still matches<br/>expert's demonstrated trajectory?"}
+    E -->|Yes| F["Policy predicts confidently"]
+    E -->|No: covariate shift| G["Errors compound —<br/>no expert recovery data"]
+```
+
 ## What is imitation learning
 Imitation learning frames control as a supervised learning problem: given an observation `o` (camera image, Lidar scan, odometry), predict the action `a` an expert would take. The simplest and most widely used variant is **behavioral cloning (BC)** — train a model to minimize the difference between its predicted action and the expert's recorded action, using ordinary supervised loss (MSE for continuous actions like velocity, cross-entropy for discrete ones like steering bins).
 

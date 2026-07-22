@@ -2,6 +2,17 @@
 
 This unit builds the mathematical vocabulary of neural networks from a single neuron up to a small multi-layer network, then applies it to two robotics-shaped problems — a regression task and a classification task — using Keras.
 
+The diagram below traces how a single neuron turns its inputs into an output, the core computation this unit builds everything else on:
+
+```mermaid
+flowchart LR
+    x1[x1] --> WS["Weighted Sum<br/>z = Σ(wᵢxᵢ) + b"]
+    x2[x2] --> WS
+    xn[xn] --> WS
+    WS --> ACT[Activation Function]
+    ACT --> a[Output a]
+```
+
 ## The math of a single neuron
 
 A neuron computes a weighted sum of its inputs, adds a bias, and passes the result through a nonlinear **activation function**:

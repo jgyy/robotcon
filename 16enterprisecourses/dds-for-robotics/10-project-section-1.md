@@ -2,6 +2,15 @@
 
 This unit opens the course's capstone project: a three-part exercise where you build, break, capture, and eventually fix a small multi-node DDS network — applying Units 1-9 as one connected workflow instead of isolated exercises. Section 1 is about building the baseline system and capturing evidence of its problems.
 
+The diagram below shows the four-step sequence Section 1 walks through to build the baseline system and capture evidence of its behavior.
+
+```mermaid
+flowchart TD
+  A["1. Build baseline publisher & subscriber (default QoS)"] --> B["2. Move to two hosts / containers"]
+  B --> C["3. Capture 30s of traffic (discovery + steady-state)"]
+  C --> D["4. Write baseline report (discovery success, rate, QoS)"]
+```
+
 ## Project scenario
 You are standing up a two-machine (or two-network-namespace, if you only have one physical machine) ROS 2 system simulating a simple robot: one "robot-side" process publishing sensor-like data (e.g. a fake `sensor_msgs/msg/LaserScan` or just a `std_msgs/msg/String` heartbeat at 10 Hz) and one "operator-side" process subscribing to it and echoing round-trip latency. The goal across all three sections is to take this system from "works by luck on localhost" to "diagnosed, tuned, and validated across a realistic constrained network," documenting your evidence at each step.
 

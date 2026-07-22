@@ -2,6 +2,19 @@
 
 Feature matching lets a robot recognize the same object or scene from a different viewpoint by finding and comparing distinctive points, rather than raw pixels. This is the core technique behind visual tracking, image mosaicking, and simple monocular localization.
 
+The flowchart below shows how FAST, BRIEF, and ORB combine to turn two separate images into a set of matched point correspondences.
+
+```mermaid
+flowchart LR
+    I1[Image 1] --> F1["FAST: detect keypoints"]
+    F1 --> B1["BRIEF: binary descriptors<br/>(ORB adds rotation awareness)"]
+    I2[Image 2] --> F2["FAST: detect keypoints"]
+    F2 --> B2["BRIEF: binary descriptors<br/>(ORB adds rotation awareness)"]
+    B1 --> M["BFMatcher (Hamming, crossCheck)"]
+    B2 --> M
+    M --> R[Sorted matches]
+```
+
 ## Why not just compare pixels?
 Comparing raw pixel intensities between two images breaks the moment the camera moves, rotates, zooms, or lighting changes even slightly. Feature-based matching instead picks out a sparse set of distinctive points — corners, blobs, high-contrast junctions — that are likely to be re-detected even under those changes, then describes each point with a numeric fingerprint that can be compared across images.
 

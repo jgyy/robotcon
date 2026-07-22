@@ -2,6 +2,19 @@
 
 Units 2–3 assumed you already knew a distribution's parameters (e.g. "debris probability is 0.3"). In practice a robot never gets handed that number — it has to estimate it from observed data. This unit covers how, and what goes wrong if you estimate naively.
 
+The flowchart below contrasts the point-estimate path (MLE, overfitting, regularization) with the full Bayesian path that keeps an entire posterior distribution.
+
+```mermaid
+flowchart TD
+    D["Observed Data"] --> MLE["Maximum Likelihood Estimate (point estimate)"]
+    MLE --> OF{"Small / extreme dataset?"}
+    OF -->|Yes| REG["Overfits: add prior, MAP / regularization"]
+    OF -->|No| OK["Estimate stands"]
+    D --> BAYES["Full Bayesian: Beta prior + data"]
+    BAYES --> POST["Posterior distribution over parameter"]
+    POST --> CI["95% Credible Interval"]
+```
+
 ## Maximum likelihood estimation: the core idea
 Given observed data and a family of candidate distributions, **Maximum Likelihood Estimation (MLE)** picks the parameter value that makes the observed data most probable. Formally, the **likelihood** L(θ) = P(data | θ) is a function of θ (not of the data, which is fixed); MLE maximizes it, equivalently minimizes the **negative log-likelihood (NLL)**. This is the training objective behind nearly every model in this course, including the logistic regression you'll train in Unit 7.
 

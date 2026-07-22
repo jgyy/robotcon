@@ -2,6 +2,20 @@
 
 A scene is the environment a robot will later be dropped into — ground, lighting, cameras, and any static or dynamic props. This unit teaches MJCF (MuJoCo's XML modeling format) at the level needed to build one from scratch.
 
+The diagram below shows how the top-level MJCF elements this unit introduces nest inside a scene file, and how `<asset>` entries are referenced by name from `<worldbody>`.
+
+```mermaid
+flowchart TD
+    Root["&lt;mujoco&gt;"] --> Compiler["&lt;compiler&gt; parsing conventions"]
+    Root --> Option["&lt;option&gt; timestep, gravity"]
+    Root --> Asset["&lt;asset&gt; textures, materials"]
+    Root --> World["&lt;worldbody&gt;"]
+    World --> Light["&lt;light&gt;"]
+    World --> Floor["&lt;geom type=plane&gt;"]
+    World --> Camera["&lt;camera&gt;"]
+    Asset -.referenced by material name.-> Floor
+```
+
 ## MJCF Basics
 Every MuJoCo model is described by an XML document, conventionally with the extension `.xml` and referred to as MJCF. The skeleton of any file looks like this:
 

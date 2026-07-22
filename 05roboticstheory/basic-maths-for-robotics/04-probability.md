@@ -2,6 +2,15 @@
 
 No sensor is perfect and no motor moves exactly as commanded, so every real robot has to reason under uncertainty. Probability gives you the vocabulary — random variables, distributions, and Bayes' rule — to combine noisy evidence into a trustworthy estimate of the world.
 
+The diagram below shows the predict/update cycle that turns a prior belief into a sharpened posterior and back into a new prior as the robot keeps sensing and moving, which the rest of this unit builds toward.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Prior: initial belief (e.g. uniform)
+    Prior --> Posterior: Update (Bayes' rule + sensor reading)
+    Posterior --> Prior: Predict (motion model, adds uncertainty)
+```
+
 ## Basics of probability and random variables
 A **random variable** is a quantity whose value is uncertain but follows a known pattern — a sensor reading, a dice roll, a robot's true position given a noisy GPS fix. Its behavior is fully described by a probability distribution, which assigns likelihoods to possible outcomes. Two flavors matter here: **discrete** random variables (finite outcomes, e.g. "which grid cell is the robot in") described by a probability mass function, and **continuous** random variables (a continuum of outcomes, e.g. "exact x position") described by a probability density function (PDF).
 

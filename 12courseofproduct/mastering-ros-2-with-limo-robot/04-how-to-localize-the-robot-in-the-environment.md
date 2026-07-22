@@ -2,6 +2,20 @@
 
 With a saved map in hand, LIMO needs a way to figure out where it is on that map at every moment — that's localization. This unit covers the particle-filter approach ROS2's AMCL implements and how to configure and run it against the map you built in the previous unit.
 
+The diagram below shows AMCL's predict/update/resample cycle and how the particle count adapts based on convergence.
+
+```mermaid
+flowchart TD
+    START["Particle cloud: pose hypotheses (x, y, θ)"] --> PREDICT["Predict: move particles by odometry + noise"]
+    PREDICT --> UPDATE["Update: score particles against lidar scan vs map"]
+    UPDATE --> RESAMPLE["Resample: bias toward high-weight particles"]
+    RESAMPLE --> CONVERGED{"Cloud converged tightly?"}
+    CONVERGED -->|Yes| SHRINK["Adaptive: shrink particle count"]
+    CONVERGED -->|No| GROW["Adaptive: grow particle count"]
+    SHRINK --> PREDICT
+    GROW --> PREDICT
+```
+
 ## What localization solves
 
 Odometry alone (integrating wheel encoder ticks over time) drifts — small errors accumulate until the estimated pose is meters away from the true one after enough driving. Localization corrects this by continuously comparing live sensor readings (lidar scans) against the known map and adjusting the pose estimate to the interpretation that best explains what the sensor is actually seeing. Unlike SLAM, the map is fixed here — localization only ever updates the robot's belief about its own pose, never the map itself.

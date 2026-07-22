@@ -2,6 +2,17 @@
 
 This is the capstone: build the full `openai_ros` stack — `RobotEnv`, `TaskEnv`, algorithm choice, and reward design — for a robot the course hasn't already walked you through: a single-legged Hopper that has to hop forward without falling over. There's no scaffolding handed to you this time; the unit is a project brief plus the design questions you need to answer, in the order Units 3-10 taught you to answer them.
 
+The diagram below traces the build order this capstone follows, from `RobotEnv` through to picking a continuous-control algorithm.
+
+```mermaid
+flowchart TD
+    A["HopperEnv (RobotEnv)<br/>joints, /joint_states, effort control"] --> B["HopperStandUpEnv (TaskEnv)<br/>obs, action_space, reward, _is_done"]
+    B --> C[Registration + training script]
+    C --> D{Action space type?}
+    D -->|Continuous torque| E[DDPG / PPO / SAC]
+    D -.->|Discrete only - ruled out here| F[DeepQ not applicable]
+```
+
 ## Scoping the Hopper project: what layers you need to build
 
 Work through the same layer order every prior robot used:

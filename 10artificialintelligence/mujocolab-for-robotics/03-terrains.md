@@ -2,6 +2,19 @@
 
 A policy that only ever learns on flat ground is brittle — it hasn't learned to handle a slope, a gap, or an obstacle it never saw. This unit teaches you how MJLab organizes custom scenes so you can go beyond the default flat plane from Unit 2, and how to populate those scenes with static and dynamic objects before generating actual custom terrain geometry.
 
+The diagram below shows how a custom scene package, its objects, and procedural terrain fit together once registered as a task.
+
+```mermaid
+flowchart TD
+    A[Custom scene package<br/>terrains.py + objects.py + __init__.py] --> B[Register task in MJLab's registry]
+    B --> C[Populate scene with objects]
+    C --> D[Static primitives<br/>fixed pose, no physics]
+    C --> E[Dynamic primitives<br/>free_joint + mass]
+    C --> F[Mesh objects<br/>STL/OBJ geometry]
+    B --> G[Generate procedural terrain<br/>height fields, difficulty curriculum]
+    G --> H[Combine with Unit 2's<br/>motion-imitation task]
+```
+
 ## Structuring a project for custom scenes
 A scene that MJLab can discover and reuse isn't just a script — it's a small package with a predictable layout: a module for your terrain/scene definitions, one for task configs, and an `__init__.py` (or equivalent package metadata) that registers your custom environment under a task name, the same way the built-in `Mjlab-Velocity-G1` task from Unit 2 is registered. A typical layout looks like:
 

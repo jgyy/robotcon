@@ -2,6 +2,22 @@
 
 Before you can view a page the way a browser really sees it — with correct relative paths, CORS behavior, and the ability to fetch data over the network — you need to serve it over HTTP instead of opening it as a local file. This unit sets up that development environment.
 
+The sequence below shows a browser and a LAN device each requesting files from the same local dev server.
+
+```mermaid
+sequenceDiagram
+    participant Browser as Browser (localhost)
+    participant Server as Dev Server (python -m http.server)
+    participant Tablet as Tablet on LAN
+
+    Browser->>Server: GET /index.html (http://localhost:8000)
+    Server-->>Browser: 200 OK + HTML
+    Browser->>Server: GET /app.js
+    Server-->>Browser: 200 OK + JS
+    Tablet->>Server: GET http://<robot-ip>:8000/ (server bound to 0.0.0.0)
+    Server-->>Tablet: 200 OK + HTML
+```
+
 ## file:// vs http://
 Opening `index.html` by double-clicking it loads it via the `file://` protocol. That works for the simplest pages, but it breaks down fast: browsers block many `fetch()` calls, WebSocket connections, and ES module imports from `file://` origins for security reasons, and relative paths behave inconsistently. A local HTTP server puts you in the same conditions your page will run in once deployed on the robot or on a lab machine, so bugs you catch now are real bugs.
 

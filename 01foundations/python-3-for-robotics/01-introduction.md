@@ -2,6 +2,19 @@
 
 This unit orients you before the coding starts: why Python is the language you will reach for constantly in robotics, and how to get a working Python 3 environment ready on your machine so every later unit is "write code, run code" with no setup friction.
 
+The flowchart below walks through the environment setup process this unit covers, from checking your Python version to a ready-to-code virtual environment:
+
+```mermaid
+flowchart TD
+    A[Check python3 --version] --> B{3.10+ installed?}
+    B -->|No| C[Install / upgrade Python 3]
+    C --> D
+    B -->|Yes| D[Create venv:<br/>python3 -m venv ~/venvs/robotics-course]
+    D --> E[Activate:<br/>source .../bin/activate]
+    E --> F[python -m pip install --upgrade pip]
+    F --> G[Ready: write & run robot scripts]
+```
+
 ## Why Python dominates robotics scripting
 
 Robotics work splits roughly into two layers: performance-critical code (drivers, real-time control loops, tight perception pipelines) usually written in C++, and everything else — gluing nodes together, prototyping algorithms, writing test scripts, tuning parameters, processing logged data — usually written in Python. ROS 2's client library `rclpy` gives Python full access to topics, services, actions, and parameters, so you can write a working robot node in a fraction of the lines a C++ equivalent needs. Python's read-eval-print loop (REPL) and lack of a compile step also make it the fastest way to poke at a live robot: import a message type, publish a test value, see what happens.

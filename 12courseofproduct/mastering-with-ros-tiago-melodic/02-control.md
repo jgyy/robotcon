@@ -2,6 +2,20 @@
 
 Now that you can identify TIAGo's subsystems, this unit makes them move. You'll drive the base with simple velocity commands, then move the torso, head, and arm through their trajectory controllers — the two fundamentally different control patterns you'll reuse for the rest of the course.
 
+The sequence below contrasts the continuous velocity-publish loop that drives the base with the goal/feedback/result exchange used for torso, head, arm, and gripper trajectories.
+
+```mermaid
+sequenceDiagram
+    participant Script as Python Script
+    participant CmdVel as /mobile_base_controller/cmd_vel
+    participant Action as FollowJointTrajectory Action Server
+    Script->>CmdVel: publish Twist (looped @10Hz)
+    Note over Script,CmdVel: base stops if messages stop arriving
+    Script->>Action: send_goal(JointTrajectory)
+    Action-->>Script: feedback (in progress)
+    Action-->>Script: result (goal reached)
+```
+
 ## Driving the base
 
 The base accepts velocity commands as a `geometry_msgs/Twist` on a `cmd_vel`-style topic. This is the simplest control interface on the whole robot: you publish a desired linear/angular velocity, and a low-level controller handles wheel speeds.

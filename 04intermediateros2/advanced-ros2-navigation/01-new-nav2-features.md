@@ -2,6 +2,18 @@
 
 The basic Nav2 course gets a robot from A to B. This unit goes past that: scripting navigation from Python instead of clicking in RViz, chaining multiple goals, and using costmap filters to encode "soft rules" about the environment — no-go zones and speed zones — directly into the map instead of hardcoding them in your application logic.
 
+The diagram below shows how the two new pieces this unit covers fit into Nav2: your Python script drives navigation through the Simple Commander API, while a separate filter mask feeds map-based rules straight into the costmap.
+
+```mermaid
+flowchart LR
+    Script[Python Script] -->|BasicNavigator| API[Simple Commander API]
+    API -->|goToPose / goThroughPoses / followWaypoints| BT[BT Navigator action server]
+    BT --> Costmap[Global Costmap]
+    Mask[Filter Mask PGM/YAML] --> Info[costmap_filter_info_server]
+    Info -->|CostmapFilterInfo topic| Filter[KeepoutFilter / SpeedFilter]
+    Filter --> Costmap
+```
+
 ## Setting up Nav2 for this unit
 
 Everything here assumes you already have a working Nav2 bringup (a robot, a map, and `nav2_bringup`-style launch files) from the introductory course — real or simulated. Bring it up as usual and confirm the servers are active before continuing:

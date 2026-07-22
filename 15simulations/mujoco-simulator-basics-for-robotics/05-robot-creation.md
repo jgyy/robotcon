@@ -2,6 +2,17 @@
 
 This unit assembles the primitives from Unit 4 into an actual articulated robot, adds actuators so it can be driven rather than just falling under gravity, and places it inside the scene built in Unit 3.
 
+The diagram below shows how the separately authored `robot.xml` is pulled into `scene.xml` via `<include>`, and how a Python-driven `data.ctrl` value flows through an actuator to move a joint.
+
+```mermaid
+flowchart LR
+    RobotFile["robot.xml: base + arm body"] -->|"&lt;include&gt;"| SceneFile["scene.xml: floor + light"]
+    SceneFile --> CompiledModel["Compiled MjModel"]
+    Ctrl["data.ctrl[i] (Python)"] --> Actuator["&lt;actuator&gt; motor/position/velocity"]
+    Actuator --> Joint["named joint (e.g. shoulder)"]
+    Joint --> Motion["robot moves"]
+```
+
 ## From Scene to Robot
 The clean way to organize a project is to keep the robot's kinematic description in its own file and pull it into a scene with `<include>`, rather than writing one monolithic XML:
 

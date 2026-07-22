@@ -2,6 +2,21 @@
 
 A mobile manipulator is still a mobile robot first: before an arm can grasp anything, the base has to reliably get itself next to the object and the drop-off location. This unit sets up the navigation layer (costmaps, planners, controllers) that every later unit — perception, manipulation, behaviors — will assume is already working.
 
+The diagram below shows how sensor data and the static map flow through localization and costmaps into planning, ending in velocity commands, with recovery behaviors looping back in when the robot gets stuck.
+
+```mermaid
+flowchart LR
+    Sensors[Lidar / Camera] --> Costmaps[Costmaps<br/>global + local]
+    Map[Static Map] --> AMCL[AMCL Localization]
+    AMCL --> GlobalPlanner[Global Planner]
+    Costmaps --> GlobalPlanner
+    GlobalPlanner --> LocalPlanner[Local Planner / Controller]
+    Costmaps --> LocalPlanner
+    LocalPlanner --> CmdVel[Velocity Commands to Base]
+    LocalPlanner -- stuck --> Recovery[Recovery Behaviors]
+    Recovery --> LocalPlanner
+```
+
 ## Why navigation for a manipulator-equipped base is different
 
 A bare mobile base is a simple, roughly cylindrical or rectangular footprint. Bolt an arm onto it and two things change:

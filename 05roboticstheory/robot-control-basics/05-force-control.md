@@ -2,6 +2,22 @@
 
 Every controller so far has controlled *position* — where is the end-effector, and how do we get it to a target pose. Many real tasks (assembly, polishing, deburring, human interaction) actually need to control *force* — how hard the end-effector pushes against something — often while accepting whatever position results from that contact. This unit introduces the geometric tool (the Jacobian) needed to relate joint torques to end-effector force, then builds a basic force controller.
 
+The diagram below shows the force control loop: a force error drives a PI correction that is mapped through the Jacobian transpose into joint torques, closed by a wrist force/torque sensor.
+
+```mermaid
+flowchart LR
+    FD[F_desired] --> ERR((Error))
+    FM[F_measured] --> ERR
+    ERR --> PI["PI: Kp_f * e + Ki_f * integral(e)"]
+    PI --> SUM((sum))
+    FD --> SUM
+    SUM --> JT["J(q)^T mapping"]
+    JT --> TAU[tau]
+    TAU --> ARM[Arm in contact with environment]
+    ARM --> SENSOR[Wrist F/T sensor]
+    SENSOR --> FM
+```
+
 ## Jacobian of the manipulator
 The manipulator Jacobian `J(q)` is the matrix that relates joint velocities to end-effector velocity: `x_dot = J(q) @ q_dot`, where `x_dot` is the end-effector's linear (and angular, if included) velocity. It's the same matrix that shows up in differential/inverse kinematics, but here we use its other key property: by the principle of virtual work, the *transpose* of the Jacobian relates end-effector force to the equivalent joint torques:
 

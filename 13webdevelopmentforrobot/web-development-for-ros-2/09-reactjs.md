@@ -2,6 +2,16 @@
 
 Manually calling `document.getElementById(...).textContent = ...` for every changing value, as you did in Units 7-8, gets unwieldy fast on a panel with a dozen live readouts and controls. React solves this by letting you describe *what the UI should look like given the current data*, and re-rendering the DOM for you whenever that data changes.
 
+The diagram below shows React's declarative update cycle: a state change triggers a re-render instead of you touching the DOM directly.
+
+```mermaid
+flowchart LR
+    Click[User clicks Connect] --> SetState[setConnected true]
+    SetState --> StateUpdate[React state updated]
+    StateUpdate --> Rerender[Component re-renders]
+    Rerender --> DOM[DOM reflects new state]
+```
+
 ## What is ReactJS?
 React is a JavaScript library for building UIs out of **components** — small, self-contained functions that return markup (via JSX, an HTML-like syntax embedded in JavaScript) describing what should appear on screen. The core idea is declarative rendering: instead of writing "when this message arrives, find this element and update its text" (imperative, what you did in Unit 8), you write "this element's text is this piece of state" and React handles updating the DOM whenever that state changes. The quickest way to get a project scaffolded is Vite:
 

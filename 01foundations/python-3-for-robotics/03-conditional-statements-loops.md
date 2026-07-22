@@ -2,6 +2,21 @@
 
 A robot is constantly making decisions — "is the path clear?", "has the battery dropped too low?" — and repeating actions — "keep reading the laser scan every cycle until the goal is reached." Conditionals and loops are how you express both, and they're the backbone of every control loop you'll write.
 
+The flowchart below traces the battery-check decision logic from this unit's example, wrapped in the repeating control loop that keeps re-evaluating it:
+
+```mermaid
+flowchart TD
+    A[Start control cycle] --> B{battery_percent < 10?}
+    B -->|Yes| C[Critical: return to dock]
+    B -->|No| D{battery_percent < 25?}
+    D -->|Yes| E[Warning: plan return soon]
+    D -->|No| F[Battery OK]
+    C --> G[Read next sensor value]
+    E --> G
+    F --> G
+    G --> B
+```
+
 ## Conditional statements
 
 `if` / `elif` / `else` in Python reads close to plain English and relies on indentation instead of braces to define blocks:

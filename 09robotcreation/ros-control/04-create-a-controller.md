@@ -2,6 +2,19 @@
 
 Stock controllers cover most needs, but eventually you'll want behavior they don't provide — a custom blend of two joints, a safety clamp, a nonstandard control law. This unit builds the simplest possible custom controller so you understand the plugin structure before you need to debug or extend a real one.
 
+The state diagram below shows the lifecycle states a custom controller class moves through, and which override you fill in at each transition.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Unconfigured: on_init()
+    Unconfigured --> Inactive: on_configure()
+    Inactive --> Active: on_activate()
+    Active --> Active: update() every cycle
+    Active --> Inactive: on_deactivate()
+    Inactive --> Unconfigured: on_cleanup()
+    Unconfigured --> [*]
+```
+
 ## Anatomy of a controller class
 A `ros2_control` controller is a C++ class that derives from `controller_interface::ControllerInterface` (in ROS 1, `controller_interface::Controller<HardwareInterface>`). The framework calls a small set of lifecycle methods on it; you fill in the ones that matter:
 

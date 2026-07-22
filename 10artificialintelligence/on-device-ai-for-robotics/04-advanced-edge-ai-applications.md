@@ -2,6 +2,18 @@
 
 With optimization techniques in hand from Unit 3, this final unit moves past single-label classification into the tasks that make an on-device system actually useful to a robot: detecting and localizing objects, segmenting a scene, and — pushing the hardware to its limit — running and even fine-tuning a compact language model locally. The unit culminates in the shape of a real on-device AI agent.
 
+The diagram below shows how detection, segmentation, and a local LLM combine into the on-device agent this unit builds toward.
+
+```mermaid
+flowchart LR
+    Cam[Camera Frame] --> Det[Object Detection]
+    Cam --> Seg[Semantic Segmentation]
+    Instr[Natural-Language Instruction] --> LLM[Local LLM Planner]
+    Det --> LLM
+    Seg --> LLM
+    LLM --> Act["Structured Action (move_to / stop)"]
+```
+
 ## Beyond classification: advanced Edge AI applications
 Classification answers "what is in this image" as a single label. A robot usually needs more:
 - **Object detection** — what objects are present, and *where* (bounding boxes), enabling navigation-relevant reasoning like "is that a person in front of me."

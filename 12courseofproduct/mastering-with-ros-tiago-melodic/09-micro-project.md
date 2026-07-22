@@ -2,6 +2,17 @@
 
 This closing unit doesn't introduce new concepts — it's where you wire together control, navigation, MoveIt, OpenCV, and PCL from Units 2 through 8 into one small autonomous behavior. Treat it as the checkpoint that proves the individual skills actually compose.
 
+The diagram below shows the micro project's navigate-perceive-grasp-confirm loop and the failure branch when no object is found.
+
+```mermaid
+flowchart TD
+    A[navigate_to table_approach_pose] --> B[find_object via PCL]
+    B --> C{Object found?}
+    C -->|No| D[Log error, abort]
+    C -->|Yes| E[approach_and_grasp target]
+    E --> F[Confirm grasp via gripper joint state]
+```
+
 ## The project: find it, go to it, pick it up
 
 Build a single script (or a small set of ROS nodes) that makes TIAGo perform this loop, starting from some distance away from a table with one object on it:

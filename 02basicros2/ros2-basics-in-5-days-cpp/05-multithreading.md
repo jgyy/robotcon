@@ -2,6 +2,23 @@
 
 Before you can understand why ROS 2 offers multithreaded executors and callback groups (Unit 6), you need a solid mental model of how a *single*-threaded ROS 2 program actually runs your code. This unit builds that model: functions as callbacks, what the executor does, and the difference between `spin()` and `spin_once()`.
 
+The sequence below shows why a single-threaded executor serializes work: even though a timer fires and a message arrives close together, the executor only ever runs one callback at a time before checking what's ready next.
+
+```mermaid
+sequenceDiagram
+    participant T as Timer
+    participant Sub as Subscription
+    participant E as Executor (spin)
+    participant CB as Callback code
+    T->>E: timer ready
+    Sub->>E: message arrived (queued, waits)
+    E->>CB: invoke tick()
+    CB-->>E: return
+    E->>CB: invoke on_confidence()
+    CB-->>E: return
+    Note over E: loop continues, one callback at a time
+```
+
 ## Functions and callbacks, in a ROS 2 program
 
 You've already written callbacks without necessarily naming them as such — the `tick()` method bound to a timer in Unit 3, the `on_scan()` method bound to a subscription. A **callback** is just a function you hand to ROS 2 that it calls *for* you when something happens (a timer fires, a message arrives, a service request lands). You never call these functions yourself; you register them once (usually in the constructor, via `create_wall_timer`, `create_subscription`, etc.) and the executor invokes them at the right time.

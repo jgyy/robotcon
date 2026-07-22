@@ -2,6 +2,19 @@
 
 Every robot MoveIt2 controls needs a configuration package: SRDF semantics layered on top of your URDF, plus planning, kinematics, and controller settings. This unit walks the MoveIt2 Setup Assistant end to end so you can generate that package for your own arm.
 
+The diagram below walks through the Setup Assistant steps in order, from loading a URDF to a tested, launchable configuration package.
+
+```mermaid
+flowchart TD
+    A[Load URDF/XACRO] --> B["Generate self-collision matrix<br/>(+ virtual joints if base isn't fixed)"]
+    B --> C["Define planning groups<br/>(arm, gripper)"]
+    C --> D["Add named robot poses<br/>(home, ready)"]
+    D --> E["Define end effector<br/>(link gripper group to arm)"]
+    E --> F["Map planning groups to<br/>ros2_control controllers"]
+    F --> G["Generate package<br/>(SRDF, YAML, launch files)"]
+    G --> H["Test with demo.launch.py<br/>in RViz2"]
+```
+
 ## What MoveIt2 needs beyond your URDF
 
 Your URDF/XACRO already describes links, joints, and geometry — enough for `robot_state_publisher` and simulation, but not enough for planning. MoveIt2 needs additional semantic information that has no natural home in a URDF: which joints move together as a logical "arm", which link pairs can never collide and shouldn't be checked, where the gripper is, and what named poses ("home", "ready") mean for this robot. That information lives in an **SRDF** (Semantic Robot Description Format) file, and the **MoveIt2 Setup Assistant** is the GUI tool that generates it — along with kinematics, planning-pipeline, and controller configuration YAML — into a ready-to-launch package. Launch it with:

@@ -2,6 +2,24 @@
 
 This closing unit puts everything together: given the kinematic models from Units 3–4, how do you compute the `(v, ω)` commands that actually drive a robot to a goal pose? You'll build both an open-loop and a feedback controller and see concretely why one of them is the one you'll actually use.
 
+The diagram below shows the timing of one control-loop tick for the `KinematicController` node from the starter code: measured pose comes in on `/odom`, a fresh command goes out on `/cmd_vel`.
+
+```mermaid
+sequenceDiagram
+    participant Robot
+    participant Odom as /odom topic
+    participant Ctrl as KinematicController
+    participant Cmd as /cmd_vel topic
+
+    Robot->>Odom: publish measured pose
+    Odom->>Ctrl: odom_cb(pose)
+    loop every 0.05s control tick
+        Ctrl->>Ctrl: compute_command(pose, goal)
+        Ctrl->>Cmd: publish Twist(v, ω)
+        Cmd->>Robot: drive wheels
+    end
+```
+
 ## Introduction
 "Control" here means the algorithm that turns a *goal* (a target pose, or a point on a path) into the velocity command you publish on `/cmd_vel` this control tick. Every navigation stack — however sophisticated its global planner — bottoms out in a kinematic controller like the ones in this unit, running at tens of Hz, converting "where do I want to be next" into "what should my wheels do right now." Getting this layer right matters more than it might seem: a bad low-level controller will make even a perfect path plan produce jerky, imprecise, or unstable motion.
 

@@ -2,6 +2,22 @@
 
 Topics are how most of LIMO's data flows — wheel odometry, lidar scans, camera frames, velocity commands. This unit covers the publish/subscribe model in depth: what a topic actually is, how to write both ends of the connection, and how message interfaces and QoS settings affect whether your data actually arrives.
 
+The sequence below shows a publisher and subscriber exchanging messages through a topic, and what happens when their QoS profiles don't match.
+
+```mermaid
+sequenceDiagram
+    participant P as Lidar driver (Publisher)
+    participant T as Topic /scan (LaserScan)
+    participant S as ScanWatcher (Subscriber)
+    P->>T: publish(LaserScan) @10Hz
+    alt QoS profiles compatible
+        T-->>S: deliver message
+        S->>S: on_scan() callback fires
+    else QoS profiles mismatched
+        T--xS: message silently dropped
+    end
+```
+
 ## What is a topic
 
 A topic is a named, typed data channel. "Named" means it has a string identifier like `/scan` or `/cmd_vel`; "typed" means every message on it must match one message definition (interface). Any number of nodes can publish to a topic and any number can subscribe — publishers and subscribers never need to know about each other directly, they only need to agree on the topic name and type. This decoupling is the whole point: you can swap LIMO's real lidar driver for a simulated one and every downstream node (mapping, obstacle avoidance) keeps working unchanged, because they only depend on `/scan` publishing `sensor_msgs/msg/LaserScan`.

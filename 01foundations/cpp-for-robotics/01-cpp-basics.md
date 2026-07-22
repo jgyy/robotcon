@@ -2,6 +2,18 @@
 
 This unit gets you writing and compiling real C++ programs, and covers the variable and type system you'll use constantly to hold sensor readings, joint angles, and robot state.
 
+The diagram below traces the compile-then-run pipeline every C++ program goes through before it can control a robot:
+
+```mermaid
+flowchart LR
+    Source["hello.cpp source"] --> Compiler["g++ -std=c++17 -Wall -Wextra"]
+    Compiler --> Warn{"Warnings raised?"}
+    Warn -- "Yes: fix code" --> Source
+    Warn -- "No" --> Binary["hello native binary"]
+    Binary --> Run["./hello"]
+    Run --> Output["Robot online"]
+```
+
 ## Compiling a C++ program
 Unlike Python, C++ is compiled ahead of time: a compiler (GCC's `g++` or LLVM's `clang++`) translates your `.cpp` source into a native binary before it runs. This matters for robotics because compiled code runs deterministically fast, which is exactly what you want in a control loop.
 

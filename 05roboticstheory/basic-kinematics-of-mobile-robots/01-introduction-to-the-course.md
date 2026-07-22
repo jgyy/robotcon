@@ -2,6 +2,15 @@
 
 This unit orients you before the math starts: what "kinematics" buys you as a robotics engineer, what a working demo looks like end to end, and what you need installed and understood before Unit 2 gets serious.
 
+The diagram below shows the two-way mapping this course builds: wheel speeds map forward into a pose, and a desired path maps inversely into the body-velocity commands that drive it.
+
+```mermaid
+flowchart LR
+    A["Wheel speeds: ω_l, ω_r"] -->|forward kinematics| B["Body velocity: v, ω"]
+    B -->|integrate over dt| C["Pose: x, y, θ"]
+    D["Desired path / goal"] -->|inverse kinematics| B
+```
+
 ## What is this course about?
 Kinematics is the study of motion without worrying about the forces that cause it — given a robot's wheel speeds or joint velocities, where does it end up, and how fast is it getting there? This course builds that mapping for mobile robots specifically: differential-drive, car-like (Ackermann), and omnidirectional platforms. You'll go from raw actuator commands to predicted robot pose, and back the other way — from a desired path to the commands that produce it. That two-way mapping (forward kinematics and inverse/control) is the foundation every navigation stack, from a warehouse AMR to a Mars rover's local planner, sits on top of.
 

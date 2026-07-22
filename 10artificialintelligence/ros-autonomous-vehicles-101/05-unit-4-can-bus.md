@@ -2,6 +2,18 @@
 
 Everything so far has commanded a simulated car through `/cmd_vel`. Real vehicles don't listen to ROS topics — they listen to CAN-Bus. This unit covers what CAN-Bus is, what a Drive-By-Wire (DBW) interface is, and how to bridge ROS commands onto it.
 
+The diagram below shows how a ROS command travels through the CAN bridge onto the vehicle's CAN bus and back again as a report — the command/report loop this unit is built around.
+
+```mermaid
+flowchart LR
+    Node["ROS control node<br/>/cmd_vel or DBW command"] --> Bridge["can_bridge node<br/>(ros2_socketcan)"]
+    Bridge --> CAN["CAN bus (SocketCAN)<br/>vcan0 / can0"]
+    CAN --> ECU["Vehicle ECUs<br/>throttle / brake / steering"]
+    ECU -->|report frames| CAN
+    CAN -->|decode| Bridge
+    Bridge -->|report topics| Node
+```
+
 ## What CAN-Bus is
 The **Controller Area Network (CAN)** bus is the wiring standard nearly every production vehicle uses to let its electronic control units (ECUs) — engine, brakes, steering, dashboard — talk to each other over a shared pair of wires. It's decades old, extremely robust to electrical noise, and deliberately simple: every message (a "frame") has a numeric ID and up to 8 bytes of data, broadcast to every device on the bus. Each ECU decides for itself which IDs to pay attention to.
 

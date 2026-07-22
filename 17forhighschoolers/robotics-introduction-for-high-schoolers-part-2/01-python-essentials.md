@@ -2,6 +2,22 @@
 
 This course builds toward a single capstone: writing a Python program that gets a TurtleBot out of a maze. Everything starts here, with how Python stores and represents the pieces of that problem — the robot's position, the maze layout, and the readings it collects along the way.
 
+The map below shows which Python type this unit uses for each piece of robot and maze state.
+
+```mermaid
+flowchart TD
+    S[Robot & maze state] --> V[Single values]
+    S --> C[Collections]
+    V --> INT["int: row, col"]
+    V --> FLOAT["float: sensor distance"]
+    V --> STR["str: heading"]
+    V --> BOOL["bool: has_reached_exit"]
+    C --> LIST["list: maze grid rows"]
+    C --> TUPLE["tuple: position (row, col)"]
+    C --> SET["set: visited cells"]
+    C --> DICT["dict: move_costs by direction"]
+```
+
 ## Variables and dynamic typing
 
 Python names are labels bound to objects, not typed storage boxes. You never declare a type, and the same name can point at a completely different kind of value later in the program:

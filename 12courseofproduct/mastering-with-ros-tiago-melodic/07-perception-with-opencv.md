@@ -2,6 +2,16 @@
 
 Motion planning gives TIAGo a way to move; this unit gives it a way to decide *where* to move by processing what its head camera sees. You'll get images out of ROS and into OpenCV, run basic detection on them, and publish the results back as ROS messages other nodes can consume.
 
+The diagram below traces an image from the camera topic through `cv_bridge` and OpenCV processing to a published detection.
+
+```mermaid
+flowchart LR
+    Cam[Head camera] -->|sensor_msgs/Image| Bridge[cv_bridge]
+    Bridge --> CV[OpenCV: HSV threshold + contours]
+    CV --> Centroid[Compute centroid]
+    Centroid --> Pub[Publish PointStamped]
+```
+
 ## Getting images out of ROS
 
 TIAGo's head camera publishes `sensor_msgs/Image` on topics under its camera namespace (commonly something ending in `/rgb/image_raw`). ROS images aren't OpenCV's native `numpy` array format, so every perception node starts with `cv_bridge` converting between the two:

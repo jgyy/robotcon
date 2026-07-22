@@ -2,6 +2,17 @@
 
 This unit sets expectations for the course: what "AI foundations" means as distinct from an applied ML/robotics course, a quick demo of the kind of behavior you'll be able to build by the end, and what background you need before diving into Unit 2's probability theory.
 
+The flowchart below traces the reject-option decision logic that `classify_with_reject` implements.
+
+```mermaid
+flowchart TD
+    A["Camera frame"] --> B["Model outputs probs over 4 classes"]
+    B --> C["Take argmax: best class + its probability"]
+    C --> D{"best probability >= threshold?"}
+    D -->|Yes| E["Return class label"]
+    D -->|No| F["Return: uncertain, defer to human/safe default"]
+```
+
 ## What this course actually teaches
 Most robotics-AI material jumps straight to "train a model" without explaining what the model is doing underneath. This course is the substrate that makes those later courses (classical ML, deep learning, reinforcement learning) legible: univariate and multivariate probability, statistics (how parameters get estimated from data), decision theory (how a robot turns probabilities into actions), information theory (how uncertainty and "surprise" are measured), and finally logistic regression as the first real trainable model that ties everything together. Every later unit in this course reuses the previous one — there's no filler.
 

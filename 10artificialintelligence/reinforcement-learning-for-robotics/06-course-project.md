@@ -2,6 +2,21 @@
 
 This project puts every prior unit to work: you'll define a maze as an MDP (Unit 2), build a tabular Q-learning agent (Unit 5) that improves on the exact answer dynamic programming would give you (Unit 3), and validate it the same way Monte Carlo methods validate a policy (Unit 4) — by running episodes and measuring return. The task: navigate a grid maze with three fixed obstacles from a start cell to a goal cell using Q-learning, with no built-in gym dependency, so every moving part is visible.
 
+The diagram below traces one training episode of the maze Q-learning loop, from initializing the table through to extracting the final greedy policy.
+
+```mermaid
+flowchart TD
+    Init["Initialize Q-table to zeros"] --> NewEp["Start new episode: state = START"]
+    NewEp --> Choose["Choose action via ε-greedy on Q"]
+    Choose --> StepEnv["step(): move unless a wall/obstacle blocks it"]
+    StepEnv --> UpdateQ["Update Q(s,a) with the Q-learning rule"]
+    UpdateQ --> Goal{"Reached GOAL?"}
+    Goal -->|No| Choose
+    Goal -->|Yes| MoreEp{"More episodes left?"}
+    MoreEp -->|Yes| NewEp
+    MoreEp -->|No| Extract["Extract greedy policy and roll it out"]
+```
+
 ## Defining the maze as an MDP
 A grid maze maps directly onto the `(S, A, P, R, γ)` tuple from Unit 2: states are grid cells, actions are the four compass directions, transitions are deterministic (moving into a wall/obstacle just keeps you in place), and reward is `-1` per step with `+10` on reaching the goal — which pushes the agent to find the *shortest* path, not just any path.
 

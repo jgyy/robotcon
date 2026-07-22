@@ -2,6 +2,22 @@
 
 Now that you've enabled security once, this unit opens up the keystore and looks at exactly what's inside it: the certificates, keys, and permission files that make authentication and access control work, and how to inspect and validate them by hand rather than treating the CLI as a black box.
 
+The diagram below lays out the keystore's file tree alongside the CA-signing and certificate-validation relationships that tie those files together.
+
+```mermaid
+flowchart TD
+    KS["demo_keystore/"] --> PUB["public/"]
+    KS --> PRIV["private/"]
+    KS --> ENC["enclaves/talker/"]
+    PUB --> CACERT["ca.cert.pem"]
+    PRIV --> CAKEY["ca.key.pem"]
+    ENC --> CERT["cert.pem"]
+    ENC --> KEY["key.pem"]
+    ENC --> PERM["permissions.p7s"]
+    CAKEY -- signs --> CERT
+    CACERT -. openssl verify .-> CERT
+```
+
 ## Anatomy of a keystore
 
 A keystore created with `ros2 security create_keystore` is just a directory tree. At the top level it holds the Certificate Authority material:

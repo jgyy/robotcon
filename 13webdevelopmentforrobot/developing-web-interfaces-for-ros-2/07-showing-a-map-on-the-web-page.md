@@ -2,6 +2,17 @@
 
 Occupancy grid maps are just 2D arrays of cell values, but rendering them well — with correct scale, origin, and live updates — is fiddly enough that RobotWebTools built a dedicated library for it. This unit covers `ros2d.js`, roslibjs's companion for 2D visualization.
 
+The diagram below shows how a raw `OccupancyGrid` message becomes pixels on screen, and how the viewer refits itself once the first message reveals the map's real dimensions.
+
+```mermaid
+flowchart LR
+    Map["/map topic: OccupancyGrid"] --> Client[ROS2D.OccupancyGridClient]
+    Client --> Viewer[ROS2D.Viewer: EaselJS canvas]
+    Viewer --> Page[Rendered map in #map div]
+    Client -->|"change" event, continuous: true| Fit[scaleToDimensions + shift]
+    Fit --> Viewer
+```
+
 ## How map rendering works
 A `nav_msgs/msg/OccupancyGrid` message carries a flat array of cell values (0-100 for occupancy probability, -1 for unknown), plus metadata describing the grid's resolution (meters per cell), width/height in cells, and the pose of the grid's origin in the world frame. Rendering this by hand means allocating a canvas, mapping array indices to pixel coordinates, choosing a color for each occupancy value, and redrawing whenever the map updates — all before you've even added a robot marker on top. `ros2djs` wraps exactly this: it subscribes to the map topic for you via a `ROS2D.OccupancyGridClient`, draws it into an SVG/canvas viewer, and keeps it in sync with map updates automatically.
 

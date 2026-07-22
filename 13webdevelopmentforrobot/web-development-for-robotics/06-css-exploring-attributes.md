@@ -2,6 +2,14 @@
 
 With selectors and the box model covered, this unit goes deeper into the CSS attributes you'll use to actually lay a dashboard out: how elements display relative to each other, and the modern layout tools that replace old float-based hacks.
 
+The diagram below shows the media-query decision that reflows the dashboard grid at the 700px breakpoint used later in this unit.
+
+```mermaid
+flowchart TD
+    Viewport{Viewport width} -->|"> 700px"| Wide["grid-template-columns: 2fr 1fr<br/>camera | status/controls side by side"]
+    Viewport -->|"<= 700px"| Narrow["grid-template-columns: 1fr<br/>camera, status, controls stacked"]
+```
+
 ## The display property
 `display` controls how an element participates in layout:
 - `block` — takes the full width available, starts on a new line (`div`, `p`, `section` by default).

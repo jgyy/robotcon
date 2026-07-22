@@ -2,6 +2,29 @@
 
 With a MoveIt2 configuration package in hand, this unit moves you from RViz2's mouse-driven planning to driving the same pipeline programmatically with the Move Group C++ Interface — the API your real applications will actually use.
 
+The sequence diagram below shows the deliberate split between planning and execution as calls flow from your C++ node through `move_group` to the controller.
+
+```mermaid
+sequenceDiagram
+    participant Code as Your C++ Node
+    participant MGI as MoveGroupInterface
+    participant MG as move_group node
+    participant Ctrl as ros2_control controller
+
+    Code->>MGI: setNamedTarget("home") / setPoseTarget(pose)
+    Code->>MGI: plan(plan)
+    MGI->>MG: planning request (action)
+    MG-->>MGI: trajectory + SUCCESS/FAILURE
+    MGI-->>Code: return error code
+    alt plan succeeded
+        Code->>MGI: execute(plan)
+        MGI->>MG: execute request
+        MG->>Ctrl: FollowJointTrajectory goal
+        Ctrl-->>MG: trajectory result
+        MG-->>MGI: execution result
+    end
+```
+
 ## The MoveGroupInterface
 
 `moveit::planning_interface::MoveGroupInterface` is a C++ class that wraps the `move_group` node's action and service interfaces behind ordinary method calls. You construct one against a specific planning group (the "arm" group you defined in Unit 2) and a node:

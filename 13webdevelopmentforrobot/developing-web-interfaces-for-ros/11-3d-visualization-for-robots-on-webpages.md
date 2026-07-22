@@ -2,6 +2,20 @@
 
 Everything so far has been 2D (canvas maps, text readouts). This unit brings a real 3D robot model into the browser — loading its URDF, animating its joints live, and rendering the TF tree, the browser equivalent of what RViz gives you on the desktop.
 
+The diagram below shows how the URDF, TF, and sensor-overlay clients each feed the same three.js scene.
+
+```mermaid
+flowchart LR
+    RD["/robot_description param"] --> Urdf[ROS3D.UrdfClient]
+    Meshes[Mesh files over HTTP] --> Urdf
+    Urdf --> Scene[three.js Scene]
+    TF["/tf, /tf_static"] --> TFC[ROS3D.TFClient]
+    TFC --> Urdf
+    Scan[LaserScan / PointCloud2 topics] --> Overlay[Sensor overlay helpers]
+    Overlay --> Scene
+    Scene --> Renderer["WebGL Renderer --> browser"]
+```
+
 ## Three.js as the rendering engine
 Under the hood, browser 3D graphics run on WebGL, and `three.js` is the standard library for working with it at a reasonable level of abstraction (scenes, cameras, meshes, lighting) instead of raw shaders. The ROS-specific 3D tooling in this ecosystem (`ros3djs`) is built on top of three.js, so a basic scene looks like ordinary three.js code:
 

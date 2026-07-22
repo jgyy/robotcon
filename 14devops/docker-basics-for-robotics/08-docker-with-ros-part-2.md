@@ -2,6 +2,18 @@
 
 Part 1 got a single containerized ROS node talking to itself. This unit tackles the harder, more realistic problems: multi-container ROS systems, GUI tools like rviz, GPU access, and DDS discovery across container and machine boundaries.
 
+The diagram below shows why this unit's containers all use `network_mode: host` — DDS discovery relies on multicast that only flows freely when every container shares the host's network stack.
+
+```mermaid
+flowchart LR
+    subgraph Host[Host network stack]
+        Driver[driver container] -.DDS multicast.-> Perception[perception container]
+        Perception -.DDS multicast.-> Planner[planner container]
+    end
+    Driver ---|ROS_DOMAIN_ID=12| Perception
+    Perception ---|ROS_DOMAIN_ID=12| Planner
+```
+
 ## Multi-container ROS systems with Compose
 Combine what you learned in Unit 6 with the ROS image patterns from Unit 7 to run a full system as separate services — useful for keeping perception, planning, and hardware-driver code in independently buildable/updatable images:
 

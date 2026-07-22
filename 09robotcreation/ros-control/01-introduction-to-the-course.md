@@ -2,6 +2,17 @@
 
 This unit sets up the vocabulary and mental model you'll need for the rest of the course: what `ros_control` (ROS 1) / `ros2_control` (ROS 2) actually is, why it exists as a separate layer instead of just publishing motor commands directly, and how the six units ahead fit together.
 
+The diagram below shows how the three core actors — controller, controller manager, and hardware interface — relate to each other and to the physical robot.
+
+```mermaid
+flowchart LR
+    C[Controller] -->|command| CM[Controller Manager]
+    CM -->|binds & runs update loop| HI[Hardware Interface]
+    HI -->|state feedback| CM
+    CM -->|state feedback| C
+    HI <-->|reads/writes| HW[(Actuators & Sensors)]
+```
+
 ## The gap ros_control fills
 Everything before this course — TF, URDF, sensor pipelines — is about *knowing* the state of a robot. ROS Control is about *changing* it. Without it you're left hand-rolling a node that reads a target position, computes some ad-hoc PID, and writes raw values to a motor driver — for every joint, on every robot, over and over. `ros_control`/`ros2_control` standardizes that pattern into three swappable pieces:
 

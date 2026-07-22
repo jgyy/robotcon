@@ -2,6 +2,19 @@
 
 The transformer architecture's ability to model long-range relationships in data — without the locality bias baked into convolutions — makes it a natural fit for object detection tasks where a robot needs to relate distant parts of a scene. This unit builds transformer fundamentals from the ground up and applies them via DETR to Mars rover object detection.
 
+The diagram below shows how DETR turns a camera frame into a fixed-size set of detections, combining a CNN backbone with a transformer encoder-decoder:
+
+```mermaid
+flowchart LR
+    IMG["Camera image"] --> CNN["CNN backbone<br/>(ResNet features)"]
+    CNN --> PE["+ positional encoding"]
+    PE --> ENC["Transformer encoder"] --> MEM["Memory"]
+    Q["Learned object queries"] --> DEC["Transformer decoder"]
+    MEM --> DEC
+    DEC --> HEAD["Detection head"]
+    HEAD --> OUT["(class, bounding box)<br/>per query"]
+```
+
 ## What are transformers
 At the core of a transformer is **self-attention**: for each element in a sequence (a word, an image patch), compute a weighted combination of *all other elements*, where the weights are learned based on relevance. Concretely, each input is projected into a query (`Q`), key (`K`), and value (`V`):
 ```python

@@ -2,6 +2,21 @@
 
 Unit 2 got you moving the base by hand; this unit hands that job to the navigation stack so TIAGo can get from A to B on its own, avoiding obstacles it discovers along the way. This is the last unit before you turn to the arm, so treat it as your last "whole robot moving through space" checkpoint.
 
+The diagram below shows how localization and the two costmaps feed `move_base` to turn a goal pose into wheel commands.
+
+```mermaid
+flowchart LR
+    Map[Static Map] --> AMCL[amcl]
+    Laser[LaserScan] --> AMCL
+    AMCL --> Pose["map->odom->base_footprint TF"]
+    Pose --> GC[Global Costmap]
+    Sensors[Live sensor data] --> LC[Local Costmap]
+    GC --> MB[move_base]
+    LC --> MB
+    Goal[MoveBaseGoal] --> MB
+    MB --> CmdVel[cmd_vel]
+```
+
 ## Localization: knowing where TIAGo is
 
 Before TIAGo can plan a path, it needs to know where it is on a map. The standard approach is `amcl` (Adaptive Monte Carlo Localization), which fuses laser scan data against a pre-built map to maintain a probabilistic pose estimate. You supply a static map (built ahead of time with a SLAM package such as `gmapping` or `slam_toolbox`) and the navigation stack keeps a live `map -> odom -> base_footprint` TF chain updated as the robot moves.

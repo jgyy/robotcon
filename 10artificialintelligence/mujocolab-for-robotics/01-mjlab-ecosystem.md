@@ -2,6 +2,17 @@
 
 This unit orients you in the toolchain before you write a single config file: what MuJoCo, MuJoCo Warp, and MJLab each do, how they stack on top of one another, and what the rest of the course will build on top of that stack.
 
+The diagram below shows the layers of the stack and the config objects MJLab exposes at the top of it.
+
+```mermaid
+flowchart TD
+    A[MuJoCo<br/>physics engine, CPU, one env at a time] --> B[MuJoCo Warp<br/>GPU-parallel reimplementation, thousands of envs]
+    B --> C[MJLab<br/>environment-authoring & training framework]
+    C --> D[robot_cfg]
+    C --> E[scene_cfg]
+    C --> F[rl_cfg]
+```
+
 ## What MJLab is
 MuJoCo itself is a general-purpose physics engine — accurate contact dynamics, articulated bodies, actuators — used across robotics research regardless of what you do with it. On its own it simulates *one* environment at a time on CPU. MuJoCo Warp is a GPU-accelerated reimplementation of the same physics that can step thousands of environment copies in parallel on a single GPU, which is what makes large-scale reinforcement learning (RL) for legged and humanoid robots practical in reasonable wall-clock time instead of days on a CPU cluster.
 

@@ -2,6 +2,29 @@
 
 This unit is a map, not a lesson: it tells you what ROS is, how the next eleven units are organized, and what you need on your machine before you touch any code. Skim it once now and come back to it whenever you lose the thread of why a later unit exists.
 
+The diagram below groups the units by the ROS concept they teach rather than by number, showing how each block of the course builds toward the next.
+
+```mermaid
+flowchart TD
+    subgraph Foundations["Foundations (Units 2-3)"]
+        F[Nodes, Parameters, Environment]
+    end
+    subgraph Topics["Topics (Units 4-5)"]
+        T[Publish / Subscribe]
+    end
+    subgraph Services["Services (Units 6-7)"]
+        S[Request / Response]
+    end
+    subgraph CPP["C++ Structure (Unit 8)"]
+        C[Class-based Nodes]
+    end
+    subgraph Actions["Actions (Units 9-10)"]
+        A[Goal / Feedback / Result]
+    end
+    Foundations --> Topics --> Services --> CPP --> Actions
+    Actions --> D[Debugging (11) & Appendix (12)]
+```
+
 ## What "ROS" actually is
 ROS (Robot Operating System) is not an operating system in the kernel sense — it's a middleware and toolset that sits on top of Linux. It gives you three things you would otherwise have to build yourself for every robot project: a message-passing layer between processes (so a camera driver, a planner, and a motor controller can talk without knowing about each other's internals), a large ecosystem of reusable packages (drivers, transforms, navigation, manipulation), and a common set of developer tools (build system, CLI introspection, visualization, logging, simulation hooks). You are learning C++ ROS specifically because most performance-sensitive robotics code — drivers, control loops, perception pipelines — is written in C++, while Python is more common for glue code and quick scripts.
 

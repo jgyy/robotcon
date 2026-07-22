@@ -2,6 +2,22 @@
 
 Topics are the workhorse communication pattern in ROS 2: an anonymous, many-to-many publish/subscribe channel identified by a name and a message type. This unit takes you from inspecting topics on the command line to writing your own publisher, subscriber, and custom message type in Rust.
 
+The sequence below shows the publisher and subscriber built later in this unit exchanging messages over the `/chatter` topic, with `ros2 topic echo` observing independently, exactly as the many-to-many, decoupled nature of topics described above implies:
+
+```mermaid
+sequenceDiagram
+    participant Pub as Publisher (topic_publisher)
+    participant Topic as /chatter topic (DDS)
+    participant Sub as Subscriber (topic_subscriber)
+    participant CLI as ros2 topic echo
+
+    loop every 500ms
+        Pub->>Topic: publish StringMsg("hello #n")
+        Topic-->>Sub: deliver message
+        Topic-->>CLI: deliver message
+    end
+```
+
 ## How topics work
 A topic is not a queue owned by any single node — it's a named, typed channel that the DDS middleware routes for you. Any number of nodes can publish to a topic, and any number can subscribe, and none of them need to know about each other; they only need to agree on the topic name and the message type. This decoupling is what lets you swap a simulated camera node for a real one without touching the nodes that consume its images. Before writing code, get comfortable inspecting live topics:
 

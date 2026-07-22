@@ -2,6 +2,20 @@
 
 This unit orients you before you touch any code: what manipulation means in ROS 2, what MoveIt2 actually does for you, and what you need already installed. It closes with a short demo so you see a working pipeline before you build one yourself.
 
+The diagram below shows the four problems any manipulation stack must solve and which of them MoveIt2 owns versus which it only integrates with.
+
+```mermaid
+flowchart LR
+    T[Manipulation task] --> K["Kinematics:<br/>where can the end<br/>effector go?"]
+    T --> P["Motion planning:<br/>how to get there<br/>without collisions?"]
+    T --> D["Perception:<br/>what's out there<br/>to pick up?"]
+    T --> G["Gripper control:<br/>how to hold &<br/>release it?"]
+    K --> MG[move_group node]
+    P --> MG
+    MG <-.integrates with.-> D
+    MG <-.integrates with.-> G
+```
+
 ## What "manipulation" means here
 
 Manipulation is the subset of robotics concerned with a robot changing the state of its environment through contact — grasping, moving, placing, and releasing objects, as opposed to just moving itself around (that's navigation, covered elsewhere in this repo). A manipulation stack has to solve several problems together:

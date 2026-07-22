@@ -2,6 +2,19 @@
 
 This course is a hands-on path through ROS2 built entirely around the LIMO robot: you start with the fundamentals of packages, nodes, Colcon, and topics, then use those building blocks to make LIMO map its surroundings, localize within that map, plan and follow paths, and avoid obstacles with the Nav2 stack — before finishing with an alternative, camera-based mapping and navigation pipeline built on RTAB-Map. By the end you can take LIMO from a bare ROS2 workspace to fully autonomous point-to-point navigation, via two different mapping approaches.
 
+The diagram below shows how the eight units build on each other, including the fork after mapping into the lidar-based (AMCL/Nav2) and camera-based (RTAB-Map) navigation tracks.
+
+```mermaid
+flowchart TD
+    U1[Unit 1: ROS2 Basic Concepts] --> U2[Unit 2: Understanding ROS2 Topics]
+    U2 --> U3[Unit 3: How to build a map]
+    U3 --> U4[Unit 4: Localize with AMCL]
+    U4 --> U5[Unit 5: Path Planning with Nav2]
+    U5 --> U6[Unit 6: Obstacle Avoidance]
+    U3 --> U7[Unit 7: RTAB-Map Basic Concepts]
+    U7 --> U8[Unit 8: Autonomous Navigation with RTAB-Map]
+```
+
 1. [ROS2 Basic Concepts](01-ros2-basic-concepts.md) — Basic ROS2 concepts: packages, nodes, compilation and launch files.
 2. [Understanding ROS2 Topics](02-understanding-ros2-topics.md) — What are topics, publishers, subscribers, topic messages (interfaces) and how they work.
 3. [How to build a map](03-how-to-build-a-map.md) — Learn how to build a map for navigation.

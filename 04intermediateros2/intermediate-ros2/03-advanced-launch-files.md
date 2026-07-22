@@ -2,6 +2,19 @@
 
 A basic launch file starts a couple of nodes with fixed arguments. A real launch file needs to be reusable across environments — different robots, different simulators, different namespaces — without being copy-pasted and hand-edited each time. This unit covers the Python launch API in depth, since it's the most expressive of the formats ROS 2 supports (XML and YAML, covered next unit, are declarative subsets of the same underlying model).
 
+The diagram below shows how the building blocks covered in this unit compose into a single top-level launch file.
+
+```mermaid
+flowchart TD
+    Top[Top-level launch file] --> Arg[DeclareLaunchArgument]
+    Arg --> Cfg[LaunchConfiguration<br/>read anywhere below]
+    Top --> Group[GroupAction: namespace + condition]
+    Group --> Inc[IncludeLaunchDescription<br/>sub launch file]
+    Top --> Cond[Node gated by IfCondition]
+    Top --> Opaque[OpaqueFunction<br/>dynamic node list at launch time]
+    Opaque --> Dyn[Nodes computed from resolved config]
+```
+
 ## Launch arguments and substitutions
 
 `DeclareLaunchArgument` defines a parameter to the launch file itself, settable from the command line; `LaunchConfiguration` reads it back anywhere else in the file. Substitutions are lazily-evaluated placeholders — they aren't strings until launch actually runs, which is what lets one launch file adapt to different invocations.

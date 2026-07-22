@@ -2,6 +2,15 @@
 
 Unit 3 was all about robots that can't move sideways. This unit covers the opposite case — omnidirectional platforms (mecanum or omni-wheel bases) that can translate in any direction independent of their heading — and shows why that extra freedom simplifies control at the cost of mechanical complexity.
 
+The diagram below shows how a holonomic body-frame command maps straight through to pose rate with no coupling, while separately feeding a wheel-speed mapping and an optional world-to-body frame conversion.
+
+```mermaid
+flowchart LR
+    World["World-frame command (vx_world, vy_world)"] -->|"rotate by -θ"| Cmd["Body command: vx, vy, ω"]
+    Cmd -->|no coupling| Rate["Pose rate: ẋ=vx, ẏ=vy, θ̇=ω"]
+    Cmd -->|wheel mapping matrix| Wheels["Individual omni/mecanum wheel speeds"]
+```
+
 ## Introduction
 A robot is **holonomic** when its controllable degrees of freedom equal its degrees of freedom in the world — for a planar robot, that means it can independently command `ẋ`, `ẏ`, and `θ̇` at any instant, with no coupling between them. Omni-wheel and mecanum-wheel platforms achieve this mechanically: each wheel has rollers set at an angle so it can contribute force in a direction other than purely "forward," and combining three or four such wheels gives full planar mobility. The payoff is significant for control: you can drive sideways into a loading dock, rotate in place while translating, or crab-walk along a wall — none of which a differential-drive or car-like robot can do without complex maneuvering.
 

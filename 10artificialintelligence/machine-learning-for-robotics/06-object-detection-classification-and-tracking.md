@@ -2,6 +2,21 @@
 
 The final unit switches sensing modality entirely: instead of LiDAR and odometry, you'll use TurtleBot4's RGB camera to run real-time object detection with YOLOv5, tune its confidence threshold, and add multi-object tracking with SORT so detections stay consistent across frames.
 
+The diagram below shows the per-frame detection-to-tracking sequence, illustrating how SORT keeps assigning the same track ID to a person across consecutive frames.
+
+```mermaid
+sequenceDiagram
+    participant Camera
+    participant YOLOv5
+    participant SORT as SORT Tracker
+    Camera->>YOLOv5: Frame N (image_raw)
+    YOLOv5->>SORT: bounding boxes + confidence
+    SORT-->>Camera: track_id=1 (person)
+    Camera->>YOLOv5: Frame N+1 (image_raw)
+    YOLOv5->>SORT: bounding boxes + confidence
+    SORT-->>Camera: track_id=1 (same person)
+```
+
 ## From LiDAR to camera perception
 Everything in Units 3-5 operated on TurtleBot4's LiDAR and odometry — one-dimensional range arrays and pose estimates. The camera introduces a fundamentally different data shape (dense 2D pixel grids) and a fundamentally different tool family: convolutional object detectors instead of regression/clustering on tabular features. The ROS 2 plumbing pattern is familiar, though — subscribe to a sensor topic, run inference, publish a result — which is why this unit reuses the node structure from Unit 4's regression driver.
 

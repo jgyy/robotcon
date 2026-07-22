@@ -2,6 +2,17 @@
 
 A well-modeled but untextured robot looks like gray plastic in every render. This unit covers materials, UV mapping, and texturing well enough to make your models read as the real-world objects they represent, plus the export pitfalls that break textures once they leave Blender.
 
+The diagram below shows how the individual PBR image maps feed into the Principled BSDF shader that both Blender and Gazebo Sim's renderer understand.
+
+```mermaid
+flowchart LR
+    A[Base Color image texture] --> E[Principled BSDF]
+    B[Roughness map / value] --> E
+    C[Metallic value] --> E
+    D[Normal map] --> E
+    E --> F[Gazebo Sim Ogre2 renderer]
+```
+
 ## Materials and the shader basics
 
 Blender's Shading workspace uses node-based materials built around the Principled BSDF shader, which maps closely onto physically-based rendering (PBR) properties that most modern renderers — including Gazebo Sim's Ogre2-based rendering — understand: Base Color, Roughness, Metallic, Normal. For robotics work you rarely need exotic shader graphs; setting Base Color to an image texture, tuning Roughness (0 = mirror, 1 = fully matte), and toggling Metallic for metal parts covers most cases.

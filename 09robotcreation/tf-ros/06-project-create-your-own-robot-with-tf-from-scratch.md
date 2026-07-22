@@ -2,6 +2,16 @@
 
 This capstone pulls together every tool from Units 1-5 into one deliverable: a minimal robot that publishes a complete, correct, well-behaved TF tree — by hand this time, with no URDF as a crutch, so the mechanics are unmistakably yours.
 
+The flowchart below lays out the build order for this project, from the fixed mounts through to verifying the full composed tree.
+
+```mermaid
+flowchart TD
+    S1["Step 1: Static mounts\nbase_link → lidar_link, head_base_link"] --> S2["Step 2: Dynamic base\nodom → base_link (TransformBroadcaster)"]
+    S2 --> S3["Step 3: Panning head\nhead_base_link → head_link (oscillating yaw)"]
+    S3 --> S4["Step 4: Verify the tree\nview_frames + tf2_echo odom head_link"]
+    S4 --> S5["Step 5 (stretch): Visualize in RViz"]
+```
+
 ## Project brief
 Design a simple robot with at least four frames and at least one moving joint. A good scope: a differential-drive base with a lidar and a single pan-only sensor head, giving you this tree:
 

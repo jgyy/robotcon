@@ -2,6 +2,20 @@
 
 A model is only as good as the data it learns from, and PyTorch gives you a small, consistent set of abstractions — `Dataset` and `DataLoader` — for turning raw files or arrays into batches a training loop can consume. This unit builds the dataset you'll feed into the model you create in Unit 4.
 
+The diagram below shows how a training loop pulls one batch through the `DataLoader` and `Dataset` abstractions:
+
+```mermaid
+sequenceDiagram
+    participant Loop as Training Loop
+    participant DL as DataLoader
+    participant DS as Dataset
+    Loop->>DL: request next batch
+    DL->>DS: __getitem__(idx) for each index
+    DS->>DS: load image, apply transform
+    DS-->>DL: (image, label)
+    DL-->>Loop: batched (images, labels) tensors
+```
+
 ## Generating the training dataset
 Before you can train anything you need labelled examples: pairs of `(input, label)`. For this course's running example — a mini keyboard detector — that means a folder of images, each labelled with whether it shows the mini keyboard or not. In a real robotics project this step is often the most time-consuming part of the whole pipeline: driving a robot around to collect camera frames, logging sensor readings during teleoperation, or rendering synthetic images in simulation.
 

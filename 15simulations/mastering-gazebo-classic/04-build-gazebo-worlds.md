@@ -2,6 +2,18 @@
 
 So far you've dropped a robot into someone else's empty world. This unit flips that around: you'll build the environment itself, from a bare SDF file to a populated, realistically-terrained scene.
 
+The diagram below shows how the pieces this unit covers compose into one world file, with the `<population>` block scattering copies of models you've already included.
+
+```mermaid
+flowchart TD
+    World[World .sdf] --> Base[sun + ground_plane includes]
+    World --> Models["Custom / Fuel models
+    (model.config + model.sdf)"]
+    World --> Terrain[Heightmap terrain]
+    World --> Pop[Population block]
+    Pop -->|scatters N copies of| Models
+```
+
 ## Building a World From Scratch
 
 A world file is plain SDF with `<world>` as its root. The fastest path is rarely a blank file — start from the built-in `worlds/empty.world` (or `worlds/ground.world`) and layer content in, since the empty world already gets physics, a sun, and a ground plane right:

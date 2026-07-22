@@ -2,6 +2,22 @@
 
 Unit 2 got a model running on the Pi; this unit is about making it *good* on the Pi — small, fast, and power-efficient without giving up more accuracy than you have to. You'll work through the four standard compression techniques (quantization, pruning, clustering, distillation) on the same flower classifier so you can compare them apples-to-apples.
 
+The diagram below shows the optimization techniques as parallel paths from the same trained model to a compressed, edge-ready model.
+
+```mermaid
+flowchart LR
+    M[Trained FP32 Model] --> Q[Post-Training Quantization]
+    M --> QAT[Quantization-Aware Training]
+    M --> P[Weight Pruning]
+    M --> CL[Weight Clustering]
+    M --> D[Knowledge Distillation]
+    Q --> O[Optimized Edge Model]
+    QAT --> O
+    P --> O
+    CL --> O
+    D --> O
+```
+
 ## Overview of edge model optimization techniques
 All four techniques attack the same underlying problem — a trained FP32 model is bigger and slower than it needs to be — from different angles:
 

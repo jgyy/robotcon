@@ -2,6 +2,21 @@
 
 RMF ships with a handful of built-in task types (covered in Unit 10), but real deployments usually need something bespoke — "when the robot arrives at the loading dock, trigger this behavior." This unit covers one practical approach: location-triggered custom actions.
 
+The sequence below shows how a composed task request flows from requester to adapter callback and back out through `/task_summaries`.
+
+```mermaid
+sequenceDiagram
+    participant Req as Task Requester
+    participant Core as RMF Core (/task_api_requests)
+    participant FA as Fleet Adapter
+    participant Sum as /task_summaries
+    Req->>Core: compose task (category=inspect_shelf)
+    Core->>FA: dispatch to robot, arrive at waypoint
+    FA->>FA: perform_action(category, description, execution)
+    FA-->>Sum: execution.update() [in progress]
+    FA-->>Sum: execution.finished() [complete]
+```
+
 ## The pattern: performable actions at waypoints
 
 Rather than inventing a brand-new task type from scratch (a heavier lift involving RMF's task planning API), the simplest path to custom behavior is to define a **performable action** attached to a waypoint. When a robot's itinerary includes visiting that waypoint, RMF calls back into your fleet adapter once it arrives, and your adapter runs arbitrary code before reporting the action complete.

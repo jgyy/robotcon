@@ -2,6 +2,18 @@
 
 Before touching ROS at all, this unit gets a plain web page running and styled — the shell every later unit will drop ROS-connected widgets into.
 
+The diagram below traces how the static files you write end up as a styled, multi-panel page in the browser, ready for ROS widgets in later units.
+
+```mermaid
+flowchart LR
+    Files[index.html + css/js files] --> Server[python3 -m http.server 8000]
+    Server --> Browser[Browser requests localhost:8000]
+    Browser --> Grid[Bootstrap container/row/col-* grid]
+    Grid --> Left[Left sidebar col-md-3: buttons]
+    Grid --> Center[Center panel col-md-6: future map/camera]
+    Grid --> Right[Right sidebar col-md-3: telemetry]
+```
+
 ## Creating and running a web page
 A ROS-connected interface is still, first and foremost, a normal static web page: an `index.html` file plus whatever CSS/JS it references, served by any HTTP server. You don't need a build pipeline for this course — a folder and a simple server are enough:
 

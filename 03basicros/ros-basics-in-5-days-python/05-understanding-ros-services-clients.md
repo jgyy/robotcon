@@ -2,6 +2,17 @@
 
 Not every interaction with a robot fits the "broadcast and forget" model of topics. Sometimes you need a direct question with a direct answer — that's what services are for. This unit covers the caller side: service clients.
 
+The sequence below shows the round trip a service call makes, in contrast to the fire-and-forget publish shown in Unit 3.
+
+```mermaid
+sequenceDiagram
+    participant C as MinimalClient
+    participant S as Service Server (/add_two_ints)
+    C->>S: call_async(request: a=3, b=5)
+    Note over C: spin_until_future_complete()
+    S-->>C: response: sum=8
+```
+
 ## Topics vs. services vs. actions
 
 These three mechanisms cover different shapes of interaction, and picking the right one is a design decision you'll make constantly:

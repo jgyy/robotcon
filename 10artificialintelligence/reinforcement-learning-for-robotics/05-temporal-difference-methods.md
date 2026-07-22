@@ -2,6 +2,18 @@
 
 Monte Carlo methods (Unit 4) need a full episode before they can update anything, and dynamic programming (Unit 3) needs a full model before it can update anything. Temporal-difference (TD) learning needs neither: it updates its value estimates after every single step, using a guess to correct a guess. This combination — model-free like MC, but step-by-step like DP — is why TD methods, and Q-learning specifically, are the most widely used family of algorithms in practical RL.
 
+The diagram below contrasts how SARSA and Q-learning pick the bootstrap target from the same observed transition — the one choice that separates on-policy from off-policy TD control.
+
+```mermaid
+flowchart TD
+    Step["Agent takes action a in state s"] --> Obs["Observe reward r and next state s'"]
+    Obs --> Choice{"On-policy or off-policy target?"}
+    Choice -->|"SARSA (on-policy)"| NextA["Sample a' from the same ε-greedy policy"]
+    Choice -->|"Q-learning (off-policy)"| MaxA["Take max over Q(s', ·)"]
+    NextA --> UpdS["Update Q(s,a) += α[r + γQ(s',a') − Q(s,a)]"]
+    MaxA --> UpdQ["Update Q(s,a) += α[r + γ·maxQ(s') − Q(s,a)]"]
+```
+
 ## TD prediction: TD(0)
 Instead of waiting for the true return `G_t`, TD(0) bootstraps: it uses the reward just received plus the *current estimate* of the next state's value as a stand-in for the real return.
 

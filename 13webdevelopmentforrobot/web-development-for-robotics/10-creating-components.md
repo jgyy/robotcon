@@ -2,6 +2,17 @@
 
 A single giant component that renders your whole dashboard is no better than a single giant JavaScript file. This unit covers splitting a React app into focused, reusable components that each own one job — a status badge, a joint table, a command form — and pass data between each other cleanly.
 
+The diagram below shows the unidirectional data flow this unit builds: props passed down to children, and commands reported back up via callback props.
+
+```mermaid
+flowchart TD
+    App["App (owns state)"] -->|"props: connected"| StatusBadge
+    App -->|"props: joints array"| JointTable
+    JointTable -->|"props: name, position, velocity"| JointRow
+    App -->|"prop: onSend callback"| VelocityForm
+    VelocityForm -->|"calls onSend(cmd)"| App
+```
+
 ## Breaking a dashboard into components
 Look for natural boundaries: anything you could point at and give a one-sentence description ("shows the battery level", "lets the user send a velocity command") is a component candidate.
 

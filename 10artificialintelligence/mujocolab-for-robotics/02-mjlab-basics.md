@@ -2,6 +2,15 @@
 
 Unit 1 showed you the shape of the ecosystem; this unit gets your hands on it. By the end you will have a working MJLab project, a simulation you launched yourself, and two trained policies — one that walks, one that imitates a reference motion — using only the robot and environments MJLab ships by default.
 
+The diagram below shows the order of operations this unit walks through, from an empty project to two trained policies.
+
+```mermaid
+flowchart TD
+    A[Scaffold project with uv] --> B[First launch: play.py<br/>random policy, verify GPU/viewer]
+    B --> C[Train velocity-tracking policy<br/>train.py --task Mjlab-Velocity-G1]
+    C --> D[Train motion-imitation policy<br/>train.py --task Mjlab-Mimic-G1]
+```
+
 ## Introduction: what "basics" means here
 Everything in this unit uses MJLab's built-in humanoid (typically a G1-class robot) and its built-in flat-ground environment. That's deliberate: the goal is to learn the *workflow* — project layout, launch commands, training loop, monitoring — before Unit 3 and 4 ask you to swap in your own terrain and your own robot. If a command here fails, the problem is almost always environment setup (GPU drivers, CUDA-enabled MuJoCo Warp, Python version) rather than the RL logic itself, so get this unit fully working before moving on.
 

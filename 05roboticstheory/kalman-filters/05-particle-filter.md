@@ -2,6 +2,16 @@
 
 The EKF and UKF still assume the belief can be represented as a single Gaussian bump. Sometimes it can't — a robot placed in a symmetric building might genuinely believe it's in one of several rooms at once. This unit covers the particle filter, which drops the Gaussian assumption entirely and represents belief as a swarm of weighted samples.
 
+The diagram below shows the three-phase predict/update/resample cycle that distinguishes the particle filter from the two-phase Bayes and Kalman filters seen in earlier units.
+
+```mermaid
+flowchart TD
+    P["N weighted particles"] -->|"Predict: move each particle + per-particle noise"| P2["Particles spread out"]
+    P2 -->|"Update: weight by sensor likelihood"| P3["Weighted particles: some heavy, some light"]
+    P3 -->|"Resample: draw N particles proportional to weight"| P4["New particle set concentrated on likely states"]
+    P4 --> P
+```
+
 ## Properties of the particle filter
 
 A particle filter represents the belief `bel(x)` as a set of `N` weighted samples ("particles") `{(x_i, w_i)}`, each a full hypothesis of the robot's state. Dense clusters of particles represent high-probability regions; sparse areas represent low-probability regions. Unlike a Gaussian, this representation can be **multimodal** (several separate clusters, e.g. "probably in room A, but maybe room B"), non-symmetric, and can represent belief over discontinuous or non-Euclidean state spaces without any linearization. The tradeoff is computational: accuracy scales with the number of particles, and in high-dimensional state spaces you may need a very large `N` to cover the space adequately — this is sometimes called the curse of dimensionality for particle filters.

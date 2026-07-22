@@ -2,6 +2,15 @@
 
 Hand-broadcasting every frame of a real robot, as you did in Unit 3, does not scale — a robot arm alone might have six or more moving joints. This unit introduces the two nodes that generate an entire TF tree automatically from a robot description and its current joint angles.
 
+The diagram below shows how the two nodes' outputs combine: fixed geometry from the URDF plus live joint angles becomes the full TF tree.
+
+```mermaid
+flowchart LR
+    URDF["URDF/xacro (robot_description param)"] --> RSP["robot_state_publisher"]
+    JSP["joint_state_publisher(_gui)"] -->|/joint_states| RSP
+    RSP -->|publishes| TF["/tf and /tf_static"]
+```
+
 ## Where the tree comes from: URDF
 `robot_state_publisher` needs a model of the robot's kinematic structure to know which frames exist and how they're connected — that model is a URDF (Unified Robot Description Format) file, described in detail in the next course. For this unit, treat URDF as a given input: an XML description of links (rigid bodies) and joints (fixed, revolute, prismatic, continuous...) connecting them, each with a fixed offset from its parent.
 

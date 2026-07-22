@@ -2,6 +2,15 @@
 
 Unit 2 built the Bayes Filter over discrete histograms. This unit specializes it to the case where beliefs and noise are Gaussian — the assumption that turns an expensive grid convolution into a handful of closed-form matrix equations: the Kalman filter.
 
+The diagram below shows the same predict/update cycle from Unit 2, now specialized to the closed-form Gaussian math and centered on the Kalman gain `K`.
+
+```mermaid
+flowchart LR
+    S["State: mean/covariance (mu, sigma^2) or (x, P)"] -->|"Predict using F, Q"| P1["Predicted state: larger uncertainty"]
+    P1 -->|"Measurement z -> compute Kalman gain K"| U1["Updated state: K blends prediction and measurement"]
+    U1 --> S
+```
+
 ## From histograms to Gaussian distributions
 
 A histogram belief needs one probability value per grid cell — fine in 1D, intractable once you track position, velocity, and heading together (the grid size explodes combinatorially). A **Gaussian** distribution instead represents an entire belief with just two numbers per dimension: a mean `μ` (the best estimate) and a variance `σ²` (the uncertainty). The Kalman filter's core assumption is that if your prior belief, motion noise, and sensor noise are all Gaussian, and your motion/sensor models are linear, then the posterior belief is *exactly* Gaussian too — no approximation needed, and no grid required. That's why it's cheap: predict and update become closed-form updates to `(μ, σ²)` instead of a convolution over every possible state.

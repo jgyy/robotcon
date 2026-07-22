@@ -2,6 +2,16 @@
 
 So far your robot has only existed as a visual/kinematic model in RViz2 — nothing has mass, nothing collides, nothing responds to gravity. This unit takes the same URDF into a physics simulator so it becomes a robot that can actually be dropped into a world and act like a physical object.
 
+The diagram below traces a URDF from a purely visual model to a physically simulated robot spawned inside Gazebo Sim.
+
+```mermaid
+flowchart LR
+    URDF[RViz2-only URDF] --> Add[Add inertial blocks + gazebo tags]
+    Add --> World[gz sim world.sdf]
+    World --> Spawn[ros2 run ros_gz_sim create]
+    Spawn --> Sim[Robot under physics: gravity, collisions, friction]
+```
+
 ## Starting Gazebo Sim and building a world
 
 Gazebo Sim (the modern successor to the classic "Gazebo") separates the **world** — terrain, lighting, static obstacles, physics parameters — from the **robot model** you spawn into it. You typically start from an empty or mostly-empty world SDF file and launch it with:

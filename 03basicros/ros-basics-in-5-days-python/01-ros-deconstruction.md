@@ -2,6 +2,18 @@
 
 Before diving into code, this unit lays out the map of everything you need to learn to program a robot with ROS, and explains the teaching method the rest of the course follows. Think of it as the syllabus made concrete.
 
+The diagram below shows how the five core areas relate: basic concepts underpin the three communication mechanisms, and debugging tools apply across all of them.
+
+```mermaid
+flowchart TD
+    A[Basic Concepts: nodes, packages, parameters] --> B[Topics: async pub/sub]
+    A --> C[Services: sync request/response]
+    A --> D[Actions: goal + feedback + result]
+    B --> E[Debugging Tools: logs, rqt, rosbag, RViz]
+    C --> E
+    D --> E
+```
+
 ## The five things you need to learn
 
 ROS can feel enormous because its documentation covers navigation stacks, perception pipelines, simulators, and more. Strip that away and the actual *core* of ROS — the part every single ROS program depends on — is small:

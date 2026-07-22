@@ -2,6 +2,20 @@
 
 Discrete buttons (Unit 4) only give you full-speed or stopped. This unit replaces them with a continuous, two-axis virtual joystick — the standard control widget for teleoperating a mobile base or manipulator smoothly from a touchscreen or mouse.
 
+The diagram below shows how a joystick drag is transformed into a clamped, scaled Twist before it reaches `/cmd_vel`.
+
+```mermaid
+flowchart TD
+    A[Pointer drag on joystick zone] --> B[nipplejs computes angle + force]
+    B --> C["Normalize to linear/angular in -1..1"]
+    C --> D{Within dead zone?}
+    D -->|Yes| E[Output 0]
+    D -->|No| F[Scale by MAX_LINEAR / MAX_ANGULAR]
+    E --> G[publishTwist]
+    F --> G
+    G --> H["/cmd_vel via ROSLIB.Topic"]
+```
+
 ## Why a joystick beats buttons for teleop
 A joystick's position maps naturally onto a `Twist`'s two independent axes: vertical displacement to linear velocity, horizontal displacement to angular velocity. This gives an operator proportional control — light forward pressure with a gentle turn — instead of jerky full-speed steps, which matters a lot once you're driving near obstacles or people.
 

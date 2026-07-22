@@ -2,6 +2,16 @@
 
 Topics are the workhorse communication mechanism in ROS 2: continuous, many-to-many, asynchronous data streams for sensor readings, actuator commands, and state broadcasts. Almost everything else in ROS 2 (including the messages actions and services use internally) builds on the same underlying concepts, so this is the most important unit in the course.
 
+The diagram below shows the decoupled publish/subscribe flow for this unit's two running examples — publishers never know who (if anyone) is subscribed, and subscribers never know who published:
+
+```mermaid
+flowchart LR
+    Sensor[Sensor Publisher Node] -->|publish LaserScan| Scan[/scan topic/]
+    Scan --> ScanSub[ScanSubscriber Node]
+    Drive[DriveForward Node] -->|publish Twist| Cmd[/cmd_vel topic/]
+    Cmd --> Actuator[Subscriber / Actuator Node]
+```
+
 ## What is a ROS 2 topic?
 A topic is a named, typed data channel. "Named" means nodes find each other by agreeing on a string like `/scan` or `/cmd_vel`; "typed" means every message sent on that topic must match a specific `.msg` definition (e.g. `sensor_msgs/msg/LaserScan`). Communication is publish/subscribe: publishers don't know who (if anyone) is listening, and subscribers don't know who's publishing — the DDS middleware handles discovery and delivery. This decoupling is what lets you swap a simulated camera for a real one without touching the nodes that consume the image data.
 

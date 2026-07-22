@@ -2,6 +2,19 @@
 
 You've called services from the client side; now you'll build the side that actually does the work — the service server — and define your own custom service message when the standard ones don't fit.
 
+The sequence below shows why the server doesn't care who's asking: a CLI call and a Python client hit the exact same callback and get the exact same response shape back.
+
+```mermaid
+sequenceDiagram
+    participant CLI as ros2 service call
+    participant PC as Python client (Unit 5)
+    participant Srv as MinimalService (/add_two_ints)
+    CLI->>Srv: request {a, b}
+    Srv-->>CLI: response {sum}
+    PC->>Srv: request {a, b}
+    Srv-->>PC: response {sum}
+```
+
 ## The service server
 
 A service server registers a callback under a service name and type; every time a client's request arrives, ROS invokes that callback with the request and expects a filled-in response object returned from it. Unlike a subscriber callback (which returns nothing), a service callback's return value *is* the reply sent back to the waiting client — get this wrong (return `None`, or the wrong type) and the client's call will hang or error out.

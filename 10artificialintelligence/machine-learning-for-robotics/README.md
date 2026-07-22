@@ -2,6 +2,17 @@
 
 This course teaches machine learning through the lens of a single running project: a TurtleBot4 in simulation, starting stationary and unprogrammed, that you progressively turn into a robot capable of learned navigation and camera-based perception. It moves from classical ML foundations (classification, regression, clustering, dimensionality reduction, and a first pass at neural networks) into hands-on work with real LiDAR and odometry data — collecting it, cleaning it, engineering features from it, augmenting it, and training both Ridge Regression and TensorFlow neural network models that drive the robot directly — before finishing with RGB-camera object detection using YOLOv5 and multi-object tracking with SORT.
 
+The diagram below shows how each unit's output becomes the next unit's input, from foundational concepts through to a full perception pipeline.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Introduction] --> U2[Unit 2: ML Overview]
+    U2 --> U3[Unit 3: Supervised Learning]
+    U3 --> U4[Unit 4: Supervised Learning II]
+    U4 --> U5[Unit 5: Data Augmentation & Feature Engineering]
+    U5 --> U6[Unit 6: Object Detection, Classification & Tracking]
+```
+
 1. [Introduction](01-introduction.md) — Course overview and roadmap: what the finished TurtleBot4 navigator and perception stack will look like, and why ML belongs in robotics.
 2. [Machine Learning Overview](02-machine-learning-overview.md) — Classical ML foundations: classification, training/regularization, decision trees, dimensionality reduction, clustering, and a first build-up of neural networks.
 3. [Supervised Learning](03-supervised-learning.md) — Setting up the ROS 2 project, collecting real LiDAR/odometry data from TurtleBot4, and exploring the raw dataset.

@@ -2,6 +2,16 @@
 
 The transform system (`tf2`) is one of the most common sources of confusing, hard-to-reproduce robotics bugs: a robot that "jumps," sensor data that appears in the wrong place, or a planner that silently refuses to run because a frame doesn't exist yet. This unit builds a systematic approach to inspecting and debugging the transform tree instead of guessing at frame math.
 
+The diagram below sketches this unit's example frame tree — mixing the dynamic (`odom`→`base_link`) and static (`base_link`→`lidar_link`) transforms from the code samples — and the frame_id string that must match it exactly.
+
+```mermaid
+flowchart TD
+    map -->|dynamic: localization| odom
+    odom -->|dynamic: TransformBroadcaster| base_link
+    base_link -->|static: static_transform_publisher| lidar_link
+    scan[/scan message<br/>header.frame_id/] -.->|must exactly match| lidar_link
+```
+
 ## Visualizing the frame tree
 
 Before debugging any specific transform, get the whole picture. `tf2_tools`/`tf2_ros` ships a tool that renders the entire tree of frames and how they connect:

@@ -2,6 +2,16 @@
 
 Unit 2 handled one random variable at a time. Real robot problems almost never look like that — a robot tracks debris count *and* dust level, or fuses *multiple* sensor readings about the same quantity. This unit extends probability to several random variables at once and ends with a full worked Bayesian estimation problem you could run on a real robot.
 
+The diagram below shows the position estimate being refined step by step as each LIDAR range reading is folded into the posterior.
+
+```mermaid
+flowchart LR
+    P["Prior N(1.5, 0.30 squared)"] --> R1["Update with reading 1.62"]
+    R1 --> R2["Update with reading 1.58"]
+    R2 --> R3["Update with reading 1.55"]
+    R3 --> Post["Posterior: mean refined, variance tightened"]
+```
+
 ## Joint, marginal, and conditional distributions
 Tracking two random variables at once — say `D` = debris count and `S` = dust level (low/medium/high) in a room — needs a **joint distribution** P(D, S): the probability of every (D, S) combination together. From a joint distribution you can always recover:
 

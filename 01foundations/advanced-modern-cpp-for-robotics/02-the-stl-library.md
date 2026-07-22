@@ -2,6 +2,20 @@
 
 The Standard Template Library gives you battle-tested, generic containers and algorithms so you stop hand-rolling arrays and linked lists. Picking the right container is one of the highest-leverage decisions you make when writing robotics code that has to run in real time.
 
+The flowchart below is the decision process to walk through before reaching for `vector` out of habit.
+
+```mermaid
+flowchart TD
+    Start["Need a container?"] --> Q1{"Lookup by key or by position?"}
+    Q1 -->|position| Q2{"Random access needed?"}
+    Q1 -->|key| Q3{"Need sorted key order?"}
+    Q2 -->|"yes, append at back"| Vector["std::vector"]
+    Q2 -->|"yes, push/pop both ends"| Deque["std::deque"]
+    Q2 -->|"no, frequent mid-insert"| List["std::list"]
+    Q3 -->|yes| Map["std::map / std::set"]
+    Q3 -->|"no, just fast lookup"| UMap["std::unordered_map"]
+```
+
 ## Containers overview
 A container is a generic class template that stores a collection of objects. STL containers fall into two families: **sequence containers** (ordering is by position — array, vector, deque, list, forward_list) and **associative containers** (ordering/lookup is by key — set, map, and their `multi`/`unordered` variants). All of them are template classes, so `std::vector<int>` and `std::vector<Pose>` share the same implementation but hold different types.
 

@@ -2,6 +2,18 @@
 
 Unit 3 gave you a raw sensor dataset; this unit turns it into deployed models. You'll clean and scale the data, engineer spatial features from raw LiDAR, train both a Ridge Regression model and a TensorFlow neural network on the raw and feature-engineered variants, and wire the result back into ROS 2 as a live velocity-publishing node.
 
+The diagram below traces this unit's full pipeline from raw dataset to a deployed velocity-publishing ROS 2 node.
+
+```mermaid
+flowchart LR
+    Raw[Raw Dataset] --> Prep[Preprocessing & Scaling]
+    Prep --> Feat[Feature Engineering: Regions]
+    Feat --> Aug[Mirroring Augmentation]
+    Aug --> Train[Train Ridge / TensorFlow NN]
+    Train --> Node[ROS 2 Inference Node]
+    Node --> CmdVel[/cmd_vel/]
+```
+
 ## Data preprocessing
 Raw LiDAR readings need cleaning before they're usable: invalid returns (`inf`, `nan`, or sensor-specific error codes) must be replaced with a sensible fill value (often the sensor's max range, since an invalid return usually means "no obstacle within range"), and columns that don't carry signal (timestamps, frame IDs) get dropped.
 

@@ -2,6 +2,20 @@
 
 With perception producing structured facts (Unit 3), this unit covers the other half of getting a robot from A to B intelligently: turning a goal — whether a coordinate or a natural-language instruction — into a sequence of motion commands, and adjusting that plan as new perception arrives.
 
+The flowchart below traces an instruction from parsing through the ambiguity check to navigation and the obstacle-triggered replan loop.
+
+```mermaid
+flowchart TD
+    Instr[Language instruction] --> Parse[instruction_to_goal: LLM parses to x, y, location_name]
+    Parse --> Check{location_name known?}
+    Check -- no --> Clarify[Return status: clarify]
+    Check -- yes --> Nav[navigation_agent: send goal to nav stack]
+    Nav --> Obs{nearest_obstacle_m < 0.3?}
+    Obs -- yes --> Replan[Cancel goal, replan]
+    Obs -- no --> Continue[Continue navigating]
+    Replan --> Nav
+```
+
 ## Goal representations
 Navigation agents need a goal to aim for. In classical robotics that goal is almost always a coordinate (`x, y, theta` in some map frame), produced by a planner like Nav2's `NavigateToPose`. An LLM-driven navigation agent adds a translation step in front of that: turning a language instruction into the same coordinate (or a sequence of waypoints).
 

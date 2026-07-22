@@ -2,6 +2,17 @@
 
 Robots constantly make decisions ("is the path clear?") and repeat actions ("keep driving until you reach the goal"). This unit covers the control-flow tools — `if`/`else`, `switch`, and the three loop forms — that let you express that logic in C++.
 
+The diagram below traces the decision logic of the `front_distance` example, showing how an `if`/`else if`/`else` chain routes a single sensor reading to one of three outcomes:
+
+```mermaid
+flowchart TD
+    Start["Read front_distance"] --> D1{"< 0.15 m?"}
+    D1 -- Yes --> Stop["STOP: obstacle too close"]
+    D1 -- No --> D2{"< 0.5 m?"}
+    D2 -- Yes --> Slow["Slow down"]
+    D2 -- No --> Clear["Path clear"]
+```
+
 ## Conditional statements
 `if`/`else if`/`else` branch on boolean expressions, exactly like in Python or C, just with braces instead of indentation defining scope.
 

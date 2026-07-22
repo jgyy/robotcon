@@ -2,6 +2,23 @@
 
 Storing data is only half the story — a robot has to make decisions and repeat actions. This unit covers the two control-flow tools every maze-solving program needs: branching on what the robot senses, and looping until it reaches the exit.
 
+The flowchart below combines this unit's `if`/`elif`/`else` branching with the `while` loop that repeats it until the robot stops.
+
+```mermaid
+flowchart TD
+    Start([Start: steps = 0]) --> Check{reached_exit or steps >= max_steps?}
+    Check -- No --> Sense{front_clear?}
+    Sense -- Yes --> Forward[move = forward]
+    Sense -- No --> Left{left_clear?}
+    Left -- Yes --> TurnLeft[move = turn_left]
+    Left -- No --> TurnRight[move = turn_right]
+    Forward --> Step["take_step(move); steps += 1"]
+    TurnLeft --> Step
+    TurnRight --> Step
+    Step --> Check
+    Check -- Yes --> End([Stop])
+```
+
 ## if / elif / else
 
 Python's conditional syntax drops the parentheses and braces you'd use in C++, and uses indentation instead of `{}` to mark a block:

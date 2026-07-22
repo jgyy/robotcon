@@ -2,6 +2,17 @@
 
 This unit and the next form the course's capstone: a single project that forces navigation, perception, and manipulation to work together instead of being practiced as isolated demos. Part 1 covers scoping the project and building its first half — getting the robot to a search area and detecting a target object within it.
 
+The diagram below shows the state machine this part of the project builds, and the conditions that move it between states.
+
+```mermaid
+stateDiagram-v2
+    [*] --> NAVIGATE_TO_SEARCH_ZONE
+    NAVIGATE_TO_SEARCH_ZONE --> SCAN_FOR_OBJECT: nav goal complete
+    SCAN_FOR_OBJECT --> SCAN_FOR_OBJECT: detection streak < 5
+    SCAN_FOR_OBJECT --> APPROACH_OBJECT: detection streak >= 5
+    APPROACH_OBJECT --> [*]: continued in Part 2
+```
+
 ## The project: search, approach, retrieve
 
 The task: starting from a known dock position, the robot must navigate to a search zone on a pre-built map (Unit 3), scan for a target object using the camera (Unit 6, backstopped by blob tracking from Unit 5 if you want a simpler color-based target), and — once found — approach and prepare to interact with it. Part 2 will finish the job by actually picking it up with MoveIt (Unit 7) and returning it to the dock. You're free to substitute "point at it" or "push it" for "pick it up" if you're working on a Burger without a manipulator — the navigation and perception integration is the part that matters most here.

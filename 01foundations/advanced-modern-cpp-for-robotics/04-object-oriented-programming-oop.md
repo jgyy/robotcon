@@ -2,6 +2,22 @@
 
 Robotics software is built from hierarchies: every driver "is a" `Sensor`, every planner "is a" `Plan`. This unit covers the OOP tools — composition, inheritance, and polymorphism — that let you model those relationships cleanly, and the pitfalls (slicing, missing virtual destructors) that trip up newcomers to C++'s specific flavor of OOP.
 
+The diagram below places this unit's two relationship kinds — "has-a" composition and "is-a" inheritance — side by side with the polymorphic call that only inheritance enables.
+
+```mermaid
+flowchart TD
+    subgraph Composition["has-a (composition)"]
+        MobileRobot --> Odometry
+        MobileRobot --> Imu
+    end
+    subgraph Inheritance["is-a (inheritance)"]
+        Sensor["Sensor (abstract)"] --> Lidar
+        Sensor --> ImuSensor["Imu"]
+        Actuator --> ServoMotor
+    end
+    Caller["printReading(const Sensor&)"] -->|"polymorphic call: read()"| Sensor
+```
+
 ## Composition
 Composition means building a class out of other objects as members ("has-a") rather than through inheritance ("is-a"). It's generally preferred over inheritance for code reuse because it keeps classes loosely coupled and avoids fragile hierarchies.
 

@@ -2,6 +2,17 @@
 
 Unit 5 covered CSS fundamentals; this unit covers the layout attributes that turn a stack of styled elements into an actual panel — controls arranged in rows, sensor readouts grouped in a grid — and makes that panel adapt to different screen sizes.
 
+The diagram below shows how the panel's layout is composed from flexbox and grid, then adapted by a media query for narrow screens.
+
+```mermaid
+flowchart TD
+    Panel[Robot Panel Layout] --> Flex[Flexbox: button row]
+    Panel --> Grid[Grid: sensor dashboard]
+    Panel --> MQ{Screen width <= 600px?}
+    MQ -->|No| Desktop[3-column grid, row of buttons]
+    MQ -->|Yes| Mobile[1-column grid, stacked buttons]
+```
+
 ## Creating structured pages
 Flexbox is the workhorse for one-dimensional layout — arranging a row of buttons, or a column of status lines:
 

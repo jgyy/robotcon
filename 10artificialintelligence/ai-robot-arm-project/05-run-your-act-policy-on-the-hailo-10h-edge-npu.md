@@ -2,6 +2,19 @@
 
 The final unit takes the ACT policy you trained and deployed in Units 3-4 and moves inference onto a dedicated edge AI accelerator — a Hailo NPU attached to a Raspberry Pi — so the arm can run its policy without a laptop or cloud GPU in the loop at all.
 
+The flowchart below traces the checkpoint through export, compilation, and validation, including the loop back to recompiling when quantized outputs drift too far from the float model.
+
+```mermaid
+flowchart TD
+    CKPT[Trained ACT checkpoint] --> Export[Export to ONNX]
+    Export --> Compile[Quantize &amp; compile for<br/>Hailo-10H → .hef file]
+    Compile --> Validate{Quantized output matches<br/>float model on held-out data?}
+    Validate -->|No, drifted too far| Recal[Use representative calibration<br/>data from real observations]
+    Recal --> Compile
+    Validate -->|Yes| Deploy[Deploy on Raspberry Pi<br/>+ Hailo runtime]
+    Deploy --> Eval[Compare latency &amp; success rate<br/>vs Unit 4 baseline]
+```
+
 ## Why an edge NPU
 
 A Raspberry Pi's CPU can run a small ACT policy, but slowly and with high, inconsistent latency — bad news for a real-time control loop. An edge NPU like the Hailo-10H is a dedicated chip built for neural-network inference: it offloads the matrix-multiply-heavy forward pass of your model to hardware designed for exactly that, giving you much higher and more predictable frames-per-second than the Pi's general-purpose CPU, at a fraction of the power draw of a discrete GPU. This is the same "run trained models cheaply and locally" trade you see across embedded AI generally — you already trade accuracy/flexibility for efficiency when you go from a big server GPU to a laptop; the Hailo module pushes that trade one step further, onto a battery-friendly, arm-mountable board.

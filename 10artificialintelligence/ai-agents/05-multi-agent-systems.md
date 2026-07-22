@@ -2,6 +2,26 @@
 
 A single agent handles one robot's sense-think-act loop. This unit covers what changes when several agents — possibly on different robots — need to share information, divide work, and avoid stepping on each other, which is the last piece needed before the capstone.
 
+The diagram below contrasts the three topologies' information flow: a single coordinator, an all-to-all mesh, and one leader directing followers.
+
+```mermaid
+flowchart LR
+    subgraph Centralized
+        C[Coordinator] --> A1[Agent 1]
+        C --> A2[Agent 2]
+        C --> A3[Agent 3]
+    end
+    subgraph Decentralized
+        D1[Agent 1] --- D2[Agent 2]
+        D2 --- D3[Agent 3]
+        D3 --- D1
+    end
+    subgraph "Leader-Follower"
+        L[Leader] --> F1[Follower 1]
+        L --> F2[Follower 2]
+    end
+```
+
 ## System topologies
 Multi-agent systems are usually classified by how control and information flow between agents:
 

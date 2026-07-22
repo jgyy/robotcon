@@ -2,6 +2,19 @@
 
 A robot is only as good as what it can perceive. This unit surveys the sensors you'll meet most often on wheeled and arm robots — lidars, point clouds, cameras, encoders, and IMUs — and shows how their data reaches your code through ROS messages.
 
+The diagram below shows how each physical sensor's raw signal is packaged into a standard ROS message type and published on a topic before any of your code can use it.
+
+```mermaid
+flowchart LR
+    Lidar[Lidar] -->|sensor_msgs/LaserScan| ScanTopic[/scan topic/]
+    Camera[Camera] -->|sensor_msgs/Image| ImageTopic[/image_raw topic/]
+    Encoder[Wheel Encoders] -->|tick counts| OdomNode[Odometry-computing node]
+    IMU[IMU] -->|sensor_msgs/Imu| ImuTopic[/imu/data topic/]
+    ScanTopic --> YourNode[Your ROS Node]
+    ImageTopic --> YourNode
+    ImuTopic --> YourNode
+```
+
 ## Proprioceptive vs. exteroceptive sensors
 
 It helps to sort sensors into two families:

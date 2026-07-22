@@ -2,6 +2,17 @@
 
 With the electronics chosen and the software driving them, this unit gives the robot a body: designing individual chassis parts in CAD, assembling them, and constraining how they fit together.
 
+The diagram below shows the recommended bottom-up order for building the assembly, adding one constrained component at a time on top of the fixed chassis reference.
+
+```mermaid
+flowchart TD
+    Base[Chassis base plate: fixed reference] --> Motors[Mate motors: fastened]
+    Motors --> Wheels[Mate wheels: revolute]
+    Wheels --> Battery[Position battery: fastened]
+    Battery --> Compute[Position compute board: fastened]
+    Compute --> Sensors[Position sensor mounts: fastened]
+```
+
 ## Part creation
 CAD (computer-aided design) tools let you model each physical piece of the robot — chassis plate, motor mounts, sensor brackets — as precise, parametric 3D geometry rather than a rough sketch. The workflow is broadly the same across tools (Onshape, Fusion, FreeCAD): sketch a 2D profile on a reference plane, then use an operation like *extrude* to turn that profile into a solid, and add features like holes, fillets, or cutouts on top of it.
 

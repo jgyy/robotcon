@@ -2,6 +2,18 @@
 
 You now have a Summit XL that maps and navigates indoors, localizes and navigates outdoors via GPS, detects and recognizes people with two independent sensors, and ties it all together into a reactive patrol loop. This closing unit points at where to take that foundation next.
 
+The diagram below maps the finished project to the main directions covered in this unit.
+
+```mermaid
+flowchart TD
+    Foundation[Working patrol robot: nav + detection + patrol loop] --> Nav[Deepen navigation tuning]
+    Foundation --> Loc[Improve localization robustness]
+    Foundation --> Perc[Upgrade perception: DNN detector]
+    Foundation --> Multi[Multi-robot patrol]
+    Foundation --> Safety[Safety & real-world review]
+    Foundation --> Portfolio[Build portfolio extension]
+```
+
 ## Where to go deeper
 
 Every unit here used the simplest workable version of its topic on purpose:

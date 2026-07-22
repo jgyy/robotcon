@@ -2,6 +2,18 @@
 
 This course picks up where a first ROS 2 course leaves off and goes deep on the machinery that turns a handful of nodes into a real, maintainable robot system: composing launch files across Python, XML, and YAML; declaring and reacting to node parameters at runtime; structuring nodes as managed lifecycle nodes the way Nav2 does; and understanding the Quality of Service policies and DDS middleware that determine whether two nodes can actually talk to each other. It assumes you can already write and build an `rclcpp` C++ node — the focus here is everything around that node, not how to write one from scratch.
 
+The diagram below shows how each unit builds on the previous one, moving from launch-file composition up through the DDS middleware that underpins everything above it.
+
+```mermaid
+flowchart LR
+    U1["Unit 1: Course Introduction"] --> U2["Unit 2: Advanced Launch Files"]
+    U2 --> U3["Unit 3: XML and YAML Launch Files"]
+    U3 --> U4["Unit 4: Node Parameters"]
+    U4 --> U5["Unit 5: Lifecycle Nodes"]
+    U5 --> U6["Unit 6: Quality of Service"]
+    U6 --> U7["Unit 7: Understanding DDS"]
+```
+
 1. [Course Introduction](01-course-introduction.md) — What the course covers, a parameter-driven speed-control demo, and what you should already know before starting.
 2. [Advanced Launch Files](02-advanced-launch-files.md) — Composing nested, modular launch files and passing arguments and parameters through them.
 3. [XML and YAML Launch Files](03-xml-and-yaml-launch-files.md) — Writing the same launch description in Python, XML, and YAML, and choosing between them.

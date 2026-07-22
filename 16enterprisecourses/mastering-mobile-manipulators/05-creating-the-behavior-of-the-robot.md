@@ -2,6 +2,29 @@
 
 You now have three working capabilities — navigate, plan/execute arm motion, grasp — each callable from Python. This unit ties them together into one coherent robot behavior using a state machine, so "go get the object and bring it to the box" becomes a single, restartable, inspectable process instead of a hand-run sequence of scripts.
 
+The state diagram below shows the happy-path pick-and-place states alongside the shared recovery states that failure outcomes route into instead of each state handling its own recovery.
+
+```mermaid
+stateDiagram-v2
+    [*] --> NavigateToObject
+    NavigateToObject --> DetectObject: arrived
+    DetectObject --> PlanGrasp: object found
+    PlanGrasp --> PickObject: grasp valid
+    PickObject --> NavigateToBox: grasped
+    NavigateToBox --> PlaceObject: arrived
+    PlaceObject --> [*]: placed
+
+    NavigateToObject --> RetryState: failed
+    DetectObject --> RetryState: failed
+    PlanGrasp --> RetryState: failed
+    PickObject --> ReturnHomeState: failed
+    NavigateToBox --> RetryState: failed
+    PlaceObject --> ReturnHomeState: failed
+
+    RetryState --> NavigateToObject: retry
+    ReturnHomeState --> [*]: safe stop
+```
+
 ## Why a state machine, and not just a linear script
 
 A plain top-to-bottom script for "navigate → detect → grasp → navigate → place" works right up until something fails partway — a grasp misses, navigation gets stuck, perception times out. A state machine makes failure a first-class part of the design instead of an afterthought:

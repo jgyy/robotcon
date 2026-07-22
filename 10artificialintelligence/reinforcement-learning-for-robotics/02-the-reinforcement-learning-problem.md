@@ -2,6 +2,18 @@
 
 This unit gives you the vocabulary the rest of the course runs on. You'll go from the simplest possible decision problem (a multi-armed bandit) to the full formalism (a Markov Decision Process) and the equation that ties value to reward (the Bellman equation).
 
+The diagram below traces how a policy's choice of action feeds into the transition and reward that the Bellman equation folds back into a state's value.
+
+```mermaid
+flowchart LR
+    S["State s"] -->|"policy π"| A["Action a"]
+    A -->|"transition P"| SP["Next state s'"]
+    A -->|"reward R(s,a,s')"| Rw["Reward r"]
+    SP --> V["Bellman: V(s) = r + γV(s')"]
+    Rw --> V
+    V -.recursion.-> S
+```
+
 ## The multi-armed bandit problem
 Imagine a row of slot machines ("one-armed bandits"), each with an unknown, fixed probability of paying out. You get a fixed number of pulls and want to maximize total payout. There is no notion of "state" here — pulling one arm doesn't change what any arm pays out next time — which makes the bandit the purest form of the **exploration vs. exploitation** trade-off: do you keep pulling the arm that has paid out best so far, or do you spend pulls testing arms you know less about?
 

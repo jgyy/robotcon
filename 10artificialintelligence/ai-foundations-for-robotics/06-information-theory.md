@@ -2,6 +2,15 @@
 
 Decision theory told you how to act on a posterior; information theory gives you the tools to measure *how uncertain* that posterior is, and — as the payoff at the end of this unit — hands you the standard loss function used to train the logistic regression model in Unit 7.
 
+The diagram below shows how entropy and KL divergence combine into cross-entropy, the loss function used to train classifiers.
+
+```mermaid
+flowchart LR
+    Hp["Entropy H(p): true uncertainty"] --> CE["Cross-Entropy H(p,q)"]
+    KL["KL Divergence D_KL(p||q): wasted bits"] --> CE
+    CE --> Loss["Training loss for classifiers (Unit 7)"]
+```
+
 ## Information content and entropy
 The **information content** (or "surprise") of an event with probability p is defined as `I(x) = -log₂ P(x)`. Rare events (small p) carry high information — learning that a low-probability event occurred tells you a lot; a near-certain event (p close to 1) carries almost none. **Entropy** is the *expected* information content of a random variable — the average number of bits of surprise you'd get from observing it:
 

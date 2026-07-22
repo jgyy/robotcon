@@ -2,6 +2,17 @@
 
 You now know how to build every major piece of a ROS system. This unit is about what to do when one of those pieces doesn't behave — the tool layer from Unit 2 that turns a silent, distributed, multi-process system back into something you can actually reason about.
 
+The flowchart below maps each symptom this unit covers to the tool best suited to diagnose it.
+
+```mermaid
+flowchart TD
+    Problem{What's the symptom?} -->|Need historical/rare bug data| Bag[ros2 bag record / play]
+    Problem -->|Too much/too little log noise| Log[Adjust log level & filter]
+    Problem -->|Numeric value looks wrong over time| Plot[Live topic plotting]
+    Problem -->|Nodes not connecting| Graph[Node graph visualizer]
+    Problem -->|Spatial data hard to interpret| RViz[RViz 3D display]
+```
+
 ## Logging: levels and filtering
 Every `RCLCPP_*` (or `ROS_*` in ROS 1) macro takes a severity level — `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL` — and your node's logger can be configured to only emit at or above a chosen level, so verbose `DEBUG` output doesn't drown a running system by default but is there when you need it. You can also filter and search aggregated logs from the CLI across all running nodes, which is faster than tailing individual terminal windows once you have more than two or three nodes running. A good habit: use `DEBUG` liberally during development for values you'd want to inspect, `WARN` for recoverable-but-suspicious conditions (e.g. a parameter defaulted because it was unset), and `ERROR` only for things that actually broke behavior.
 

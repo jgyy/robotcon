@@ -2,6 +2,23 @@
 
 This is the capstone: one program that combines variables, conditionals, loops, and the `TurtleBot` class from Units 1-4 to actually solve a maze, instead of solving small isolated exercises about each piece.
 
+The flowchart below traces the right-hand-rule algorithm implemented in `solve()` below, one full iteration of its `while` loop.
+
+```mermaid
+flowchart TD
+    Start([Start: steps = 0]) --> Check{At exit or steps >= max_steps?}
+    Check -- No --> Front{Wall ahead?}
+    Front -- No --> TurnR[turn_right]
+    TurnR --> RightCheck{Wall ahead now?}
+    RightCheck -- Yes --> TurnLL["turn_left twice (face original way)"]
+    RightCheck -- No --> Align
+    Front -- Yes --> Align["while wall ahead: turn_left"]
+    TurnLL --> Align
+    Align --> StepFwd["step_forward(); steps += 1"]
+    StepFwd --> Check
+    Check -- Yes --> End([Return solved, steps])
+```
+
 ## The maze
 
 Represent the maze as a grid of strings, same as earlier units — `"open"` cells the robot can enter, `"wall"` cells it can't, and one `"exit"` cell that ends the run:

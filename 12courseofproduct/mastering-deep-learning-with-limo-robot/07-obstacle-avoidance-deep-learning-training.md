@@ -2,6 +2,20 @@
 
 This closing unit brings everything together into one end-to-end pipeline: collect real driving data from LIMO, turn it into a labeled training set, train an AlexNet-style CNN to predict a safe driving action from a camera image, and deploy the trained model back onto the robot as a controller.
 
+The diagram below traces the full behavior-cloning loop this unit builds, from driving data collection through to a deployed controller that can generate more data for future retraining:
+
+```mermaid
+flowchart LR
+    A[Teleop / Safe Policy Driving] --> B[Camera Frame + cmd_vel Logging]
+    B --> C["Labeled Dataset<br/>(left / straight / right)"]
+    C --> D[Train AlexNet-style CNN]
+    D --> E[Saved Model]
+    E --> F[Inference Node on LIMO]
+    F --> G[Predicted Action]
+    G --> H[Published Twist Command]
+    H --> A
+```
+
 ## The task: learned obstacle avoidance
 
 Instead of hand-tuning a reactive obstacle-avoidance controller from LiDAR ranges, this approach learns a mapping directly from **camera image → driving action** (e.g. turn left, go straight, turn right, or a continuous steering value), trained on examples of a human (or a scripted safe policy) driving the robot around obstacles. This is a classic instance of **behavior cloning** — the model is only ever as good as the driving behavior it was trained to imitate, so the quality and diversity of your collected data matters more than almost any architectural choice.

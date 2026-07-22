@@ -2,6 +2,27 @@
 
 Unit 2 got you a MoveIt config you can drive by hand in RViz. A real application can't have a human dragging markers — this unit is about calling motion planning from Python so it can be triggered programmatically, which is what your eventual pick-and-place state machine will do.
 
+The sequence below shows the request/response pattern behind every programmatic move: your node sets a goal, asks MoveIt to plan, checks the result, and only then hands the trajectory to the controller for execution.
+
+```mermaid
+sequenceDiagram
+    participant Node as Python Node
+    participant MoveIt as MoveGroup Interface
+    participant Ctrl as Joint Trajectory Controller
+
+    Node->>MoveIt: set_start_state_to_current_state()
+    Node->>MoveIt: set_goal_state(pose or named config)
+    Node->>MoveIt: plan()
+    alt planning succeeded
+        MoveIt-->>Node: trajectory
+        Node->>Ctrl: execute(trajectory)
+        Ctrl-->>Node: execution result
+    else planning failed
+        MoveIt-->>Node: failure
+        Node->>Node: log failure and retry / abort
+    end
+```
+
 ## The MoveGroup interface
 
 MoveIt exposes its planning pipeline as a ROS 2 action server (`move_group`, using the `MoveGroup` action) plus a set of services for scene management. Rather than talking to that action directly, you normally use a Python wrapper — `moveit_commander` in older MoveIt, or the `moveit_py`/`MoveGroupInterface` bindings in current MoveIt 2 — that hides the action/goal bookkeeping behind method calls:

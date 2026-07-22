@@ -2,6 +2,23 @@
 
 Robots in a shared building share it with people. This unit covers how RMF represents humans and human-operated systems so the traffic scheduler and task dispatcher can account for them, not just robot-to-robot interaction.
 
+The diagram below shows the three human-facing mechanisms this unit covers: registering a non-responsive human participant, the operator panel touchpoint, and the emergency-alarm override.
+
+```mermaid
+flowchart LR
+    Human["Human / cart with
+badge or app"] --> Register["register_participant
+(responsive=False)"]
+    Register --> Scheduler["Traffic Scheduler"]
+    RobotTask["Robot itinerary request"] --> Scheduler
+    Scheduler --> Route["Robot routes around
+claimed human space"]
+    Panel["rmf-panel-js Operator"] -- "dispatch / pause" --> Core["RMF Core"]
+    Alarm["/fire_alarm_trigger"] --> Adapter["Fleet Adapter callback"]
+    Adapter --> Reroute["Interrupt & reroute
+to safe waypoint"]
+```
+
 ## Humans as participants, not obstacles
 
 Purely reactive obstacle avoidance (stop or swerve when something is detected in the way) is necessary but not sufficient for shared human-robot spaces — it handles the immediate collision case but not the coordination case: a robot shouldn't even *plan* to occupy a lift or corridor a human operator has flagged as currently in use. RMF supports registering humans (or human-driven vehicles/carts) as schedule participants with their own reserved itineraries, the same mechanism robots use to negotiate with each other.

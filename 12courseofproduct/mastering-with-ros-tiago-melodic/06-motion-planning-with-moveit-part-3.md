@@ -2,6 +2,16 @@
 
 The last MoveIt unit covers the two things basic pose-target planning doesn't give you: motion that follows a precise straight-line path, and motion that's constrained along the way rather than just at the destination. Together these get you close to a real pick-and-place capability.
 
+The diagram below lays out the manual pick-and-place sequence this unit builds toward, chaining Cartesian and pose-target moves around the grasp.
+
+```mermaid
+flowchart TD
+    A[Cartesian approach to object] --> B[Close gripper group]
+    B --> C["Cartesian vertical retreat (orientation constraint)"]
+    C --> D[Pose-target transit to drop location]
+    D --> E[Open gripper]
+```
+
 ## Cartesian paths
 
 `set_pose_target` plans *a* path to a goal — not necessarily a straight one. When you need the end effector to travel a specific line (approaching an object straight-on, or lifting an object vertically without tipping it), use `compute_cartesian_path`, which plans through a list of waypoints and reports back how much of the path it actually managed to complete:

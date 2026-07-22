@@ -2,6 +2,18 @@
 
 Indoor navigation relies on walls to build a map against; outdoors there often aren't any. This unit switches Jackal's navigation source from laser-built maps to GPS, and shows how to fuse that global signal with the odometry and IMU you already have.
 
+The diagram below shows how GPS, IMU, and wheel odometry are fused into a single drift-corrected estimate before being handed to the navigation stack.
+
+```mermaid
+flowchart LR
+    GPS[Raw GPS Fix] --> NavsatTransform[navsat_transform_node]
+    IMU[IMU Data] --> EKF[EKF - robot_localization]
+    Odom[Wheel Odometry] --> EKF
+    NavsatTransform --> EKF
+    EKF --> FusedOdom[Fused Odometry in odom frame]
+    FusedOdom --> NavGoal[BasicNavigator.goToPose]
+```
+
 ## Why Outdoor Navigation Is a Different Problem
 
 Outdoors, laser SLAM loses most of its value — open fields and roads give the scanner little structure to match against, and a small map-frame drift that's invisible in a 4x4 metre room becomes meters of error across a 100 metre field. What you have instead is a global reference: GPS. The trade-off flips: GPS gives you drift-free *global* position but is noisy and updates slowly (often 1-10 Hz with meter-level accuracy), while odometry and the IMU give you smooth, high-rate *local* motion that drifts unbounded over time. Good outdoor navigation blends both rather than picking one.

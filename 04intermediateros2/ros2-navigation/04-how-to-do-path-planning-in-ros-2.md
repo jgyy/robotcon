@@ -2,6 +2,26 @@
 
 With a map and a localized robot in place, this unit covers the part that actually gets the robot moving: computing a route (global planning), following it safely (local control), and the behaviors that keep both robust. You'll also learn the two ways — CLI and code — to actually send a robot somewhere.
 
+The diagram below shows the action-based request/feedback/result exchange that happens every time a `NavigateToPose` goal is sent, and how it fans out to the planner and controller servers.
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant BT as bt_navigator
+    participant Planner as planner_server
+    participant Controller as controller_server
+    Client->>BT: NavigateToPose goal
+    BT->>Planner: request global path
+    Planner-->>BT: path
+    BT->>Controller: follow path
+    loop until goal reached
+        Controller-->>BT: feedback (distance remaining)
+        BT-->>Client: feedback
+    end
+    Controller-->>BT: path complete
+    BT-->>Client: result (success/failure)
+```
+
 ## Launching path planning for your robot
 
 Path planning in Nav2 is split across two servers working together, both usually brought up via `nav2_bringup`'s navigation launch file alongside the lifecycle manager that activates them:

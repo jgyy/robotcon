@@ -2,6 +2,22 @@
 
 Where Unit 2 learned to copy a demonstrator, this unit learns from reward instead — the policy improves through its own trial and error, evaluated against a task objective rather than a fixed set of labeled examples. Actor-critic methods are the RL family most commonly paired with continuous-control robotics tasks like pick-and-place, and they'll give you a second lens (reward-driven, rather than imitation-driven) for the ALOHA work in Unit 4.
 
+The sequence diagram below shows one timestep of the actor-critic loop: how the critic's advantage estimate is computed and fed back to update the actor.
+
+```mermaid
+sequenceDiagram
+    participant Env as Environment
+    participant Actor as Actor π(a|s)
+    participant Critic as Critic V(s)
+    Env->>Actor: observation (state)
+    Actor->>Env: action
+    Env->>Critic: reward, next state
+    Critic->>Critic: TD target = reward + γ·V(next state)
+    Critic->>Critic: advantage = TD target − V(state)
+    Critic->>Actor: advantage signal
+    Actor->>Actor: reinforce action ∝ advantage
+```
+
 ## Why actor-critic, and not plain policy gradient
 A basic policy-gradient method (REINFORCE) updates the policy directly using the total return of a whole episode, but that return is extremely noisy — one lucky or unlucky trajectory swings the gradient estimate a lot, which makes training slow and unstable, especially with continuous action spaces like joint torques.
 

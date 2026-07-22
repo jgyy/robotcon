@@ -2,6 +2,15 @@
 
 Part 1 planned the scaffolding; this unit fills in the actual `RobotEnv` for the Moving Cube — a cube that balances and rolls on one edge by spinning an internal disk in the roll axis. By the end you'll have a robot-level class that reads the disk's state and commands it, with no task or reward logic yet.
 
+The diagram below maps how sensor data flows in from `/joint_states` and how commands flow out to the roll disk controller.
+
+```mermaid
+flowchart LR
+    T1["/moving_cube/joint_states"] --> CB["_joints_cb(msg)"] --> J["self.joints"]
+    J --> GV["get_roll_velocity()"]
+    MV["move_joints(roll_speed)"] --> PUB["_cmd_pub.publish(Float64)"] --> T2["roll disk velocity controller"]
+```
+
 ## The Moving Cube hardware/simulation model
 
 The cube has a single revolute joint connecting the outer shell to an internal disk. Spinning that disk fast in one direction applies a reaction torque to the shell (conservation of angular momentum), which is how the cube rolls or rights itself — the same principle as a reaction-wheel or CMG-based attitude control system used on spacecraft, just applied at toy scale. Everything the `RobotEnv` needs to expose comes down to: what's the disk's current angle/velocity, and how do we command its speed.

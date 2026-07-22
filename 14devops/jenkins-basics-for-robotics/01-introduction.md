@@ -2,6 +2,20 @@
 
 This unit sets the stage for the whole course: what Jenkins actually is, where it fits in a robotics software workflow, and why a "build server" matters when your codebase already compiles fine on your laptop.
 
+The diagram below shows the robotics CI loop this course builds toward, from a developer's push to a pass/fail result on the pull request.
+
+```mermaid
+flowchart LR
+    A[Developer pushes code] --> B[Jenkins detects change]
+    B --> C[Spin up agent<br/>with right OS/toolchain]
+    C --> D[Checkout code]
+    D --> E[Build workspace<br/>colcon build]
+    E --> F[Run linters and unit tests]
+    F --> G[Simulation-based<br/>integration test]
+    G --> H[Report pass/fail to PR]
+    H --> I[Package and publish<br/>artifacts on success]
+```
+
 ## What is Jenkins?
 Jenkins is an open-source automation server, originally built for continuous integration (CI). At its core it does one thing: it watches for a trigger (a git push, a timer, a manual click) and then runs a defined sequence of steps — checkout code, build it, run tests, package it, deploy it — on a machine you control, independent of anyone's laptop. It's written in Java, runs as a long-lived server process, and is extended almost entirely through plugins: source control integrations, build tools, notification systems, cloud agents, and more.
 

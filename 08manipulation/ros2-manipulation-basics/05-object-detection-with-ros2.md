@@ -2,6 +2,24 @@
 
 Every prior unit planned to poses you typed by hand. This closing unit replaces that with real perception: detecting objects from a depth camera and feeding their positions into the pick and place pipeline from Unit 4, so the robot picks up what's actually in front of it.
 
+The sequence diagram below traces a detected object's pose from the `simple_grasping` action result through frame transformation and object selection to a grasp plan.
+
+```mermaid
+sequenceDiagram
+    participant Node as Your Node
+    participant SG as simple_grasping<br/>action server
+    participant TF as tf2 buffer
+    participant MGI as MoveGroupInterface
+
+    Node->>SG: send detection goal
+    SG-->>Node: feedback (processing point cloud)
+    SG-->>Node: result: list of detected objects (camera frame)
+    Node->>Node: select object (nearest / largest / labeled)
+    Node->>TF: transform(object_pose, "base_link")
+    TF-->>Node: object pose in base frame
+    Node->>MGI: plan pre-grasp, approach, grasp, retreat
+```
+
 ## The simple_grasping package and depth camera data
 
 `simple_grasping` is a ROS 2 package that provides basic object detection and grasp-point generation from RGB-D data — enough to bootstrap a pick and place task without writing a perception pipeline from scratch. It works from a **point cloud**: a set of 3D points, each with a position (and often color), produced by a depth camera. Before trusting detections, visualize the raw point cloud in RViz2 to confirm the camera is actually seeing the scene correctly — a `PointCloud2` display subscribed to your camera's cloud topic:

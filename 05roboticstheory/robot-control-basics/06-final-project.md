@@ -2,6 +2,19 @@
 
 This unit ties together everything from the course — dynamics-aware control (Unit 4's inverse dynamics) and kinematics (inverse kinematics, introduced here) — into a single guided project: making the 2DOF arm's end-effector follow a path defined in Cartesian space rather than joint space.
 
+The diagram below shows the full pipeline: an outer inverse-kinematics layer converts a Cartesian path into joint-space setpoints for the inner inverse-dynamics control loop from Unit 4.
+
+```mermaid
+flowchart LR
+    CARTPATH["Cartesian path x(t), y(t)"] --> IK[Inverse Kinematics]
+    IK --> QD["q_desired, qdot_desired, qddot_desired"]
+    QD --> ID[Inverse Dynamics + PD Controller]
+    Q["Measured q, qdot"] --> ID
+    ID --> TAU[tau]
+    TAU --> ARM[2DOF Arm Dynamics]
+    ARM --> Q
+```
+
 ## Introduction to the final project
 So far, every trajectory and setpoint you've worked with has been specified directly in joint angles (`q_desired`). Real tasks are almost always specified in the world/task frame instead — "move the end-effector along this line," "trace this circle" — which means you need to convert a Cartesian-space target into joint angles before any of the joint-space controllers from earlier units can track it. That conversion is inverse kinematics (IK), and combining it with inverse dynamics control (Unit 4) is exactly the standard architecture used in real manipulator controllers: an outer IK layer converts task-space goals into joint-space setpoints, and an inner inverse-dynamics-plus-PD loop tracks those setpoints against the real (nonlinear, coupled) dynamics.
 

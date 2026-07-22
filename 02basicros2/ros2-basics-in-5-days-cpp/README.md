@@ -2,6 +2,20 @@
 
 This course is a hands-on introduction to ROS 2 using the C++ client library (`rclcpp`), aimed at programmers who are new to robotics but not new to code. Starting from an empty workspace, it builds up the full core toolkit — packages and builds, topics, services, actions, multithreaded execution, node composition, and debugging — through a running Mars-rover-flavored example, so that by the end you can structure, build, run, and troubleshoot a real multi-node ROS 2 C++ system.
 
+The diagram below shows how each unit's skills build directly on the ones before it, from environment setup through to debugging a full multi-node system.
+
+```mermaid
+flowchart TD
+    U1[Unit 1: Introduction] --> U2[Unit 2: Basics]
+    U2 --> U3[Unit 3: Topics]
+    U3 --> U4[Unit 4: Services]
+    U4 --> U5[Unit 5: Multithreading]
+    U5 --> U6[Unit 6: MultiThreading Part 2]
+    U6 --> U7[Unit 7: Actions]
+    U7 --> U8[Unit 8: Node Composition]
+    U8 --> U9[Unit 9: Debugging]
+```
+
 1. [Introduction](01-introduction.md) — Course orientation, ROS 2 vs. ROS 1, environment setup, and the running rover example.
 2. [Basics](02-basics.md) — Packages, workspaces, colcon builds, your first node, and launch files.
 3. [Topics](03-topics.md) — The publish/subscribe communication channel, CLI tools, publishers, subscribers, and custom message interfaces.

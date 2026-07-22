@@ -2,6 +2,18 @@
 
 This is the capstone: everything from Units 1-5 — data generation, transfer learning, fine-tuning, multi-object discrimination, and domain randomization — gets assembled into one working robot behavior. The robot must find a target object among distractors, approach it to picking distance, and pick it up.
 
+The diagram below shows the decide stage's search/approach/pick state machine that the `on_detection` callback implements.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Search
+    Search --> Search: not target OR confidence < 0.7
+    Search --> Approach: is target AND confidence >= 0.7
+    Approach --> Approach: distance > pick_distance
+    Approach --> Pick: distance <= pick_distance
+    Pick --> Search: pick complete / next trial
+```
+
 ## Project architecture: perceive, decide, act
 Structuring the system as three loosely coupled stages keeps each piece testable on its own and mirrors how most real perception-driven manipulation stacks are built:
 - **Perceive** — the trained model (Units 4-5's multi-task classifier + locator) turns camera frames into "is the target visible, and if so where" at some steady rate.

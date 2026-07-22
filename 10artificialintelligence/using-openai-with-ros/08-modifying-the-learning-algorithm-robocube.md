@@ -2,6 +2,16 @@
 
 Unit 7 moved CartPole from tabular Q-learning to DeepQ. This unit repeats that migration for the RoboCube `TaskEnv` from Unit 5 — a slightly harder case, since RoboCube's reward landscape is less forgiving than CartPole's, which makes it a good place to learn how to tell "the algorithm is broken" apart from "training just needs more time."
 
+The flowchart below captures the diagnostic checks this unit walks through when RoboCube's DeepQ training misbehaves.
+
+```mermaid
+flowchart TD
+    A[Watch RoboCube DeepQ reward curve] --> B{What do you see?}
+    B -->|Flatlines near worst value| C[Increase exploration_fraction]
+    B -->|Oscillates wildly episode to episode| D[Lower lr or raise buffer_size]
+    B -->|Loss grows unbounded| E[Rescale/clip reward, e.g. the -200 fall penalty]
+```
+
 ## Porting RoboCube's TaskEnv observations to a DeepQ-friendly form
 
 Same move as Unit 7: stop calling `discretize()` before handing observations to the algorithm, and make sure `observation_space` bounds in the `TaskEnv` are realistic (tight bounds that don't match what the robot can actually report will bias the network's input normalization). RoboCube's 3-vector (`roll_angle`, `roll_velocity`, `disk_velocity`) needs no other change — this is the payoff of having kept `_get_obs()` returning continuous values all along and only discretizing at the algorithm boundary in Unit 5.

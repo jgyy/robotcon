@@ -5,6 +5,17 @@ This closing unit is a small hands-on project that pulls together all three test
 ## The scenario
 Build (or reuse) a tiny `bumper_stop` package: a node that subscribes to a `range` topic (a single `Float32` distance reading from a simulated proximity sensor) and publishes a `cmd_vel`-style `Twist` telling the robot to stop if the reading drops below a safety threshold, otherwise to keep moving forward at a fixed speed. This is deliberately safety-flavored — exactly the kind of node where "we never actually tested this" is not an acceptable answer.
 
+The flowchart below captures the `compute_command` decision logic that Task 1's library tests need to exercise on every branch.
+
+```mermaid
+flowchart TD
+    A[range_reading received] --> B{range_reading is None?}
+    B -->|Yes| C["return 0.0 (fail-safe stop)"]
+    B -->|No| D{range_reading < stop_threshold?}
+    D -->|Yes| E["return 0.0 (stop)"]
+    D -->|No| F["return cruise_speed"]
+```
+
 ```python
 # bumper_stop/safety.py  (pure logic, no ROS)
 def compute_command(range_reading, stop_threshold, cruise_speed):

@@ -2,6 +2,18 @@
 
 Real hardware is expensive to break and slow to iterate on; this unit gets your robot running in a physics simulator, driven by the same ROS 2 nodes and launch files you've already built, so you can develop and test without touching the physical robot.
 
+The diagram below shows why simulation needs no code changes: both the real hardware nodes and the Gazebo plugins publish and subscribe to the exact same ROS 2 topics.
+
+```mermaid
+flowchart LR
+    Nav[Navigation / Teleop] -->|"/cmd_vel"| Real[motor_driver_node]
+    Nav -->|"/cmd_vel"| Sim[Gazebo diff_drive plugin]
+    Real --> RealBot[Real wheels]
+    Sim --> SimBot[Simulated wheels]
+    RealLidar[Real LiDAR driver] -->|"/scan"| Nav
+    SimLidar[Gazebo LiDAR plugin] -->|"/scan"| Nav
+```
+
 ## Adapt URDF for Gazebo
 The URDF you wrote in Unit 7 (or exported from your Onshape/CAD assembly) describes visual and collision geometry, but a physics simulator like Gazebo needs more to actually simulate the robot realistically: correct `<inertial>` values on every link (not just the base), and typically some simulator-specific tags. Two additions matter most:
 ```xml

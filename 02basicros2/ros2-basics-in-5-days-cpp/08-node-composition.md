@@ -2,6 +2,20 @@
 
 So far, every node you've written has been its own executable and, typically, its own OS process. Node composition lets you instead load multiple nodes as **components** into a single process, sharing memory and avoiding inter-process serialization overhead. This unit covers what components are and the two ways to compose them: at run-time and at compile-time.
 
+The diagram below contrasts the separate-process arrangement you've used through Unit 7 with composition, where the same node classes are loaded as components sharing one process's memory.
+
+```mermaid
+flowchart LR
+    subgraph Before["Separate processes"]
+        P1[Process: PlantDetector] -.DDS serialize/deserialize.- P2[Process: DriveForward]
+    end
+    subgraph After["Composed in one container"]
+        Container[component_container process] --> Comp1[PlantDetector component]
+        Container --> Comp2[DriveForward component]
+        Comp1 -.intra-process, no serialization.- Comp2
+    end
+```
+
 ## What are ROS 2 components?
 
 A component is a node packaged as a shared library that exposes a standard registration entry point, instead of (or in addition to) a `main()` that runs it standalone. The same class you've been writing all course — `public rclcpp::Node` — becomes a component just by registering it as a plugin:

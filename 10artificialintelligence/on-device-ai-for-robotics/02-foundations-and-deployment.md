@@ -2,6 +2,17 @@
 
 This unit takes you through a full, minimal Edge AI pipeline end to end: train a classifier, feel the pain of relying on the cloud for inference, convert the model with TensorFlow Lite, and get it running on real Raspberry Pi hardware. It's the "hello world" of this course — small enough to complete in one sitting, but it exercises every stage you'll revisit in more depth later.
 
+The diagram below traces the full pipeline this unit walks through, from training to a working local inference loop on the Pi.
+
+```mermaid
+flowchart TD
+    A[Train Keras Model] --> B[Wire Up Cloud Inference Endpoint]
+    B --> C[Measure Round-Trip Latency and Feel the Pain]
+    C --> D[Convert Model to TensorFlow Lite]
+    D --> E[Deploy tflite-runtime on Raspberry Pi]
+    E --> F[Run Local Inference]
+```
+
 ## Edge AI for embedded systems
 Embedded devices differ from your development workstation in three ways that dictate everything downstream: limited RAM (hundreds of MB to a few GB, not tens of GB), no or minimal GPU (inference must be efficient on CPU or a small accelerator), and a power budget (often battery-powered, so every watt of sustained draw matters). A model trained without these constraints in mind — a full-precision ResNet-50, say — will typically not even load on a Raspberry Pi 4, let alone run in real time.
 

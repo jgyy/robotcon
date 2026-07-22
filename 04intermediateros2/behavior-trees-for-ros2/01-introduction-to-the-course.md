@@ -2,6 +2,20 @@
 
 This unit sets expectations for the course: what Behavior Trees (BTs) are for, why ROS2 developers reach for them instead of state machines, and what you'll be able to build by the end. It also gets a minimal toolchain running so later units aren't blocked on setup.
 
+The diagram below traces how a single tick flows through the sample tree shown later in this unit, so you can see the "try the kitchen, otherwise recharge" logic play out step by step.
+
+```mermaid
+flowchart TD
+    A[Tick Root: Fallback] --> B[Tick Child 1: Sequence]
+    B --> C[CheckBattery]
+    C -- SUCCESS --> D[MoveToGoal: kitchen]
+    C -- FAILURE --> E[Fallback moves on]
+    D -- SUCCESS --> F[Tree SUCCESS]
+    D -- FAILURE --> E
+    E --> G[GoToChargingStation]
+    G --> H[Tree Result]
+```
+
 ## Why Behavior Trees, and why now
 
 Robot behavior logic tends to start as a handful of `if`/`else` statements and grow into an unmaintainable tangle as more edge cases, recoveries, and modes get added. Finite State Machines (FSMs) help for a while, but the number of transitions grows roughly with the square of the number of states, and adding a single new "abort and retry" rule can mean touching transitions all over the graph.

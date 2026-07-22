@@ -2,6 +2,19 @@
 
 This unit is about testing plain Python — the `robot_math.py` module from Unit 2 — with no ROS involved. These are the cheapest, fastest tests you'll write, and they should cover the bulk of your logic.
 
+The flowchart below shows how to pick the right technique from this unit for a given kind of function under test.
+
+```mermaid
+flowchart TD
+    A[What are you testing?] --> B{Returns a float?}
+    B -->|Yes| C[Use assertAlmostEqual, not assertEqual]
+    B -->|No| D{Depends on something external?}
+    D -->|Yes| E[Patch it with unittest.mock]
+    D -->|No| F{Several similar input cases?}
+    F -->|Yes| G[Use pytest.mark.parametrize]
+    F -->|No| H[Plain assertEqual / assertRaises]
+```
+
 ## Writing tests with `unittest`
 Python's standard library ships `unittest`, and it's what `ament_python`/`colcon` tooling expects to discover by default. A test file is a class of test methods, each starting with `test_`:
 

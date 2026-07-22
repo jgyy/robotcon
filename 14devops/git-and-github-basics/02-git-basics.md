@@ -2,6 +2,17 @@
 
 This is the core local workflow you will use every single day: turning a plain folder into a repository, and reliably capturing snapshots of your work as commits. Everything later in the course (branches, pull requests, collaboration) is just this loop applied more elaborately.
 
+The diagram below shows how a change moves through Git's three areas, and which command drives each transition.
+
+```mermaid
+flowchart LR
+    W[Working Directory<br/>files on disk] -- "git add" --> S[Staging Area / Index<br/>what will go in next commit]
+    S -- "git commit" --> R[Repository<br/>permanent commit history]
+    R -- "git restore --source &lt;hash&gt;" --> W
+    W -. "git diff" .-> S
+    S -. "git diff --staged" .-> R
+```
+
 ## Initial setup and initializing a repository
 
 Before your first commit, Git needs to know who you are — this identity gets baked into every commit you make, which matters once you collaborate:

@@ -2,6 +2,24 @@
 
 With a single-robot RMF stack working from Unit 2, this unit extends the setup to two robots operating in the same fleet, which is where traffic negotiation actually starts to matter.
 
+The sequence below shows how the traffic scheduler resolves two robots contending for the same pinch point rather than letting them collide.
+
+```mermaid
+sequenceDiagram
+    participant R1 as tinyRobot1
+    participant R2 as tinyRobot2
+    participant TS as Traffic Scheduler
+    R1->>TS: Request itinerary (through pinch point)
+    R2->>TS: Request itinerary (through pinch point)
+    TS->>TS: Detect time-space conflict
+    TS-->>R1: Proceed
+    TS-->>R2: Hold / reroute
+    R1->>R1: Cross pinch point
+    R1-->>TS: Itinerary complete
+    TS-->>R2: Proceed
+    R2->>R2: Cross pinch point
+```
+
 ## Why two robots changes everything
 
 With one robot, the traffic scheduler has nothing to arbitrate — it always wins any negotiation it enters. As soon as a second robot from the same fleet is added, RMF has to actually reserve non-overlapping time-space windows on the navigation graph and resolve conflicts when both robots want the same lane or waypoint at similar times. This is the first place you'll actually see RMF's traffic negotiation do work.

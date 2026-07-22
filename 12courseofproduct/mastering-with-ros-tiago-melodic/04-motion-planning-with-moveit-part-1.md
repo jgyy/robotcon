@@ -2,6 +2,19 @@
 
 This is the first of three units on MoveIt, the motion-planning framework that turns "move the gripper to this pose" into a collision-free arm trajectory. Part 1 stays entirely in the graphical interface so you build correct mental models of planning groups, planning scenes, and the plan/execute cycle before you automate any of it in Part 2.
 
+The flowchart below captures the plan-preview-execute habit this unit teaches, including the branch back to re-planning when a preview looks wrong.
+
+```mermaid
+flowchart TD
+    A[Drag interactive marker to goal pose] --> B[Choose planning group: arm / arm_torso / gripper]
+    B --> C[Hit Plan]
+    C --> D[move_group computes candidate trajectory]
+    D --> E{Preview looks safe?}
+    E -->|No| F[Adjust goal or switch planner]
+    F --> C
+    E -->|Yes| G[Hit Execute]
+```
+
 ## What MoveIt needs to plan for a robot
 
 MoveIt plans against a **kinematic model**, not the raw URDF: it needs joint limits, which joints belong to which "planning group," a self-collision matrix, and an inverse kinematics solver. For TIAGo this configuration already exists as a MoveIt config package (conventionally named something like `tiago_moveit_config`) — you don't build this from scratch, you launch it.

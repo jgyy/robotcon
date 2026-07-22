@@ -2,6 +2,15 @@
 
 This unit sets up the problem this whole course exists to solve — knowing where a robot actually is — and gives you a first taste of the machinery (Bayesian reasoning, Gaussians, recursive estimation) before the math gets formal in later units.
 
+The diagram below shows the core idea this unit builds toward: combining two independent noisy sources into a single, more confident belief.
+
+```mermaid
+flowchart LR
+    A["Wheel odometry (noisy, high variance)"] --> C["Belief (Gaussian mean, variance)"]
+    B["Lidar / GPS (noisy, lower variance)"] --> C
+    C --> D["Fused position estimate (variance lower than either input)"]
+```
+
 ## The localization problem
 
 A robot never has direct access to its own position. It only has proprioceptive sensors (wheel encoders, IMUs) that tell it roughly how it has moved, and exteroceptive sensors (lidar, cameras, GPS) that tell it roughly what it sees. Both are noisy. Wheel odometry drifts because of wheel slip and quantization error; a lidar scan match can be ambiguous in a symmetric corridor; GPS can jump meters between fixes. If you simply integrate wheel velocities over time (dead reckoning), the position estimate's error grows without bound.

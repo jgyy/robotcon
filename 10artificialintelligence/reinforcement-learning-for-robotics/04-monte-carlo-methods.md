@@ -2,6 +2,21 @@
 
 Dynamic programming in Unit 3 required a full model of the environment — you can't run it on a real robot arm whose exact transition probabilities you don't know. Monte Carlo (MC) methods drop that requirement entirely: they learn value estimates purely by sampling complete episodes and averaging the returns that were actually observed. The cost is that you need episodes to *end* before you can learn from them.
 
+The diagram below shows the first-visit Monte Carlo prediction loop: complete an episode, walk it backward to compute returns, then average those returns into the value estimate.
+
+```mermaid
+flowchart TD
+    Gen["Generate a full episode by following policy π"] --> Traj["Record trajectory: (s0,r1), (s1,r2), ..."]
+    Traj --> Back["Walk backward through episode, accumulate G = r + γG"]
+    Back --> FirstVisit{"First visit to state s this episode?"}
+    FirstVisit -->|Yes| Update["Add G to returns for s, set V(s) = average"]
+    FirstVisit -->|No| Skip["Skip (already counted)"]
+    Update --> More{"More episodes?"}
+    Skip --> More
+    More -->|Yes| Gen
+    More -->|No| Done["V converges to V^π"]
+```
+
 ## MC prediction: first-visit vs. every-visit
 **MC prediction** estimates `V^π(s)` by running the policy, recording every episode's trajectory, and averaging the return that followed each visit to `s`.
 - **First-visit MC** only counts the return following the *first* time `s` is visited in an episode.

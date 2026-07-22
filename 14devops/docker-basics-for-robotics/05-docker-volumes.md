@@ -2,6 +2,18 @@
 
 A container's writable layer disappears the moment the container is removed. For anything you actually need to keep — sensor logs, recorded bag files, maps, calibration data — you need volumes.
 
+The diagram below contrasts the three storage mechanisms a container can use and which ones actually persist data beyond the container's own life.
+
+```mermaid
+flowchart LR
+    C[Container] -->|bind mount| H[Host path: /home/user/bagfiles]
+    C -->|named volume| V[Docker-managed volume: robot-logs]
+    C -->|tmpfs mount| T[RAM-backed scratch: /tmp/scratch]
+    H --> P1[Survives container removal]
+    V --> P2[Survives container removal]
+    T --> P3[Vanishes on container stop]
+```
+
 ## Why containers lose data
 By default, all files a container writes live in its own thin writable layer, which is deleted along with the container. Prove it to yourself:
 

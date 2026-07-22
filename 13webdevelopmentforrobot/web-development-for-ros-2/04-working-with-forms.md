@@ -2,6 +2,20 @@
 
 So far your panel can only display fixed content and fire fixed commands from hardcoded buttons. Forms are how a web page collects arbitrary input from a user — a target velocity, a goal pose, a named waypoint — and this unit covers the input types you'll actually use to control a robot.
 
+The diagram below shows how the kind of value you need to collect determines which form control to reach for.
+
+```mermaid
+flowchart TD
+    A{What kind of input?} -->|Bounded numeric value| B[input type=range]
+    A -->|Fixed set of options| C[select]
+    A -->|On/off toggle| D[input type=checkbox]
+    A -->|Exactly one of several named options| E[input type=radio group]
+    B --> F[Form values]
+    C --> F
+    D --> F
+    E --> F
+```
+
 ## Forms
 A `<form>` groups a set of input controls and, in traditional web development, submits them to a server on a button click. For a robot panel you'll rarely want a full page reload on submit — instead you intercept the submit event in JavaScript (covered properly in Unit 7) and use the values directly. For now, focus on building forms whose *structure* captures the right kind of input:
 

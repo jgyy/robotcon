@@ -2,6 +2,18 @@
 
 This unit gets your hands dirty: setting up a build that produces a testable library, wiring GTest into it through CMake, and writing your first real assertions. Everything here works even on a machine with no robot or simulator attached.
 
+The diagram below traces how source code becomes a linkable library that both the real executable and a GTest binary depend on, and how that test binary flows through the `colcon` build/test loop.
+
+```mermaid
+flowchart TD
+    Src[Source files, e.g. kinematics.cpp] --> Lib[Shared library target: my_robot_core]
+    Lib --> Node[Executable: my_robot_node]
+    Lib --> Test[Test executable: test_kinematics via ament_add_gtest]
+    Test --> Build[colcon build]
+    Build --> Run[colcon test]
+    Run --> Result[colcon test-result --verbose]
+```
+
 ## CMake basics: shared libraries and linking
 
 Before you can unit-test code, the code under test usually needs to live in a library rather than directly inside an executable's `main()` — you cannot easily link a test binary against logic that is trapped inside another executable. The standard pattern is to build your logic as a shared (or static) library and link both your real executable and your test executable against it:

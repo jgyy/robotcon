@@ -2,6 +2,24 @@
 
 This unit orients you on the TIAGo platform itself before you touch a single line of control code: what the hardware looks like, how that hardware is exposed to ROS, and how to get a simulated TIAGo running so the rest of the course has something to talk to.
 
+The diagram below maps TIAGo's four hardware subsystems onto the ROS controllers, topics, and TF tree that expose them to code.
+
+```mermaid
+flowchart LR
+    subgraph Hardware
+        Base[Base - PMB2]
+        Torso[Torso lift joint]
+        Arm[7-DoF Arm]
+        Head[Head - RGB-D camera]
+    end
+    Base --> RC[ros_control controllers]
+    Torso --> RC
+    Arm --> RC
+    Head --> Topics[Image / PointCloud topics]
+    RC --> TF[TF tree via URDF]
+    Topics --> TF
+```
+
 ## What TIAGo is
 
 TIAGo ("Take It And Go") is a mobile manipulator from PAL Robotics built around four physical subsystems that you'll treat as separate-but-coordinated ROS actors for the rest of the course:

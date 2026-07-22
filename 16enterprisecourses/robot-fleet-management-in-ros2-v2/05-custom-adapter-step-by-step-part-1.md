@@ -2,6 +2,19 @@
 
 Every deployment beyond the bundled demos needs a fleet adapter tailored to your specific robot. This unit builds the skeleton of a custom fleet adapter and wires up the minimum callbacks RMF needs to consider a robot "integrated."
 
+The diagram below shows the callback interface RMF's adapter core calls into your `RobotAPI` implementation, which is the only translation layer between RMF and your robot's native interface.
+
+```mermaid
+flowchart LR
+    RMF["RMF Fleet Adapter Core"] -- "position()" --> API["MyRobotAPI"]
+    RMF -- "navigate(pose)" --> API
+    RMF -- "navigation_completed()" --> API
+    RMF -- "battery_soc()" --> API
+    API -- "current pose" --> RMF
+    API -- "SDK / REST calls" --> Robot["Robot's Native Interface"]
+    RMF --> FS["/fleet_states"]
+```
+
 ## What a fleet adapter actually is
 
 Strip away the RMF-specific vocabulary and a fleet adapter is an ordinary ROS 2 node (or, for the Python API, a Python process using `rmf_fleet_adapter`'s bindings) that implements a small, well-defined interface:

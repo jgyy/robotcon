@@ -2,6 +2,23 @@
 
 Part 2 continues the topic/message debugging case, moving from read-only inspection to writing small diagnostic nodes and scripts of your own. Where Part 1 was about querying a running system from the shell, this unit is about programmatically consuming and validating that data — the next step once command-line inspection isn't enough.
 
+The sequence below shows why a QoS mismatch is silent instead of erroring — and how the same publisher and subscriber start working the moment their QoS profiles agree.
+
+```mermaid
+sequenceDiagram
+    participant Pub as Publisher (best_effort)
+    participant Topic as /scan topic
+    participant Sub as Subscriber (reliable)
+    Pub->>Topic: publish LaserScan
+    Note over Pub,Sub: QoS mismatch — no error, no log
+    Topic--xSub: message never delivered
+    Sub->>Sub: callback never fires
+    Note over Pub,Sub: fix — match QoS (best_effort/best_effort)
+    Pub->>Topic: publish LaserScan
+    Topic->>Sub: message delivered
+    Sub->>Sub: callback fires, logs min/max/frame
+```
+
 ## Writing a throwaway subscriber node
 
 The fastest way to confirm your understanding of a topic's data is to subscribe to it yourself in a few lines of code, rather than trusting a large existing node:

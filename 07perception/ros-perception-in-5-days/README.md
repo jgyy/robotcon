@@ -2,6 +2,20 @@
 
 Perception is what turns a robot from a moving body into something that can actually understand its surroundings. This course builds that capability up in ROS 1 (Noetic), starting from raw pixels and simple color thresholding, moving through 3D point clouds and deep-learning object detection, and finishing with face recognition, person tracking, and a capstone project that fuses several of these skills together on a PhantomX hexapod. Each unit assumes you can already program and focuses on the perception concepts and the ROS/OpenCV/PCL integration glue rather than general programming syntax.
 
+The diagram below shows how each unit's skills build directly on the one before it, culminating in the Unit 9 capstone.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Perception Intro] --> U2[Unit 2: Blob Tracking]
+    U2 --> U3[Unit 3: Follow Line]
+    U3 --> U4[Unit 4: Surface & Object Recognition]
+    U4 --> U5[Unit 5: YOLO 3D Location]
+    U5 --> U6[Unit 6: Face Detection]
+    U6 --> U7[Unit 7: Face Recognition]
+    U7 --> U8[Unit 8: People Tracking]
+    U8 --> U9[Unit 9: Hexapod Capstone]
+```
+
 1. [Perception with ROS Intro](01-perception-with-ros-intro.md) — Know what you will learn in this course and how
 2. [Vision Basics Blob Tracking](02-vision-basics-blob-tracking.md) — First steps in image perception through blob tracking
 3. [Vision Basics Follow Line](03-vision-basics-follow-line.md) — Learn about OpenCV and how to use it to follow lines

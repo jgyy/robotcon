@@ -2,6 +2,17 @@
 
 Topics are the workhorse communication channel in ROS 2 — the continuous, many-to-many data streams behind sensor readings, velocity commands, and robot state. This unit takes you from inspecting topics on the command line to writing your own publishers, subscribers, and custom message types.
 
+The diagram below shows the many-to-many shape of topic communication: publishers and subscribers never reference each other directly, only the shared named, typed topic.
+
+```mermaid
+flowchart LR
+    P1[DriveForward publisher] -->|/cmd_vel| T1((cmd_vel topic))
+    S1[LaserScan sensor] -->|/scan| T2((scan topic))
+    T2 --> C1[ObstacleWatcher subscriber]
+    T1 --> C2[Rover motor driver]
+    C1 -->|stop command| T1
+```
+
 ## What is a ROS 2 topic?
 
 A topic is a named, typed data channel. Any number of nodes can publish to it and any number can subscribe — publishers and subscribers don't know about each other, only about the topic name and message type they share. This decoupling is the whole point: you can swap a simulated rover for a real one without touching the nodes that consume `/cmd_vel` or `/scan`, as long as the message types match.

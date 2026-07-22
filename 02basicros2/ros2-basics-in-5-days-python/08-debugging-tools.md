@@ -2,6 +2,21 @@
 
 With topics, services, actions, and callbacks all in your toolkit, the last practical skill is diagnosing a system when it doesn't behave as expected. This unit covers ROS 2's logging framework, RViz2 for visualizing data you can't just print, TF for understanding coordinate frames, and `ros2 doctor` for catching environment problems.
 
+The flowchart below shows the decision path this unit recommends for tracking down a misbehaving system, from a quick environment check to spatial and frame-level inspection:
+
+```mermaid
+flowchart TD
+    A[Something looks wrong] --> B[ros2 doctor --report]
+    B -->|env / network / QoS issue found| C[Fix reported issue]
+    B -->|environment looks clean| D{Can you see the data?}
+    D -->|No, need spatial view| E[RViz2: subscribe & visualize topic]
+    D -->|Data looks spatially wrong| F[Inspect TF tree: view_frames / tf2_echo]
+    E --> G[Check Fixed Frame / find missing publisher]
+    F --> G
+    C --> H[System behaving correctly]
+    G --> H
+```
+
 ## ROS 2 debugging messages
 `self.get_logger()` gives every node a leveled logger, so you're not choosing between silence and `print()` spam:
 ```python

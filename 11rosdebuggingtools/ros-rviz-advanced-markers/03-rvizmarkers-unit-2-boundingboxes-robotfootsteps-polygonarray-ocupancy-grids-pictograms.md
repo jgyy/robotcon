@@ -2,6 +2,17 @@
 
 With the basic `Marker` message under your belt, this unit walks through five visualization patterns that show up constantly in real robotics stacks: perception bounding boxes, footstep planning, region polygons, occupancy grids, and icon-based pictograms.
 
+The diagram below maps each robotics data source in this unit to the marker pattern (or built-in display) used to visualize it.
+
+```mermaid
+flowchart LR
+    Detections[Object Detector Output] --> BBox[Wireframe Bounding Box<br/>LINE_LIST in a MarkerArray]
+    FootstepPlan[Footstep Plan] --> Footsteps[Footprint Trail<br/>CUBE/ARROW + LINE_STRIP]
+    Regions[Region / Cluster Hull] --> Polygon[Closed Loop<br/>LINE_STRIP from PolygonStamped]
+    Costmap[nav_msgs/OccupancyGrid] --> Map[Built-in RViz Map Display]
+    Semantic[Semantic Label / Hazard] --> Pictogram[Icon Billboard<br/>Pictogram or TEXT_VIEW_FACING]
+```
+
 ## Dynamic bounding box arrays
 Object detectors and 3D perception pipelines typically output a list of boxes that changes every frame. Rather than a solid `CUBE` (which occludes what's inside it), draw each box as a `LINE_LIST` wireframe so you can still see the point cloud or mesh inside:
 

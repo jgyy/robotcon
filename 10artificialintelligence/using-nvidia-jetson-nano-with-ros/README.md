@@ -2,6 +2,16 @@
 
 This course is about putting deep learning directly onto a mobile robot instead of treating perception as something that happens off-board. Using the NVIDIA Jetson Nano and a JetBot-style two-wheeled robot ("Ignisbot") as the running example, you'll go from flashing the board and confirming CUDA/ROS both work, through driving the robot over ROS topics, training and deploying a collision-avoidance classifier, rosifying a person detector into a follower behavior, and finally integrating all of it into one robot that can search for a person, follow them, and avoid obstacles along the way — in simulation first, then on physical hardware.
 
+The diagram below shows how each unit's skills build directly on the previous one, culminating in the integrated mini project.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Jetson Nano Setup] --> U2[Unit 2: Move Ignisbot]
+    U2 --> U3[Unit 3: Collision Avoidance]
+    U3 --> U4[Unit 4: People Follower]
+    U4 --> U5[Unit 5: Mini Project Integration]
+```
+
 1. [Introduction Demo to NVIDIA Jetson Nano DeepLearning](01-introduction-demo-to-nvidia-jetson-nano-deeplearning.md) — Flash and verify the Jetson Nano, confirm CUDA/TensorRT are working, and connect it into a ROS network.
 2. [Basics - Move Ignisbot](02-basics-move-ignisbot.md) — Use the JetBot API to move a two-wheeled robot, wrapped as a ROS driver node that works in both simulation and on hardware.
 3. [Basics - Collision Avoidance with DeepLearning](03-basics-collision-avoidance-with-deeplearning.md) — Train Ignisbot to navigate a known environment while avoiding obstacles, using a transfer-learned classifier optimized with TensorRT.

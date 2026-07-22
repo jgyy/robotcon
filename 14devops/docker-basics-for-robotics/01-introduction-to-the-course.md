@@ -2,6 +2,25 @@
 
 This unit sets the stage: why a robotics developer should care about Docker, what the course will cover unit by unit, and a small hands-on demo so you leave with a container already running before diving into theory.
 
+The diagram below shows how Docker packages a fragile, multi-piece host setup into a single portable image that runs identically everywhere it's needed.
+
+```mermaid
+flowchart LR
+    subgraph Fragile["Fragile host setup"]
+        A[ROS distro]
+        B[System libraries]
+        C[GPU drivers]
+        D[Third-party packages]
+    end
+    A --> IMG[Docker image]
+    B --> IMG
+    C --> IMG
+    D --> IMG
+    IMG --> L[Laptop]
+    IMG --> CI[CI server]
+    IMG --> R[Robot onboard computer]
+```
+
 ## Why Docker matters in robotics
 Robotics software stacks are notoriously fragile to set up: a specific ROS distro, a specific set of system libraries, GPU drivers, and dozens of third-party packages all need to line up exactly. "Works on my machine" is a bigger problem here than in most software domains because the "machine" is often also a robot with limited storage, a specific OS image, and no internet access in the field. Docker solves this by packaging an application together with its entire runtime environment (OS libraries, dependencies, configuration) into a single, portable unit called an image. Anyone who runs that image — on a laptop, a CI server, or the robot's onboard computer — gets byte-for-byte the same environment.
 

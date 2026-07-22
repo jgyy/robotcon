@@ -2,6 +2,17 @@
 
 The Bayes Filter is the general recursive estimation framework that every filter in this course — Kalman, EKF, UKF, particle — is a special case of. This unit builds it from first principles over a discrete grid, so the predict/update logic is visible before it gets buried in Gaussian algebra in Unit 3.
 
+The diagram below traces one full predict/correct cycle of the recursion, showing exactly where uncertainty grows and where it shrinks.
+
+```mermaid
+flowchart TD
+    Bel["bel(x): current belief"] --> Pred["Prediction: apply motion model p(x_t | x_t-1, u_t)"]
+    Pred --> Wide["Uncertainty increases"]
+    Wide --> Upd["Correction: apply sensor model p(z_t | x_t)"]
+    Upd --> Narrow["Uncertainty decreases"]
+    Narrow --> Bel
+```
+
 ## The building blocks
 
 A Bayes Filter maintains a **belief** `bel(x)` — a probability distribution over possible states `x` (e.g. "which grid cell is the robot in"). It has two models:

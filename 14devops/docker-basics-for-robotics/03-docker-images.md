@@ -2,6 +2,20 @@
 
 Now that you can pull and run other people's images, this unit teaches you to build your own — the skill you'll rely on for every robotics project you containerize from here on.
 
+The diagram below follows a Dockerfile from its first instruction through the cached layers it produces to a tagged image pushed to a registry.
+
+```mermaid
+flowchart TD
+    F[FROM ubuntu:22.04] --> R1[RUN apt-get install python3]
+    R1 --> W[WORKDIR /app]
+    W --> C1[COPY requirements.txt]
+    C1 --> R2[RUN pip install -r requirements.txt]
+    R2 --> C2[COPY . .]
+    C2 --> CMD[CMD python3 main.py]
+    CMD --> TAG[docker build -t myrobot/perception:1.0]
+    TAG --> PUSH[docker push to registry]
+```
+
 ## Writing a Dockerfile
 A Dockerfile is a script of instructions for building an image, executed top to bottom. Each instruction produces a new filesystem **layer**, and Docker caches layers so unchanged steps don't need to be rerun on subsequent builds.
 

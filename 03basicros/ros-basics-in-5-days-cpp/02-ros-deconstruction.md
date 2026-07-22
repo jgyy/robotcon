@@ -2,6 +2,15 @@
 
 Before writing any node, it helps to pull ROS apart into its four layers so that when something goes wrong later you know *which layer* to go looking in. This unit builds that mental map; Units 3 onward fill in the details of each piece.
 
+The diagram below shows how the four layers relate: source code on disk becomes a running graph, which the tooling layer inspects and the documentation layer describes.
+
+```mermaid
+flowchart TD
+    FS[Layer 3: Filesystem — packages & workspace] -->|compiled & run| Graph[Layer 1: Computation Graph — nodes, topics, services, actions, params]
+    Graph -->|inspected by| Tool[Layer 2: Tooling — CLI, echo, graph viz, RViz]
+    Graph -->|interface described by| Docs[Layer 4: Documentation & Conventions]
+```
+
 ## Layer 1: the computation graph
 The computation graph is the live, running system: a set of **nodes** (processes) exchanging data over **topics** (streaming pub/sub), **services** (request/response), and **actions** (long-running goals), plus a mechanism for **parameters** (per-node or global configuration values). This is the layer you reason about when you ask "what is my robot doing right now" — and it's entirely separate from the code on disk that produced it. Two different pieces of source code can produce the same graph shape, and the same source code can produce different graphs depending on remapping and launch configuration.
 

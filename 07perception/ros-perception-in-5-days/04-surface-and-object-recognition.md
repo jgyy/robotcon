@@ -2,6 +2,18 @@
 
 This unit moves perception from 2D pixels into 3D space using point clouds — the data type that lets a robot know not just what something looks like, but where it physically is, which is essential before an arm can pick anything up.
 
+The diagram below shows how a raw point cloud is downsampled, split into the dominant surface plane and everything above it, then clustered into individual object candidates.
+
+```mermaid
+flowchart TD
+    A["PointCloud2 (/camera/depth/points)"] --> B[Voxel grid downsample]
+    B --> C[RANSAC plane segmentation]
+    C --> D["table_cloud: plane inliers"]
+    C --> E["objects_cloud: remaining points"]
+    E --> F[Euclidean clustering]
+    F --> G["Per-object cluster centroid / bbox"]
+```
+
 ## From image to point cloud
 A depth-capable camera (e.g. RGB-D) publishes `sensor_msgs/PointCloud2` on a topic such as `/camera/depth/points`. Each point carries `x, y, z` (in meters, relative to the camera frame) and often `rgb`. In Python, the PCL-backed tooling that ships alongside ROS 1 (`python-pcl`, or `pcl_ros` nodelets) lets you filter, segment, and cluster this data:
 ```python

@@ -2,6 +2,16 @@
 
 Before you can program a robot, you need a mental map of what a robot actually *is*: which parts sense the world, which parts think, and which parts act on decisions. This unit builds that map so the rest of the course (sensors, actuators, kinematics, odometry) has somewhere to attach.
 
+The diagram below shows the sense-think-act loop as a continuous cycle, where an actuator's effect on the world becomes the next thing a sensor picks up.
+
+```mermaid
+flowchart LR
+    Sense[Sense<br/>cameras, lidar, encoders, IMUs] --> Think[Think<br/>compute stack: MCU, SBC, ROS nodes]
+    Think --> Act[Act<br/>motors, servos, grippers]
+    Act --> World[World / Environment]
+    World --> Sense
+```
+
 ## The sense-think-act loop
 
 Almost every robot, from a Roomba to a warehouse arm, runs the same basic cycle:

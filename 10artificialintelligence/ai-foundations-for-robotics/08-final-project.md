@@ -2,6 +2,18 @@
 
 This capstone strings together every unit into one working pipeline: a robot that collects its own training images, trains a classifier on them (Unit 7), and wraps the classifier's raw predictions in a decision policy (Unit 5) before acting. Nothing here introduces new theory — the goal is proving to yourself that the pieces genuinely compose.
 
+The diagram below shows the full capstone pipeline, from raw images to an evaluated decision policy.
+
+```mermaid
+flowchart LR
+    Collect["Collect images: robot orbits object"] --> Prep["Preprocess: grayscale, resize, normalize"]
+    Prep --> Train["Train softmax classifier (Unit 7 pipeline)"]
+    Train --> Post["Model outputs posterior over 4 classes"]
+    Post --> Decide["Decision policy: Unit 5 loss matrix"]
+    Decide --> Action["Class label or Reject"]
+    Action --> Eval["Evaluate on held-out test set"]
+```
+
 ## Problem framing: an image classifier from scratch
 The task: build a complete image classification system that lets a robot recognize four known objects — e.g. a lamp, a ball, a plant, and a compacted debris cube — from camera images, and safely decline to guess when an image doesn't clearly match any of them (the reject option from Units 1 and 5). Framing it end-to-end up front matters: you'll touch data collection, preprocessing, training, and decision-making, and each stage's design choices constrain the next.
 

@@ -2,6 +2,25 @@
 
 Training a policy is only half the job — this unit closes the loop by running your ACT or SmolVLA checkpoint against the real follower arm, both fully locally and offloaded to a remote GPU, and talks about how to evaluate whether it's actually working.
 
+The sequence diagram below shows one control cycle of the deployment loop, and where a remote Vast.ai policy adds a network round-trip that a local policy doesn't have.
+
+```mermaid
+sequenceDiagram
+    participant Cam as Camera
+    participant Ctrl as Control Computer
+    participant Policy as Policy (local or Vast.ai)
+    participant Servo as Follower Servos
+
+    loop every control cycle (~10-50 Hz)
+        Cam->>Ctrl: image frame
+        Servo->>Ctrl: Present_Position (joint state)
+        Ctrl->>Policy: observation = {image, state}
+        Note over Ctrl,Policy: remote deployment adds<br/>network round-trip latency
+        Policy-->>Ctrl: predicted action (joint targets)
+        Ctrl->>Servo: Goal_Position
+    end
+```
+
 ## Loading a checkpoint for inference
 
 Deployment inverts the training data flow: instead of reading recorded (observation, action) pairs from disk, you read live camera frames and joint state from the hardware, feed them to the model, and write the predicted action back to the follower's servos.

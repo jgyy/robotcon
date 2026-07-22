@@ -2,6 +2,21 @@
 
 This closing unit extends the single-floor building model from Units 15-16 to multiple floors connected by a lift, tying together nearly every mechanism covered in the course: navigation graphs, transforms, lifts as building systems, and task dispatch across levels.
 
+The flowchart below traces a robot's journey across levels via the lift, and highlights that each level keeps its own navigation graph and its own Unit 7 coordinate transform.
+
+```mermaid
+flowchart TD
+    L1["Level L1
+(own nav graph + own transform)"] -- "main_lift" --> Lift{"Lift: main_lift"}
+    Lift -- "LiftRequest destination L2" --> Wait["Wait for LiftState:
+arrived + door open"]
+    Wait --> Enter["Robot enters lift"]
+    Enter --> Travel["Lift travels to L2"]
+    Travel --> Exit["Robot exits at L2"]
+    Exit --> L2["Level L2
+(own nav graph + own transform)"]
+```
+
 ## Modeling multiple levels in the traffic editor
 
 `rmf_traffic_editor` supports multiple named levels within a single building file, each with its own floor plan image, walls, and navigation graph — conceptually, each level is a separate map (like the "L1" you saw referenced in fleet configs back in Unit 3), unified under one building model:

@@ -2,6 +2,18 @@
 
 The MoveIt config from Unit 3 only knows about obstacles you described explicitly in the URDF. Real environments have objects the robot was never told about — a box someone left on the table, a person walking past. This unit adds perception to your planning scene so the planner avoids what a depth sensor actually sees, still driven entirely from RViz and launch files.
 
+The diagram below traces how depth data flows from the sensor into the planning scene and finally shapes the planned trajectory:
+
+```mermaid
+flowchart LR
+    Sensor[Depth Sensor] -->|PointCloud2| Topic[/camera/depth/points/]
+    Topic --> Updater[PointCloudOctomapUpdater]
+    Updater --> Octomap[Octomap occupancy voxels]
+    Octomap --> Scene[Planning Scene]
+    Scene --> Planner[Motion Planner]
+    Planner --> Trajectory[Collision-free trajectory around obstacle]
+```
+
 ## Why perception matters for planning
 
 MoveIt's planning scene is a monitored, continuously-updated model of "what's collidable right now." Without a sensor feed, that model is static: whatever collision objects you hard-coded or added by hand in RViz. With a sensor feed, MoveIt can build a live occupancy representation of the world and treat it as additional collision geometry, so a plan that looked clear at startup gets rejected or replanned if something now blocks it. This is the difference between a robot that only avoids obstacles a programmer anticipated and one that avoids obstacles it's currently looking at.

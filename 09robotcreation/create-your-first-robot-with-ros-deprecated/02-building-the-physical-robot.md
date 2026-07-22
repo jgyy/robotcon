@@ -2,6 +2,18 @@
 
 This unit is entirely hands-on: mounting the two-wheeled chassis and wiring its electronics so that, at the end, you have a robot that powers on safely even though nothing is driving it yet. Get this right and every later software unit has a stable platform to talk to; get it wrong and you'll spend Unit 5 debugging a loose wire instead of a driver bug.
 
+The diagram below shows the power and signal wiring architecture described below: battery power and SBC control signals are two separate paths that both terminate at the driver board.
+
+```mermaid
+flowchart LR
+    Battery[Battery] --> Regulator[Voltage Regulator]
+    Regulator --> Driver[Motor Driver Board]
+    Driver --> MotorL[Left Motor]
+    Driver --> MotorR[Right Motor]
+    SBC[Single-Board Computer] -- "GPIO: direction + PWM" --> Driver
+    SBC -. common ground .- Driver
+```
+
 ## Chassis and drivetrain assembly
 Start with the mechanical structure before any electronics: mount the two geared DC motors to the chassis plate, attach the wheels, and fit the caster or ball-bearing support that keeps the robot balanced as a differential-drive platform (two powered wheels plus one passive contact point). Torque screws by hand-tight plus a small turn — over-tightening plastic chassis mounts is a common way to crack a mount you'll need to replace mid-course. Check that both wheels spin freely with no motor power applied; binding at this stage means an alignment problem now, not a "weak motor" problem later.
 

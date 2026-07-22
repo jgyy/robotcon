@@ -2,6 +2,23 @@
 
 This is the capstone unit: the Action Chunking Transformer (ACT), the algorithm that made ALOHA-style bimanual manipulation practical, and the technique most directly associated with "VLAs with ALOHA" as a topic. You'll see how it fixes BC's compounding-error problem (Unit 2) using a transformer architecture, and how the pieces assemble into a full training pipeline.
 
+The diagram below shows the CVAE data flow: what only runs during training versus what also runs at inference.
+
+```mermaid
+flowchart LR
+    subgraph Training["Training only"]
+        GT[Ground-truth Action Chunk] --> Enc[CVAE Encoder]
+        Obs1[Observation] --> Enc
+        Enc --> Z[Latent z]
+    end
+    subgraph Both["Training + Inference"]
+        Obs2[Camera Images + Joint State] --> Dec[Transformer Decoder]
+        Z --> Dec
+        Prior[z sampled from prior] -.inference only.-> Dec
+        Dec --> Chunk["Predicted Action Chunk<br/>(action_t ... action_t+k-1)"]
+    end
+```
+
 ## The core idea: predict action chunks, not single steps
 Standard BC (Unit 2) predicts one action per observation: `obs_t -> action_t`. ACT instead predicts a *chunk* of k future actions from a single observation: `obs_t -> [action_t, action_t+1, ..., action_t+k-1]`. At execution time, the robot doesn't necessarily run all k actions blindly — a common strategy (temporal ensembling) is to re-predict a new chunk at every timestep and average overlapping predictions, which smooths out noise between chunks.
 

@@ -2,6 +2,19 @@
 
 Before authoring any XML, you need to be fluent in MuJoCo's interactive viewer — it is how you will debug every scene, model, and robot you build for the rest of this course.
 
+The state diagram below captures how the viewer's playback controls — covered later in this unit — move the simulation between running, paused, and reset states.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Running
+    Running --> Paused: Space
+    Paused --> Running: Space
+    Paused --> Paused: Arrow keys (single-step)
+    Running --> Reset: Backspace
+    Paused --> Reset: Backspace
+    Reset --> Paused: jump to initial keyframe
+```
+
 ## Launching the Viewer
 There are two common ways to open the GUI. The standalone `simulate` app (built from source or bundled with some installs) is the fastest way to drag-and-drop `.xml` files:
 

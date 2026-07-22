@@ -2,6 +2,16 @@
 
 ROS 2 launch files don't have to be Python. This unit looks at the XML and YAML front ends, when each one is a better fit than Python, and how the same launch description looks across all three.
 
+The diagram below shows how all three front ends parse down into the same internal launch graph, which is why they can be mixed and included from one another.
+
+```mermaid
+flowchart LR
+    P["Python launch file"] --> LD["LaunchDescription graph"]
+    X["XML launch file"] --> LD
+    Y["YAML launch file"] --> LD
+    LD --> N["Nodes, includes, arguments, event handlers"]
+```
+
 ## Three ways to write a launch file
 
 Under the hood, every launch file — Python, XML, or YAML — is parsed into the same internal `LaunchDescription` graph of actions (nodes, includes, arguments, event handlers). Python is the most expressive front end since it's a real programming language: conditionals, loops, and helper functions are all available. XML and YAML are declarative, restricted subsets aimed at the common case — starting nodes, remapping topics, setting parameters — without needing to read Python to understand what a launch file does. Which one a project uses is often a house style choice rather than a technical requirement; being able to read all three is what matters, since you will encounter all three in other people's packages.

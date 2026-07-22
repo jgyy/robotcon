@@ -2,6 +2,23 @@
 
 With the `RobotEnv` from Part 2 done, this unit adds the `TaskEnv` on top — turning "a cube whose disk I can spin" into an actual learning problem — and trains it with the tabular Qlearn algorithm you'll reuse (and later replace) throughout the rest of the course.
 
+The flowchart below traces one episode of the Qlearn training loop, including the epsilon-greedy explore/exploit decision.
+
+```mermaid
+flowchart TD
+    A[env.reset] --> B[discretize obs into state]
+    B --> C{random < epsilon?}
+    C -- Yes --> D[explore: random action]
+    C -- No --> E[exploit: argmax Q state,a]
+    D --> F[env.step action]
+    E --> F
+    F --> G[discretize next obs]
+    G --> H[qlearn.learn: update Q-table]
+    H --> I{done or max steps?}
+    I -- No --> C
+    I -- Yes --> J[log episode reward, start next episode]
+```
+
 ## Designing the Task Environment: obs, actions, reward
 
 The task: keep the cube from tipping over past some angle while it balances on one edge. That gives you a natural, small design:

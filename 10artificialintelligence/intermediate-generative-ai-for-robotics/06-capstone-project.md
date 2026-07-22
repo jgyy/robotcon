@@ -2,6 +2,18 @@
 
 The capstone pulls together every technique from the course into one deployed system: a Visual Navigation Transformer (Units 2 and 5's imitation learning and ViT work, combined) running alongside a DETR object detector (Unit 4), both operating simultaneously on the same rover. This is the unit where the pipeline habits you practiced repeatedly finally pay off as a single integrated system.
 
+The diagram below shows how the two AI pipelines and the coordinator node connect over ROS topics:
+
+```mermaid
+flowchart LR
+    CAM["/camera/image_raw"] --> VITNODE["ViT Navigation Node"] --> PROP["/cmd_vel_proposal"]
+    CAM --> DETRNODE["DETR Detection Node"] --> DET["/detected_objects"]
+    LIDAR["/scan (Lidar)"] --> COORD["Coordinator Node"]
+    PROP --> COORD
+    DET --> COORD
+    COORD --> CMD["/cmd_vel"]
+```
+
 ## Project scope and architecture
 The capstone rover runs two parallel AI pipelines against the same camera stream, each publishing to its own ROS topic, with a coordinator node reading both:
 ```

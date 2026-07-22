@@ -2,6 +2,18 @@
 
 This is where everything from Units 2-4 comes together: tensors, a dataset, and a model architecture get combined into an actual training loop that improves the model's weights from data. By the end you will have trained the mini keyboard detector for real.
 
+The diagram below shows the six-step loop every epoch repeats to turn data into improved weights:
+
+```mermaid
+flowchart TD
+    A["Get batch (inputs, labels) from DataLoader"] --> B["Forward pass: outputs = model(inputs)"]
+    B --> C["Compute loss: criterion(outputs, labels)"]
+    C --> D["Backward pass: loss.backward()"]
+    D --> E["optimizer.step(): update weights"]
+    E --> F["optimizer.zero_grad(): clear gradients"]
+    F --> A
+```
+
 ## PyTorch training basics
 Training a model is an iterative loop repeated many times:
 

@@ -2,6 +2,18 @@
 
 OpenCV told you *what* pixel something is at; this unit tells you *where it is in 3D*. TIAGo's head sensor is RGB-D, publishing a colored point cloud alongside the plain image, and the Point Cloud Library (PCL) is the standard toolkit for turning that raw cloud into "there is an object, here, with this size."
 
+The diagram below follows a raw point cloud through filtering, plane segmentation, and clustering to per-object 3D centroids.
+
+```mermaid
+flowchart LR
+    PC[PointCloud2] --> PT[PassThrough filter]
+    PT --> VG[VoxelGrid downsample]
+    VG --> RANSAC[RANSAC plane segmentation]
+    RANSAC --> Remove[Remove plane inliers]
+    Remove --> Cluster[Euclidean cluster extraction]
+    Cluster --> Centroid[Per-cluster centroid]
+```
+
 ## Getting a point cloud into your node
 
 Depth-capable cameras publish `sensor_msgs/PointCloud2` on a topic such as `/xtion/depth_registered/points`. In Python you'll typically pull points out with `sensor_msgs.point_cloud2`, or hand the raw message to `pcl_ros`/`python-pcl` bindings for heavier processing; in C++, PCL nodes convert the ROS message straight into a `pcl::PointCloud<PointXYZRGB>`.

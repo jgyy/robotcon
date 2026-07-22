@@ -2,6 +2,17 @@
 
 This unit orients you before the math starts: what problem Kalman filters solve in a real ROS 2 stack, what a working filter feels like from the outside, and what you need installed to follow along.
 
+The diagram below shows where a Kalman-family filter node sits in a ROS 2 stack, fusing several noisy sensor topics into one fused estimate that the rest of navigation trusts.
+
+```mermaid
+flowchart LR
+    Odom[Wheel Odometry /odom] --> Filter[Kalman-family Filter Node]
+    IMU[IMU /imu] --> Filter
+    Lidar[Lidar Scan-Match /scan] --> Filter
+    Filter --> Fused[Fused Estimate /odometry/filtered]
+    Fused --> Nav[Nav2 Planner]
+```
+
 ## The problem: your robot doesn't know where it is
 
 Every mobile robot has to answer "where am I?" continuously, and it never gets a direct answer. Wheel encoders report how far the wheels *appear* to have turned, not how far the robot actually moved (slip, uneven floors, tire deformation all lie a little). An IMU drifts. A GPS fix can be off by meters or vanish indoors. Even a good lidar scan-matcher can be ambiguous in a long, feature-poor corridor. Every one of these is a noisy, partial estimate of the true state.

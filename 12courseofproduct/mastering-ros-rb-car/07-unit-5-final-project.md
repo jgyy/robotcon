@@ -2,6 +2,15 @@
 
 This closing unit has no new ROS concepts — it's where you integrate everything from Units 1-6 (platform basics, mapping and navigation, TEB planning, GPS-fused localization, and perception) into one autonomous run that behaves like a small self-driving demo, not a collection of separate exercises.
 
+The diagram below shows the incremental build order this unit recommends, layering navigation and then perception before attempting the full autonomous run.
+
+```mermaid
+flowchart TD
+    A[Static integration: launch all nodes together] --> B[Navigation-only run: GPS-fused localization + TEB]
+    B --> C[Perception-triggered stop: behavior node halts on hazard]
+    C --> D[Full run: complete autonomous drive]
+```
+
 ## Project brief and success criteria
 
 Build and demonstrate: RB-CAR autonomously drives a mapped outdoor route from a start point to a goal point, using fused GPS/IMU/odometry localization and a TEB local planner tuned for its Ackermann kinematics, while its perception pipeline detects at least one traffic light or pedestrian-equivalent obstacle along the route and causes the vehicle to stop appropriately before continuing.

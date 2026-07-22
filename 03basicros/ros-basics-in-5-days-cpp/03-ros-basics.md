@@ -2,6 +2,16 @@
 
 With the map from Unit 2 in hand, this unit gets hands-on with the four things every ROS session starts with: getting the graph running, understanding what a node is, reading/writing parameters, and knowing which environment variables control it all.
 
+The diagram below shows how these four pieces relate at startup: environment variables shape both discovery and the node itself, and a running node exposes its parameters.
+
+```mermaid
+flowchart LR
+    ENV[Environment Variables] -->|configures| Boot[roscore / DDS Discovery]
+    Boot -->|registers| Node[Node]
+    Node -->|declare/get| Param[Parameter Server]
+    ENV -->|sets ROS_DOMAIN_ID / paths| Node
+```
+
 ## Bootstrapping the graph
 In ROS 1, a single process called the **master** (`roscore`) must be running before anything else — it's the registry every node talks to first to find out who else exists. Nothing works without it, and forgetting to start it is the single most common "why isn't anything connecting" bug for beginners. In ROS 2, there is no master; nodes discover each other automatically over the network via DDS, so there's no equivalent process to start — but the mental model of "a graph that nodes join and leave" is identical, and the same CLI questions ("who's out there?") still apply.
 

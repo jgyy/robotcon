@@ -2,6 +2,20 @@
 
 Unit 3 got RB-CAR navigating with a generic local planner. This unit swaps that in for the **Timed Elastic Band (TEB)** local planner, configured specifically for a car-like, non-holonomic vehicle — the piece of the stack that actually respects the fact that RB-CAR can't strafe or spin in place.
 
+The diagram below shows TEB's continuous optimization loop: it balances the global plan, local obstacles, and RB-CAR's Ackermann constraints into a feasible command every cycle.
+
+```mermaid
+flowchart TD
+    A[Global plan from planner] --> B[TEB Local Planner]
+    C[Local costmap / obstacles] --> B
+    D[min_turning_radius & footprint model] --> B
+    B --> E{Feasible trajectory found?}
+    E -->|Yes| F[Publish AckermannDriveStamped command]
+    E -->|No| G[Report failure / replan]
+    F --> H[Re-optimize at 5-10 Hz]
+    H --> B
+```
+
 ## Why car-like robots need a kinematics-aware local planner
 
 A local planner's job is to turn the global plan (a coarse, geometry-only path) into a smooth, dynamically-feasible trajectory the robot can actually execute right now, reacting to obstacles the global planner didn't know about. A planner designed around differential-drive robots (like the classic DWA/TrajectoryPlanner) assumes the robot can rotate in place and turn on a dime — assumptions that are simply false for RB-CAR. Point it at a differential-drive local planner and you'll see it repeatedly generate trajectories the vehicle physically cannot follow, or fall back to jerky, timid motion because it's fighting its own kinematic model.

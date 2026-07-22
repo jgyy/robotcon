@@ -2,6 +2,20 @@
 
 Gazebo Classic has no support for pre-authored mesh animation — anything that moves does so because a joint or plugin drives it, frame by frame, through the physics engine. Gazebo Sim changed that: it can play back skeletal animations baked into a glTF file directly, which opens up effects (background characters, conveyor contents, decorative moving parts) that would be painful to build with joints alone. This unit covers that gap and how to author animations in Blender that Gazebo Sim will play correctly.
 
+The diagram below contrasts Classic's plugin-driven faking of motion with Sim's native actor pipeline that this unit teaches.
+
+```mermaid
+flowchart TD
+    subgraph Classic[Gazebo Classic]
+        C1[Plugin repositions object each timestep] --> C2[No native mesh animation]
+    end
+    subgraph Sim[Gazebo Sim]
+        S1[Blender: armature + baked keyframes] --> S2[glTF export with animation]
+        S2 --> S3[SDF actor element]
+        S3 --> S4[Native skeletal playback]
+    end
+```
+
 ## Classic vs. Sim: what changed
 
 In Gazebo Classic, "animation" of anything other than a rigid-body joint essentially doesn't exist as a first-class feature — you fake motion with plugins that reposition objects each timestep. Gazebo Sim added an `<actor>` element to SDF that references an animated mesh (typically glTF or COLLADA with embedded skeletal animation) and plays it back, either on a fixed loop or driven by a trajectory/plugin. This matters for simulation realism: a warehouse scene with a walking human actor, or a robot arm with a decorative pre-baked idle animation, becomes achievable without hand-rolling joint-by-joint control.

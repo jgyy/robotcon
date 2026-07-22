@@ -2,6 +2,15 @@
 
 This first unit sets the stage for the whole course: what problem TF actually solves, why almost every ROS robot depends on it, and how the six units ahead build on each other.
 
+The flow below traces why a raw sensor reading is useless on its own until TF relates it to the frame you actually care about.
+
+```mermaid
+flowchart TD
+    Sensor["Lidar reports: obstacle 2m @ 30° (in lidar_link frame)"] --> Question{"Where is that relative to base_link or map?"}
+    Question --> TFSystem["TF chains parent → child transforms:\nlidar_link → base_link → odom → map"]
+    TFSystem --> Answer["Any node can ask: transform(frame A, frame B, time T)"]
+```
+
 ## The problem TF exists to solve
 A robot is not one rigid block — it is a tree of parts (base, wheels, arm links, a lidar mount, a camera) that all move relative to each other, and the whole assembly also moves relative to the world. Every sensor reports data in its own local frame. A lidar says "obstacle at 2m, bearing 30°" relative to *itself*, not relative to the robot's base or the map. Before you can act on that reading (steer around it, plan a grasp, localize on a map), you need to know the geometric relationship between the sensor's frame and every other frame you care about.
 

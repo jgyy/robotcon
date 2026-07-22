@@ -2,6 +2,15 @@
 
 Unstyled HTML is functional but unreadable at a glance, which matters for a robot panel someone might check quickly before hitting an emergency stop. CSS (Cascading Style Sheets) is how you control color, spacing, and layout without touching your HTML's structure.
 
+The diagram below shows the CSS box model's four layers, from the outermost margin down to the innermost content.
+
+```mermaid
+flowchart TD
+    Margin[Margin: space outside the border] --> Border[Border]
+    Border --> Padding[Padding: space inside the border]
+    Padding --> Content[Content: text or child elements]
+```
+
 ## What is CSS used for?
 CSS lets you separate *what a page contains* from *how it looks*: the same `<button id="stop">` markup can render as a small gray rectangle or a large red attention-grabbing control purely through CSS, with no HTML changes. For a robot interface this separation pays off directly — you can restyle the entire panel (say, a high-contrast "outdoor" theme vs. a compact "desktop" theme) by swapping one stylesheet.
 

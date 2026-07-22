@@ -2,6 +2,17 @@
 
 Robot data is full of arrays — joint positions, laser scan ranges, a list of detected objects — so JavaScript's `Array` methods are some of the most-used tools in a robotics dashboard. This unit covers the core array API and applies it to live data coming from Rosbridge.
 
+The pipeline below shows how a `/joint_states` message flows through chained array methods to reach a usable result, the pattern used in this unit's roslibjs example.
+
+```mermaid
+flowchart LR
+    Topic["/joint_states topic"] --> Bridge[rosbridge_server]
+    Bridge -->|WebSocket JSON| Callback[roslibjs subscribe callback]
+    Callback --> Zip[".map(): zip name + position arrays"]
+    Zip --> Filter[".filter(): |position| > 0.01"]
+    Filter --> Log["console.log(moving.length)"]
+```
+
 ## Core array methods: map, filter, reduce
 These three functional methods replace most hand-written loops and, unlike a `for` loop, always return a new array (or value) without mutating the original — which keeps your rendering code predictable.
 

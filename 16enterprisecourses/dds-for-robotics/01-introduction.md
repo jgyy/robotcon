@@ -2,6 +2,17 @@
 
 This unit sets up why a robotics course needs a whole track on DDS, what you'll be able to diagnose by the end, and how the pieces (Linux networking, Wireshark, ROS 2, Zenoh, Vulcanexus) fit together across the following units.
 
+The diagram below shows the layers a single ROS 2 API call passes through before it becomes traffic on the wire — the layers this course peels back one by one.
+
+```mermaid
+flowchart LR
+  A[Your ROS 2 Node Code] --> B[rclpy / rclcpp API]
+  B --> C[rmw Abstraction Layer]
+  C --> D["DDS Vendor (Fast DDS / Cyclone DDS / Connext)"]
+  D --> E[Linux Network: UDP + Multicast]
+  E --> F[Wire Protocol: RTPS Packets]
+```
+
 ## Why DDS matters to a robotics engineer
 ROS 2 replaced ROS 1's custom TCP-based transport with the Data Distribution Service (DDS) standard for all inter-process communication: topics, services, and actions all move as DDS messages under the hood. This is a deliberate architectural choice — DDS is an OMG (Object Management Group) standard originally built for defense and industrial systems that need reliable, low-latency, many-to-many data distribution without a central broker. When you call `ros2 topic pub` or write a publisher node, you are really configuring a DDS Data Writer; when a subscriber "can't see" a topic, the actual fault usually lives in DDS discovery, QoS mismatches, or network configuration — not in your Python or C++ callback code. This course exists because those failures are extremely common in real deployments (multi-robot fleets, WiFi-connected robots, cloud bridges) and are almost impossible to debug without understanding the layer underneath ROS 2's API.
 

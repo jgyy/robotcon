@@ -2,6 +2,15 @@
 
 This unit sets expectations for the whole course: what "generative AI" adds on top of the classification and regression models you may already know, what you'll be able to build by the end, and what you should already be comfortable with before diving in.
 
+The diagram below contrasts how the same input flows through a discriminative model versus a generative model, which is the core distinction this unit builds everything else on.
+```mermaid
+flowchart LR
+    In[Input: image / scene / prompt] --> D[Discriminative model]
+    D --> Label[Label or score\ne.g. 'cat', distance to obstacle]
+    In --> G[Generative model]
+    G --> New[New plausible output\ne.g. text, image, trajectory]
+```
+
 ## From discriminative to generative models
 Most of the machine learning you meet early on is **discriminative**: given an input, predict a label or a number (is this a cat? what's the distance to that obstacle?). **Generative** models instead learn the distribution the data came from, so they can *produce* new, plausible outputs — new text, new images, new trajectories — rather than just scoring existing ones. Large language models (LLMs) generate the next token in a sequence; diffusion models generate images (or, increasingly, robot actions) by iteratively refining noise; vision-language models (VLMs) generate text conditioned on an image.
 

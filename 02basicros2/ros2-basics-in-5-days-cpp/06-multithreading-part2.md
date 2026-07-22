@@ -2,6 +2,18 @@
 
 Unit 5 showed that a single-threaded executor runs one callback at a time. This unit covers what to do when that's not good enough: callback groups, the multithreaded executor, and running several nodes in one process/executor.
 
+The diagram below shows how a `MultiThreadedExecutor` schedules callbacks according to their group: Mutually Exclusive callbacks still serialize against each other, while Reentrant callbacks and callbacks in different groups can run concurrently across the thread pool.
+
+```mermaid
+flowchart TD
+    E[MultiThreadedExecutor thread pool] --> G1[Mutually Exclusive group]
+    E --> G2[Reentrant group]
+    G1 --> C1["timer_callback (serialized)"]
+    G1 --> C2["on_confidence (serialized)"]
+    G2 --> C3["slow_service handler (thread 1)"]
+    G2 --> C4["slow_service handler (thread 2, concurrent)"]
+```
+
 ## Why you need multithreading
 
 Picture the plant-detector-turned-mission-node from Unit 5, but now it also has a slow callback — say, a service that takes 2 seconds to analyze a sample. With a single-threaded executor, that 2-second callback blocks *everything else on that node*: no new sensor readings processed, no other services answered, until it returns. In a real rover this could mean missing obstacle data for two full seconds. Multithreading exists to let independent callbacks run concurrently instead of queuing behind each other.

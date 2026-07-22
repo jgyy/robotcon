@@ -2,6 +2,21 @@
 
 Now that PEDRITO is wired, it's time to make it move from ROS 2. This unit connects the physical motor driver from Unit 3 to a micro-ROS subscriber, and along the way covers the two pieces of rclc machinery — timers and executors — that everything in this course depends on.
 
+The diagram below traces a `Twist` command's path from the ROS 2 topic down to the physical motors, matching the control path described below.
+
+```mermaid
+flowchart LR
+    Topic["/cmd_vel<br/>geometry_msgs/Twist"] --> Sub["micro-ROS subscriber<br/>twist_callback"]
+    Sub --> Split{"linear.x, angular.z<br/>split into wheel speeds"}
+    Split --> SetL["set_motor(LEFT)"]
+    Split --> SetR["set_motor(RIGHT)"]
+    SetL --> PWM_L["PWM duty cycle + direction"]
+    SetR --> PWM_R["PWM duty cycle + direction"]
+    PWM_L --> Driver["Motor driver GPIO"]
+    PWM_R --> Driver
+    Driver --> Motors["Left / Right motors"]
+```
+
 ## From ROS 2 topic to PWM signal
 
 The control path is: a `geometry_msgs/Twist` (or a simpler custom message, if you'd rather keep dependencies light) published from your PC → received by a micro-ROS subscriber on the MCU → converted to per-wheel PWM duty cycle and direction → written to the motor driver's GPIO pins.

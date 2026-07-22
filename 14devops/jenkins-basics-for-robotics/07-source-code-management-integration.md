@@ -2,6 +2,19 @@
 
 So far your jobs have run canned shell commands with no real code involved. This unit connects Jenkins to a Git repository so builds operate on your actual robotics codebase, and sets up the trigger that makes CI feel automatic.
 
+The diagram below shows the two ways Jenkins can notice a new commit — polling and webhooks — and how both converge on the same checkout-and-build path.
+
+```mermaid
+flowchart TD
+    A[Developer pushes commit] --> B{Trigger mechanism}
+    B -->|"Poll SCM (H/5 * * * *)"| C[Jenkins checks repo<br/>on a schedule]
+    B -->|Webhook| D[Git host notifies<br/>Jenkins immediately]
+    C --> E[Jenkins clones/fetches repo]
+    D --> E
+    E --> F[Checkout into job workspace]
+    F --> G["Build steps run<br/>(GIT_COMMIT, GIT_BRANCH available)"]
+```
+
 ## Connecting a Git repository
 Under a job's **Source Code Management** section (Freestyle) or in the "Pipeline script from SCM" option (Pipeline), choose **Git** and supply the repository URL plus a **Credentials** entry (an SSH key or a token, stored via **Manage Jenkins → Credentials**, never typed in plaintext here — see Unit 5). Set the **Branch Specifier**, e.g. `*/main`, or `*/${BRANCH_NAME}` in a multibranch setup.
 

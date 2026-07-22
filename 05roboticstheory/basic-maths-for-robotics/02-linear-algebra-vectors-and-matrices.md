@@ -2,6 +2,18 @@
 
 Linear algebra is the language robots use to describe "where" and "which way": every position, velocity, orientation, and sensor reading eventually becomes a vector or a matrix. This unit builds that language from the ground up.
 
+The diagram below traces how vectors and matrices combine into linear maps and, ultimately, the homogeneous transforms used to chain robot frames.
+
+```mermaid
+flowchart TD
+    V[Vectors] --> DOT[Dot Product: alignment / angle]
+    V --> CROSS[Cross Product: perpendicular vector]
+    M[Matrices] --> ROT["Rotation Matrices (orthogonal, R^-1 = R^T)"]
+    M --> LMAP["Linear Maps: f(v) = A v"]
+    ROT --> LMAP
+    LMAP --> HOMO[Homogeneous Transforms: rotate + translate chained]
+```
+
 ## Vectors — declaration and properties
 A vector is an ordered tuple of numbers representing a point, a direction, or a rate of change, depending on context. In robotics you'll constantly use vectors for positions `(x, y, z)`, velocities `(vx, vy, vz)`, and forces/torques. The operations that matter:
 

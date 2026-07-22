@@ -2,6 +2,16 @@
 
 This course builds the math and control tools needed to drive a mobile robot along a pre-defined path: starting from rigid-body transforms, through the kinematic models of nonholonomic (differential-drive, car-like) and holonomic (omnidirectional) robots, and finishing with the open-loop and feedback control laws that turn a goal pose into real velocity commands. It's the geometric foundation that later sensor-driven navigation courses build on top of.
 
+The diagram below shows how each unit's concepts build directly on the ones before it:
+
+```mermaid
+flowchart TD
+    U1[Unit 1: Introduction to the Course] --> U2[Unit 2: Rigid Body Motions]
+    U2 --> U3[Unit 3: Kinematics of Nonholonomic Robots]
+    U3 --> U4[Unit 4: Kinematics of Holonomic Robots]
+    U4 --> U5[Unit 5: Kinematic Control]
+```
+
 1. [Introduction to the Course](01-introduction-to-the-course.md) — A quick presentation of the contents of this course.
 2. [Rigid Body Motions](02-rigid-body-motions.md) — Mathematically describe and represent the movement of rigid bodies in space, including translations, rotations, and full 3D transformations.
 3. [Kinematics of Nonholonomic Robots](03-kinematics-of-nonholonomic-robots.md) — The motion constraints of nonholonomic robots and how they affect kinematic modeling and control.

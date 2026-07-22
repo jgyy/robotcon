@@ -2,6 +2,20 @@
 
 The final unit covers processes, remote access over SSH, and package management with `apt`/`sudo` — the tools you need once a "robot" stops being a directory on your laptop and becomes a separate machine you reach over a network.
 
+The diagram below shows the sequence of an SSH session: setting up key-based auth once, then connecting, transferring files, and managing a process on the remote robot.
+
+```mermaid
+sequenceDiagram
+    participant You as Your Laptop
+    participant Robot as Robot (Remote Computer)
+    You->>You: ssh-keygen -t ed25519
+    You->>Robot: ssh-copy-id (install public key)
+    You->>Robot: ssh username@ip (connect)
+    Robot-->>You: shell session opens
+    You->>Robot: rsync ~/robot_ws/ (sync files)
+    You->>Robot: kill PID (manage remote process)
+```
+
 ## Linux processes
 Every running program is a process with a numeric PID. On a robot, a launch file typically starts a dozen or more processes at once (drivers, controllers, perception nodes), so being able to inspect and manage them by hand is essential when something misbehaves.
 

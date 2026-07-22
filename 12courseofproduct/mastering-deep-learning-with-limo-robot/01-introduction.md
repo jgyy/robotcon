@@ -2,6 +2,21 @@
 
 This unit sets the frame for the whole course: what deep learning actually is, how it differs from the classical robotics you may already know, and what the seven units ahead will build toward — a LIMO robot that can detect objects and avoid obstacles using trained neural networks instead of hand-tuned rules.
 
+The diagram below contrasts the two programming approaches this unit introduces — a hand-written rule versus a model trained on examples — for the same sensor-to-output task:
+
+```mermaid
+flowchart LR
+    subgraph Classical["Classical Robotics Programming"]
+        S1[Sensor Reading] --> R1[Hand-written Rule / Formula]
+        R1 --> O1[Control Output]
+    end
+    subgraph Learned["Deep Learning Approach"]
+        S2[Sensor Reading] --> M1[Trained Neural Network]
+        M1 --> O2[Control Output]
+        E1[Labeled Examples] -.trains.-> M1
+    end
+```
+
 ## Deep learning versus classical robotics programming
 
 Most of the robotics code you've written so far is explicit: you read a sensor value, apply a formula or a state machine, and produce a control output. Deep learning inverts this — instead of writing the mapping from input to output by hand, you show the system many examples of inputs paired with correct outputs, and an optimization process (gradient descent) adjusts a large number of numerical parameters until the model approximates that mapping on its own. "Deep" refers to stacking many layers of these parameterized transformations, each layer learning to represent the input at a different level of abstraction — raw pixels, then edges, then shapes, then objects, for example.

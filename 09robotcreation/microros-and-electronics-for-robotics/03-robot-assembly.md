@@ -2,6 +2,20 @@
 
 With the software toolchain proven in Unit 2, this unit is entirely physical: putting PEDRITO's chassis, motors, and power system together correctly before any real firmware goes near it. Getting the wiring right here saves you from chasing "software" bugs later that are actually a loose connector or a reversed motor lead.
 
+The diagram below shows the two separated power domains and the common ground that ties every component together.
+
+```mermaid
+flowchart LR
+    Battery["Battery pack<br/>(2S LiPo / 4x18650)"] -->|VMotor| Driver["Motor driver IC<br/>(H-bridge)"]
+    Driver -->|Motor+/-| MotorL["Left DC motor"]
+    Driver -->|Motor+/-| MotorR["Right DC motor"]
+    Buck["Buck converter /<br/>driver onboard regulator"] -->|regulated 5V/3.3V| MCU["Microcontroller"]
+    MCU -->|IN1/IN2 direction| Driver
+    MCU -->|PWM speed| Driver
+    Battery -. common ground .- MCU
+    Battery -. common ground .- Driver
+```
+
 ## Chassis and mechanical layout
 
 A typical two-wheel differential-drive chassis kit gives you a base plate, two DC gearmotors with wheels, a caster/ball wheel for the third contact point, and standoffs to mount a second deck for electronics. Mount components with maintenance in mind: leave the USB port on the MCU reachable without disassembly, since you'll be reflashing firmware constantly through this course, and keep the battery removable/accessible since you'll be charging or swapping it often.

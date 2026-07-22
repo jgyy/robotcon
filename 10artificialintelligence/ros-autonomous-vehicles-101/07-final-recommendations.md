@@ -2,6 +2,18 @@
 
 You now have a small but complete Level 3 stack: sensing, GPS navigation, obstacle handling, and CAN-Bus actuation, tied together in a microproject. This closing unit points at where to take that foundation next.
 
+The diagram below maps the completed course stack to each of the next steps this unit recommends.
+
+```mermaid
+flowchart LR
+    Stack["Completed Level 3 stack<br/>(sensing, GPS nav, obstacles, CAN)"] --> Nav["Navigation: adopt Nav2"]
+    Stack --> Perc["Perception: camera object detection"]
+    Stack --> AV["Study full AV stacks (Autoware)"]
+    Stack --> Sim["Higher-fidelity simulation (Gazebo)"]
+    Stack --> Safety["Real-world safety: ISO 26262, redundancy"]
+    Stack --> Portfolio["Portfolio: extend the microproject"]
+```
+
 ## Where to go deeper
 Each unit in this course used the simplest version of its topic on purpose. The natural next steps:
 

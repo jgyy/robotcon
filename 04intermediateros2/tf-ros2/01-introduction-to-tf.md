@@ -2,6 +2,15 @@
 
 Every robot with more than one moving part — a camera on a pan-tilt mount, an arm with joints, wheels that roll relative to a chassis — needs a consistent way to answer "where is X relative to Y?" This unit lays the conceptual groundwork for TF2, ROS 2's system for tracking coordinate frames and the transformations between them.
 
+The diagram below shows the frame chain the drone example must compose to place a camera-relative observation into the world frame — exactly the chaining problem TF2 automates:
+
+```mermaid
+flowchart LR
+    World[world] --> Body[drone_body]
+    Body --> Camera[camera_link]
+    Camera -. "subject: 2m ahead, 0.3m left, 0.1m up" .-> Subject[subject]
+```
+
 ## The problem TF solves
 
 Picture a drone with a camera that must keep a subject centered in frame. The camera reports "subject is 2m ahead, 0.3m left, 0.1m up" — but that's relative to the *camera*, not the drone's body, not the world. To fly the drone toward the subject, or to log where the subject actually is on a map, you need to chain together: camera → drone body → world. Do this by hand with matrix multiplication for every sensor and every joint and the bookkeeping becomes unmanageable and error-prone the moment a joint moves. TF2 exists to make this chaining automatic, time-aware, and queryable from any node in the system.

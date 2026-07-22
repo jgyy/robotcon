@@ -2,6 +2,18 @@
 
 This is the unit where generative AI stops being an abstract text exercise and starts moving a robot. You'll train a sequence-to-sequence model that maps natural language commands to differential-drive wheel velocities, then wire that model into a ROS 2 node so a real (or simulated) robot can act on it.
 
+The diagram below shows how a typed or spoken command flows through the ROS 2 node built in this unit to become an actual `/cmd_vel` velocity command.
+```mermaid
+flowchart LR
+    Cmd["/robot_command topic\n(std_msgs/String)"] --> Node[LanguageControlNode]
+    Node --> Tok[Tokenizer]
+    Tok --> Model[Fine-tuned seq2seq model]
+    Model --> Pred["Predicted (linear_x, angular_z)"]
+    Pred --> Clamp[clamp to speed limits]
+    Clamp --> Vel["/cmd_vel topic\n(geometry_msgs/Twist)"]
+    Vel --> Robot[Robot base]
+```
+
 ## From language to wheel velocities
 The task is a translation problem: input is a string like "turn left slowly" and output is a pair of numbers, `(linear_x, angular_z)`, the standard differential-drive control signal published on `/cmd_vel`. Framing it this way lets you reuse the sequence-to-sequence machinery built for language translation — an encoder reads the command, a small regression or generation head produces the velocity pair — instead of inventing something bespoke. The pipeline has seven concrete steps, which is worth internalizing as a template you'll reuse in later units too: setup, data, model, tokenize, fine-tune, test in sim, test on hardware.
 

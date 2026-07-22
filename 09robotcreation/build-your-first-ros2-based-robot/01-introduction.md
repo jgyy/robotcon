@@ -2,6 +2,27 @@
 
 This unit orients you before any wrench is turned or line of code is written: what robot you're building, what it will be able to do by the end, and what you need to have on hand to follow along.
 
+The diagram below groups the course's units by the phase of the robot they build, showing why the order isn't alphabetical but dependency-driven.
+
+```mermaid
+flowchart TD
+    subgraph Hardware["Units 2-4: Power the hardware"]
+        M[Motors] --> B[Battery] --> C[Computer]
+    end
+    subgraph Software["Unit 5: Command it"]
+        R[ROS Framework]
+    end
+    subgraph Body["Units 6-7: Give it a body"]
+        P[Physical Structure] --> D[URDF]
+    end
+    subgraph Senses["Units 8-9: Give it senses"]
+        L[LiDAR] --> Cam[Camera]
+    end
+    Hardware --> Software --> Body --> Senses
+    Senses --> Sim[Unit 10: Simulation]
+    Sim --> Ext[Unit 11: 3D Printed Mods]
+```
+
 ## What you're building
 Across this course you'll build a small differential-drive mobile robot — two independently driven wheels plus a caster, a single-board computer running ROS 2, a LiDAR, and a camera — from bare parts to a robot that can be teleoperated, mapped, and simulated. Think of it as the "hello world" of mobile robotics: complex enough to touch every layer of a real robotics stack (mechanical, electrical, firmware, ROS 2 software, simulation), simple enough to finish in a reasonable number of weekends. Every later unit in this course adds exactly one layer on top of the previous one, so nothing you build gets thrown away.
 

@@ -2,6 +2,20 @@
 
 This unit gets you oriented on the Jetson Nano as a piece of robotics hardware: what makes it different from the laptop or desktop you've been developing on, how to get it running, and how to prove that both CUDA and ROS are alive on it before you build anything on top.
 
+The flow below traces the bring-up sequence this unit walks through, from flashing the SD card to confirming the Nano can talk to a ROS network.
+
+```mermaid
+flowchart TD
+    A[Flash JetPack image to SD card] --> B[First boot over SSH]
+    B --> C[Set power mode & jetson_clocks]
+    C --> D{torch.cuda.is_available?}
+    D -- False --> E[Reinstall NVIDIA aarch64 wheel]
+    E --> D
+    D -- True --> F[Verify TensorRT import]
+    F --> G[Set ROS_DOMAIN_ID / ROS_MASTER_URI]
+    G --> H[Confirm cross-machine pub/sub]
+```
+
 ## What the Jetson Nano actually is
 
 The Jetson Nano is a small single-board computer with an ARM CPU and an onboard NVIDIA GPU (128 CUDA cores), designed to run inference (and light training) for neural networks directly on a robot instead of shipping camera frames to a remote server. That matters for robotics specifically because perception loops — object detection, segmentation, depth estimation — need to run at tens of Hz with low latency, and round-tripping to the cloud adds latency and a network dependency you don't want on a mobile platform. Compared to a Raspberry Pi, the Nano trades some general-purpose CPU headroom for a GPU that can run a ResNet-sized model in real time. Compared to your desktop, you're now working with an aarch64 CPU, a fixed and fairly small amount of RAM, and thermal/power limits that mean you can't just "throw more compute at it."

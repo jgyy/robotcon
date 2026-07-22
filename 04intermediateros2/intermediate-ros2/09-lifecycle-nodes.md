@@ -2,6 +2,21 @@
 
 Every node you've built so far starts doing its job the instant its process comes up — publishers publish, timers fire, as soon as `rclpy.spin` runs. Lifecycle (managed) nodes exist for the systems where that's not good enough: where you need a node to be *configured* before it's *active*, where several nodes must come up in a controlled order, or where you need to cleanly pause and resume a node's real work without killing its process. Nav2 (mentioned in Unit 1's course roadmap) is built almost entirely out of lifecycle nodes for exactly this reason.
 
+The state diagram below shows the primary states a lifecycle node moves through and the transition callbacks that drive each change.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Unconfigured
+    Unconfigured --> Inactive: on_configure
+    Inactive --> Active: on_activate
+    Active --> Inactive: on_deactivate
+    Inactive --> Unconfigured: on_cleanup
+    Unconfigured --> Finalized: on_shutdown
+    Inactive --> Finalized: on_shutdown
+    Active --> Finalized: on_shutdown
+    Finalized --> [*]
+```
+
 ## The managed state machine
 
 A lifecycle node moves through a fixed set of **primary states** — `Unconfigured`, `Inactive`, `Active`, `Finalized` — via transitions that your code hooks into: `on_configure`, `on_activate`, `on_deactivate`, `on_cleanup`, `on_shutdown`, `on_error`. Nothing happens automatically; an external caller (a lifecycle manager, or you by hand) has to trigger each transition.

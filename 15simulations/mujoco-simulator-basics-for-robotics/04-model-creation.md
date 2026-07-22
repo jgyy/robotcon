@@ -2,6 +2,19 @@
 
 Where Unit 3 built a static environment, this unit covers the pieces that make something *move*: bodies, joints, geoms, and mass properties. Every robot you build later is just a structured composition of these four primitives.
 
+The diagram below mirrors the two-link example in this unit, showing how nested `<body>` elements form a kinematic tree while each attaches its own joint, geom, and inertial properties.
+
+```mermaid
+flowchart TD
+    World["worldbody"] --> Link1["body: link1"]
+    Link1 --> Joint1["joint1: hinge"]
+    Link1 --> Geom1["geom: cylinder"]
+    Link1 --> Inertial1["inertial: mass, diaginertia"]
+    Link1 --> Link2["body: link2 (child)"]
+    Link2 --> Joint2["joint2: hinge"]
+    Link2 --> Geom2["geom: cylinder"]
+```
+
 ## Bodies and the Kinematic Tree
 A `<body>` is a coordinate frame that can hold geoms, joints, and child bodies. Nesting bodies inside each other defines a kinematic tree, exactly like a robot's link hierarchy:
 

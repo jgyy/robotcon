@@ -2,6 +2,20 @@
 
 With image-building covered, this unit goes deeper on the container side: the full lifecycle, how to interact with containers while they run, and how to diagnose the problems you'll inevitably hit.
 
+The diagram below maps the container lifecycle states this unit covers and the commands that move a container between them.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Created: docker create
+    Created --> Running: docker start
+    Running --> Paused: docker pause
+    Paused --> Running: docker unpause
+    Running --> Exited: docker stop
+    Exited --> Running: docker start
+    Exited --> Removed: docker rm
+    Removed --> [*]
+```
+
 ## The container lifecycle
 A container moves through states: created, running, paused, exited (stopped), and removed. `docker run` combines create + start; you can also do them separately.
 

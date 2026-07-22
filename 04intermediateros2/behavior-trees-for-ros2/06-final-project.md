@@ -2,6 +2,22 @@
 
 This unit consolidates everything from Units 1-5 into one original piece of work: designing, implementing, and testing a complete Behavior Tree for a ROS2 robot task of your choosing. There's no single "correct" tree — the goal is to demonstrate deliberate use of the design principles you've learned, not to reproduce a reference solution.
 
+The flowchart below sketches the "tidy the table" suggested scope, showing how the required happy path, fallback, reactive interrupt, and repeat loop fit together.
+
+```mermaid
+flowchart TD
+    Start([Start Task]) --> Nav[Navigate to Table]
+    Nav --> Det[Detect Object]
+    Det --> Grasp[Grasp Object]
+    Grasp -- Success --> Deliver[Deliver to Drop-off]
+    Grasp -- Repeated Failure --> Help[Call for Help - Fallback]
+    Battery{Battery Low?} -. reactive interrupt .-> Nav
+    Battery -. reactive interrupt .-> Grasp
+    Deliver --> Repeat{Table Empty?}
+    Repeat -- No --> Nav
+    Repeat -- Yes --> Done([Done])
+```
+
 ## Project brief
 
 Design a BT-driven behavior for a mobile manipulator (real or simulated) performing a task with at least these characteristics:

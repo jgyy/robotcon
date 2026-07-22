@@ -2,6 +2,18 @@
 
 ROS 2 replaced ROS 1's `catkin` with **ament** and **colcon**, and split package builds along language lines: `ament_python` for pure-Python packages and `ament_cmake` for C++ (or mixed) packages. This unit focuses on getting the Python build system right, since that's what trips up developers coming from ROS 1's more monolithic build.
 
+The diagram below shows how a package's language determines its build convention, and how `colcon build` turns that into an installable workspace.
+
+```mermaid
+flowchart TD
+    A[Package source in src/] --> B{Language?}
+    B -->|Pure Python| C[ament_python convention<br/>setup.py + setup.cfg]
+    B -->|C++ / mixed| D[ament_cmake convention<br/>CMakeLists.txt]
+    C --> E[colcon build --symlink-install]
+    D --> E
+    E --> F[install/ workspace<br/>sourced via setup.bash]
+```
+
 ## colcon and ament: who does what
 
 `colcon` is the build *tool* — it walks your workspace, figures out the dependency order between packages, and invokes the right build backend for each one. `ament` is the *convention* — a set of CMake macros and Python packaging rules that let colcon (and other tools) discover a package's type, dependencies, and installed files consistently. You almost never call `ament` directly; you interact with it through `colcon build` and through the metadata you declare in `package.xml` and `setup.py`/`CMakeLists.txt`.

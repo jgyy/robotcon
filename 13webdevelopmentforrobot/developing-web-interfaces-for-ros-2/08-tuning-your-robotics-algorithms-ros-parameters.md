@@ -2,6 +2,26 @@
 
 Beyond commands and telemetry, a useful operator dashboard often needs to read and adjust a running node's configuration — a controller's max speed, a filter's threshold — without restarting anything. This unit covers ROS 2 parameters from the web side.
 
+The sequence below shows a full get/set round trip through `ROSLIB.Param`, plus the terminal-side check from the "Try it yourself" exercise that confirms the change actually reached the ROS graph.
+
+```mermaid
+sequenceDiagram
+    participant Term as Terminal (ros2 param)
+    participant Page as Web Page (JS)
+    participant Bridge as rosbridge
+    participant Node as ROS 2 node parameter service
+
+    Page->>Bridge: maxSpeedParam.get()
+    Bridge->>Node: get_parameters service call
+    Node-->>Bridge: current value
+    Bridge-->>Page: value returned to callback
+    Page->>Bridge: maxSpeedParam.set(newValue)
+    Bridge->>Node: set_parameters service call
+    Node-->>Bridge: acknowledgement
+    Term->>Node: ros2 param get (verify)
+    Node-->>Term: confirms new value
+```
+
 ## ROS 2 parameters recap
 Every ROS 2 node can expose named, typed parameters (int, double, string, bool, arrays) that live for the node's lifetime and can be read or changed at runtime — the same values you'd normally touch with `ros2 param get` / `ros2 param set` on the command line. From a web page, `roslibjs` exposes this through `ROSLIB.Param`, which under the hood calls the node's parameter get/set services for you, so you don't need to construct those service calls by hand.
 

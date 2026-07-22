@@ -2,6 +2,25 @@
 
 Almost every real FlexBE state you write ends up calling a ROS action server — move a joint, navigate to a pose, close a gripper. This unit covers the standard pattern for that, plus the autonomy-level mechanism that lets a human decide how much to supervise each transition.
 
+The sequence below shows a state's action-goal lifecycle — send, poll, result, cancel-on-preempt — together with the autonomy-level confirmation gate before the behavior moves on to the next state.
+
+```mermaid
+sequenceDiagram
+    participant O as Operator (OCS)
+    participant S as FlexBE State
+    participant A as Action Server
+
+    S->>A: send_goal() (on_enter)
+    loop each execute() tick
+        S->>A: has_result()?
+        A-->>S: not yet
+    end
+    A-->>S: result (done / failed)
+    S->>O: outcome ready, autonomy level checked
+    O-->>S: confirm transition (if required)
+    Note over S,A: on_exit cancels the goal if preempted before a result arrives
+```
+
 ## Why actions, not services, for state work
 
 Services are request/response and block until done — fine for quick queries, bad for anything that takes seconds or needs cancelling. Actions give you goal, feedback, and result, plus the ability to cancel a running goal. Long-running robot behaviors (navigation, manipulation, drone flight) are almost always exposed as actions, so FlexBE states built around `ProxyActionClient` are the workhorse of most behaviors.

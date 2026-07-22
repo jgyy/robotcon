@@ -2,6 +2,16 @@
 
 Here you get hands-on with an existing TF tree: how frames and transforms are represented, and the command-line and visual tools you'll reach for constantly for the rest of the course.
 
+The diagram below shows how the same `/tf` and `/tf_static` data feeds four different tools, each answering a different question about the tree.
+
+```mermaid
+flowchart LR
+    TFTopics["/tf and /tf_static topics"] --> Echo["tf2_echo\n(live value between two named frames)"]
+    TFTopics --> ViewFrames["view_frames\n(PDF snapshot of the whole tree)"]
+    TFTopics --> RViz["RViz TF display\n(axis triads, visual sanity check)"]
+    TFTopics --> Buffer["Buffer + TransformListener\n(programmatic lookup_transform)"]
+```
+
 ## Frames, transforms, and the `/tf` and `/tf_static` topics
 Every transform in ROS is a `parent_frame -> child_frame` relationship carrying a translation (x, y, z) and a rotation, usually expressed as a quaternion (x, y, z, w) to avoid gimbal lock. Moving relationships (a wheel spinning, a robot driving) are published on the `/tf` topic as a stream over time; relationships that never change (a lidar bolted to the chassis) go on `/tf_static`, published once (with transient-local QoS) rather than repeatedly. Both topics carry the same message type, a list of stamped transforms — the split is purely a bandwidth/efficiency optimization, not a difference in meaning.
 

@@ -2,6 +2,17 @@
 
 Hand-writing a broadcaster for every link of an articulated robot — an arm with six joints, say — quickly becomes unmanageable. `robot_state_publisher` solves this by reading your robot's URDF once and automatically broadcasting the entire kinematic chain's TF frames from a single stream of joint values. This unit shows how it fits together with simulation and joint state data.
 
+The diagram below shows how `robot_state_publisher` combines the two inputs — fixed URDF geometry and live joint values — into the TF tree that RViz2 and `rqt_tf_tree` display:
+
+```mermaid
+flowchart LR
+    URDF[URDF robot_description] --> RSP[robot_state_publisher]
+    Driver[Driver / simulator /\njoint_state_publisher_gui] --> JS["/joint_states"]
+    JS --> RSP
+    RSP --> TF[TF transforms: one per link]
+    TF --> Viz[RViz2 / rqt_tf_tree]
+```
+
 ## Why spawning a robot exposes the problem
 
 Drop a multi-link robot model into a simulator without a running `robot_state_publisher` and you'll see the base frame in RViz but none of the arm/wheel/sensor links move relative to it as joints change — or they won't appear at all, because nothing is broadcasting their transforms. Spawning a robot into a Gazebo-family simulator makes this concrete: the simulator publishes raw **joint states** (position, velocity, effort per joint) on `/joint_states`, but something still has to turn "joint 3 is at 0.7 radians" into "here is the TF transform from link 3 to link 4." That translation step is exactly what `robot_state_publisher` performs.

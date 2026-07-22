@@ -2,6 +2,19 @@
 
 Here you get your hands dirty for the first time: set up a host-side ROS 2 + micro-ROS toolchain, write a minimal micro-ROS publisher, and flash it to a board so it shows up as a real node in `ros2 topic list`. Everything you learn here — the build/flash/agent workflow — is the loop you'll reuse for every remaining unit.
 
+The diagram below traces this build/flash/agent loop end to end, from toolchain setup to confirming the node on the ROS 2 graph.
+
+```mermaid
+flowchart TD
+    A[Set up micro_ros_setup workspace] --> B[Build firmware workspace for board]
+    B --> C[Write micro-ROS node<br/>publisher + rcl_ret_t checks]
+    C --> D[Build &amp; run micro-ROS agent]
+    D --> E[Flash firmware to board]
+    E --> F{Agent shows<br/>connection?}
+    F -- "no: check baud/device" --> D
+    F -- yes --> G[ros2 topic list / echo<br/>confirms node on graph]
+```
+
 ## Setting up the host-side environment
 
 micro-ROS firmware is built with its own toolchain, `micro_ros_setup`, which wraps the board vendor's SDK (e.g. `esp-idf` for ESP32) and the micro-ROS build system. On your ROS 2 workspace:

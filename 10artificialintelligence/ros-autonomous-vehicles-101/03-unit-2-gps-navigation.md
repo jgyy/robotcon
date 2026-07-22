@@ -2,6 +2,19 @@
 
 Sensors tell the car what's around it; GPS tells it where it is on the planet. This unit covers reading GPS in ROS, turning that into coordinates you can actually do math with, and using it to steer toward a waypoint.
 
+The diagram below traces the full pipeline this unit builds, from raw GPS and odometry/IMU data through fusion to the waypoint-following steer command.
+
+```mermaid
+flowchart LR
+    GPS["/gps/fix (NavSatFix)"] --> NT["navsat_transform_node"]
+    ODOM["/odom"] --> EKF["ekf_node"]
+    IMU["/imu"] --> EKF
+    NT --> EKF
+    EKF --> FO["/odometry/filtered"]
+    FO --> WP["Waypoint follower<br/>steer_command()"]
+    WP --> CMD["/cmd_vel"]
+```
+
 ## GPS fundamentals and the NavSatFix message
 GPS receivers report position as latitude, longitude, and altitude — a spherical coordinate, not the flat Cartesian coordinates your control code wants. In ROS 2 this arrives as `sensor_msgs/msg/NavSatFix`:
 

@@ -2,6 +2,21 @@
 
 Imitation learning is the foundation everything else in this course builds on: instead of hand-coding a controller or defining a reward function, you collect examples of the behavior you want and train a model to reproduce it. This unit works through Behavioral Cloning (BC), the simplest and most widely used imitation learning algorithm, including why it breaks and the classic fixes.
 
+The flowchart below traces how a small per-step error at deployment compounds into failure, and where DAgger closes the loop back to the training set.
+
+```mermaid
+flowchart TD
+    Demo[Collect Demonstrations] --> Train[Train BC Policy<br/>minimize action MSE]
+    Train --> Deploy[Run Policy in Closed Loop]
+    Deploy --> Check{On-distribution state?}
+    Check -->|Yes| Correct[Correct Action Predicted]
+    Correct --> Deploy
+    Check -->|No| Drift[Small Error → Drift]
+    Drift --> Worse[Increasingly Off-Distribution]
+    Worse --> Fail[Compounding Failure]
+    Fail -.DAgger: label policy's own states.-> Demo
+```
+
 ## Framing manipulation as supervised learning
 A demonstration is a sequence of (observation, action) pairs: at each timestep t, the robot was in some state (camera image, joint positions) and a demonstrator (human teleoperator, or a scripted policy) issued some action (target joint positions, gripper open/close). Behavioral cloning treats this exactly like any other supervised learning problem: the observations are your inputs `X`, the actions are your labels `y`, and you train a model to minimize the difference between its predicted action and the demonstrated one.
 

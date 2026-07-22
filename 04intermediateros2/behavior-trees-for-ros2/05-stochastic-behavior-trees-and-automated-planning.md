@@ -2,6 +2,17 @@
 
 The BTs you've built so far are fully deterministic: given the same blackboard state, a tick always produces the same result. Real robots operate under uncertainty — sensors are noisy, actions sometimes fail for reasons outside the tree's model. This unit covers ways to let BTs express that uncertainty, and how automated planning can generate or reconfigure tree structure rather than requiring every tree to be hand-authored.
 
+The flowchart below captures the decision logic from this unit's "handling flaky actions" pattern: only transient failures get retried, so persistent ones are reported immediately instead of masked.
+
+```mermaid
+flowchart TD
+    A[Action Fails] --> B{IsFailureTransient?}
+    B -- Yes --> C[Retry up to N attempts]
+    C -- Succeeds --> D[SUCCESS]
+    C -- Still Failing --> E[ReportPersistentFailure]
+    B -- No --> E
+```
+
 ## Why "stochastic" nodes
 
 A purely deterministic tree either always tries an action or never does; it can't naturally express "retry, but assume this has a 70% chance of transient failure so don't give up after one attempt" or "occasionally probe a fallback path even when the primary one has been working, in case conditions changed." Two patterns fill this gap:

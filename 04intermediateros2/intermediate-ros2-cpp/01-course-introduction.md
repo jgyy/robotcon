@@ -2,6 +2,18 @@
 
 This unit sets expectations before you dive in: what the course adds on top of a first ROS 2 course, a small taste of the kind of thing you'll be able to build by the end, and what you need already installed and understood to follow along comfortably.
 
+The diagram below shows how this course extends a basic beginner-level node with the five areas of "production-grade machinery" it covers.
+
+```mermaid
+flowchart TD
+    A["Beginner ROS2 node: publish/subscribe, ros2 run"] --> B{"What's missing for a real robot stack?"}
+    B --> C["Unit 2-3: Launch Files"]
+    B --> D["Unit 4: Node Parameters"]
+    B --> E["Unit 5: Lifecycle Nodes"]
+    B --> F["Unit 6: Quality of Service"]
+    B --> G["Unit 7: DDS Middleware"]
+```
+
 ## What this course covers
 
 A beginner ROS 2 course teaches you to write a node, publish and subscribe, and maybe call a service. This course is about the machinery that makes those nodes production-grade: launch files that scale past a single `ros2 run`, parameters that let you reconfigure a node without recompiling it, node lifecycles that let a system bring hardware up and down safely, Quality of Service settings that make communication reliable (or intentionally lossy) over real networks, and the DDS middleware that actually implements all of it under the hood. None of these topics are optional extras in a real robot stack — they show up in almost every non-trivial ROS 2 package, including Nav2 and MoveIt.

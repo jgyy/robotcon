@@ -2,6 +2,23 @@
 
 This unit gets a minimal Open-RMF stack running end-to-end with a single simulated robot, so you have a working baseline before adding complexity like multiple robots or fleets in the next two units.
 
+The diagram below shows the three pieces a minimal RMF launch brings up together and how they connect to the verification topics you'll use.
+
+```mermaid
+flowchart LR
+    subgraph Core["RMF Core"]
+        Sched["Traffic Schedule Node"]
+        MapSvr["Building Map Server"]
+        Disp["Task Dispatcher"]
+    end
+    Sim["Gazebo/Ignition World
++ Simulated Robot"] --> Adapter["Fleet Adapter"]
+    Adapter <--> Sched
+    Adapter <--> Disp
+    Adapter -- publishes --> FS["/fleet_states"]
+    CLI["dispatch_loop CLI"] --> Disp
+```
+
 ## Installing the Open-RMF stack
 
 Open-RMF ships as a collection of ROS 2 packages (`rmf_core`, `rmf_traffic`, `rmf_fleet_adapter`, `rmf_simulation`, and friends). The straightforward path is to build the demo workspace from source alongside your ROS 2 distro so you get matching versions of everything:

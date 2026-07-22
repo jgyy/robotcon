@@ -2,6 +2,15 @@
 
 This unit is a preview, not a technical lesson: it orients you to what ROS is, why this course is structured the way it is, and gets you looking at a running robot before you write a single line of code.
 
+The diagram below traces the single `ros2 topic pub` command shown later in this unit, so you can see the path a command takes before it becomes robot motion.
+
+```mermaid
+flowchart LR
+    A[Terminal: ros2 topic pub] --> B[/Topic: cmd_vel/]
+    B --> C[Robot's control node]
+    C --> D[Simulated robot moves]
+```
+
 ## Why programming robots has a big future
 
 Robotics used to mean bespoke, one-off software written from scratch for every machine: a different stack for every arm, every mobile base, every drone. ROS (Robot Operating System) exists because that approach doesn't scale. It gives the robotics community a shared set of conventions — how processes talk to each other, how sensor and actuator data is represented, how packages are built and distributed — so that a driver written for a camera by one team can be reused by another team building an entirely different robot. That reuse is why ROS has become the de facto standard in robotics research, and increasingly in industrial and service robotics: warehouse robots, surgical robot prototypes, self-driving research vehicles, and countless university and hobbyist projects all speak some dialect of ROS. Learning it is less like learning one library and more like learning the plumbing that lets robotics code compose.

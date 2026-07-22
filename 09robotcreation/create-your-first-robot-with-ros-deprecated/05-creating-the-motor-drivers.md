@@ -2,6 +2,26 @@
 
 This is the unit where the robot first moves under ROS's control. You'll write the node that turns abstract velocity commands into the actual GPIO signals your driver board expects, and expose it with the same topic interface your simulation from Unit 3 already understands.
 
+The sequence below shows the two paths through the driver node: the normal cmd_vel-to-PWM conversion, and the independent watchdog timer that forces a stop if commands stop arriving.
+
+```mermaid
+sequenceDiagram
+    participant Pub as cmd_vel Publisher
+    participant Node as motor_driver Node
+    participant GPIO as Motor GPIO/PWM
+    participant WD as Watchdog Timer
+
+    Pub->>Node: Twist(linear.x, angular.z)
+    Node->>Node: twist_to_wheel_speeds()
+    Node->>GPIO: set_left/right_motor_pwm()
+    Node->>WD: update LAST_CMD_TIME
+    loop every 0.1s
+        WD->>WD: check time since LAST_CMD_TIME
+    end
+    Note over Pub,Node: publisher crashes or WiFi drops
+    WD->>GPIO: timeout exceeded -> stop both motors
+```
+
 ## From velocity command to wheel speeds
 The standard ROS convention for driving a mobile base is to publish `geometry_msgs/Twist` messages on a `/cmd_vel` topic — linear velocity in x, angular velocity in z, for a ground robot. Your driver node's first job is converting that single Twist into two independent wheel speeds using the differential-drive kinematics:
 ```python

@@ -2,6 +2,18 @@
 
 Security in ROS 2 is entirely opt-in: unless you set a specific environment variable and point it at a directory of keys, every node runs exactly as it did before, wide open. This unit walks through the minimum steps to flip that switch and get a secured node talking to another secured node.
 
+The diagram below traces the activation sequence end to end, including the pass/fail decision `ROS_SECURITY_STRATEGY=Enforce` makes at launch.
+
+```mermaid
+flowchart TD
+    A["ros2 security create_keystore"] --> B["ros2 security create_key (per node)"]
+    B --> C["export ROS_SECURITY_KEYSTORE / ENABLE / STRATEGY"]
+    C --> D["ros2 run <node> --enclave <name>"]
+    D --> E{Valid cert & permissions found?}
+    E -- Yes --> F[Node starts: authenticated & encrypted]
+    E -- "No (Enforce)" --> G[Node refuses to start]
+```
+
 ## The `sros2` package and prerequisites
 
 The tooling lives in the `sros2` package, which ships as part of a standard ROS 2 install (or is installable via your package manager, e.g. `apt install ros-<distro>-sros2` if it isn't already present). It wraps OpenSSL certificate generation and DDS-Security XML permission files behind a friendlier `ros2 security` CLI verb.

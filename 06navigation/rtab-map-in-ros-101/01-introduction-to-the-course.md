@@ -2,6 +2,17 @@
 
 This unit sets the stage for everything that follows: what RTAB-Map actually is, where it sits relative to other SLAM approaches you may already know, and what you need on your machine before Unit 2 starts touching real topics and packages.
 
+The diagram below breaks the name "RTAB-Map" into its two defining jobs and shows how each one leads to a different piece of output:
+
+```mermaid
+flowchart TD
+    A[RGB-D or stereo camera input] --> B[RTAB-Map]
+    B --> C["Real-Time:<br/>Working Memory / Long-Term Memory split"]
+    B --> D["Appearance-Based:<br/>visual bag-of-words loop closure"]
+    C --> E[2D occupancy grid]
+    D --> F[3D point-cloud / mesh map]
+```
+
 ## What is RTAB-Map, and why it exists
 
 RTAB-Map (Real-Time Appearance-Based Mapping) is a graph-based SLAM library built around one core idea: use appearance (images) rather than only geometry to decide whether the robot is revisiting a place it has already seen. Many SLAM stacks you may have used before — laser-scan-matching approaches like `slam_toolbox` or Cartographer — build a map primarily from 2D LIDAR returns and odometry. RTAB-Map is designed from the ground up for RGB-D (color + depth) and stereo cameras, and it produces both a 2D occupancy grid *and* a dense 3D point-cloud/mesh map, which is what makes it attractive for robots that need to reason about full 3D structure (shelves, stairs, overhangs) rather than a flat 2D slice of the world.

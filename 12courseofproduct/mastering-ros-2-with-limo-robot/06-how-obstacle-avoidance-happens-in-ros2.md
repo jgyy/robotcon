@@ -2,6 +2,21 @@
 
 Planning a path is only useful if LIMO can also keep itself from hitting things that weren't on the map — furniture that moved, a person walking by, a door left ajar. This unit covers costmaps, the layered obstacle model Nav2 uses, and the recovery behaviors that kick in when avoidance alone isn't enough.
 
+The diagram below shows how the static and obstacle layers combine into a costmap, and what happens when avoidance alone isn't enough to make progress.
+
+```mermaid
+flowchart LR
+    MAP["Saved static map"] --> SLAYER["Static layer"]
+    SCAN["/scan live lidar data"] --> OLAYER["Obstacle layer (mark / clear)"]
+    SLAYER --> COMBINE["Combined costmap"]
+    OLAYER --> COMBINE
+    COMBINE --> INFLATE["Inflation layer (cost gradient)"]
+    INFLATE --> USE["Costmap used by planner + controller"]
+    USE --> STUCK{"Boxed in / no valid cmd_vel?"}
+    STUCK -->|Yes| RECOVER["Recovery: Spin / BackUp / Wait"]
+    STUCK -->|No| NAV["Continue navigating"]
+```
+
 ## Costmaps: the data structure obstacle avoidance runs on
 
 A costmap is a grid overlaid on (or independent of) the map, where each cell holds a cost from free (0) to lethal (254, guaranteed collision). Nav2 maintains two: the **global costmap**, seeded from the static map and updated slowly, and the **local costmap**, a smaller rolling window centered on LIMO that updates continuously from live sensor data. Both are built from stacked **layers**, each contributing cost independently before being combined:

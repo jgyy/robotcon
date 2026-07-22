@@ -2,6 +2,17 @@
 
 A map is useless if the robot doesn't know where it is on it. This unit covers what "localization" means precisely in ROS Navigation, the particle-filter algorithm that solves it by default, and how to configure and monitor it in practice.
 
+The diagram below shows the AMCL cycle described in the next section — the same five steps repeating on every odometry and scan update:
+
+```mermaid
+flowchart TD
+    Particles[Particle Cloud: pose hypotheses] --> Motion[Motion Update: apply odometry + noise]
+    Motion --> Sensor[Sensor Update: score vs laser scan]
+    Sensor --> Resample[Resample: keep high-scoring particles]
+    Resample --> Estimate[Pose Estimate: weighted mean]
+    Estimate --> Particles
+```
+
 ## What localization means here
 
 Note the distinction: **odometry** gives you a *relative* pose that drifts over time (wheel slip, integration error accumulate endlessly). **Localization** gives you an *absolute* pose on the map by continuously correcting that drifting estimate against sensor observations. Concretely, localization's job is to maintain the `map -> odom` transform — odometry already gives you `odom -> base_link`, and together those compose into `map -> base_link`, the pose the rest of the stack actually cares about.

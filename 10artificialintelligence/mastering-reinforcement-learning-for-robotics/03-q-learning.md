@@ -2,6 +2,23 @@
 
 Q-Learning is the algorithm most people learn RL through first, and for good reason: it directly implements the Bellman equation from Unit 2 as an update rule you can code in a few lines, with no neural network required. This unit builds a working Q-Learning agent end to end on a small, fully observable environment.
 
+The diagram below traces one full pass through the training loop this unit builds — from action selection through the Q-table update to episode termination:
+
+```mermaid
+flowchart TD
+    Reset[Reset environment, get state s] --> Choose{"rand() < epsilon?"}
+    Choose -->|Yes| Explore[Pick random action a]
+    Choose -->|No| Exploit["Pick a = argmax Q(s, ·)"]
+    Explore --> Step[Take action a in the environment]
+    Exploit --> Step
+    Step --> Observe[Observe reward r, next state s', done?]
+    Observe --> Update["Update Q(s,a) += α·[r + γ·max Q(s',·) − Q(s,a)]"]
+    Update --> Decay[Decay epsilon]
+    Decay --> Done{Episode done?}
+    Done -->|No, s ← s'| Choose
+    Done -->|Yes| Reset
+```
+
 ## The Q-table
 Q-Learning represents the action-value function `Q(s,a)` as an explicit lookup table — one row per state, one column per action — which only works when both `S` and `A` are small and discrete. For a robotics-flavored example, imagine a simplified grid-world "warehouse robot" that must navigate a 5x5 grid to a goal cell while avoiding obstacle cells: the state is the robot's `(row, col)` position (25 states), and the action is one of `{up, down, left, right}` (4 actions), giving a 25x4 Q-table. Real robot state spaces are rarely this small (that's exactly the problem Unit 4 solves), but the grid-world keeps the algorithm itself visible without a neural network in the way.
 

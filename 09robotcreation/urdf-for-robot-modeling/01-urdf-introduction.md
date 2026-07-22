@@ -2,6 +2,17 @@
 
 Every simulated or real robot in ROS needs a machine-readable description of its own body before anything else — TF, RViz, motion planning, and physics simulation all read from it. This unit introduces that description format, URDF, and previews the two robots you'll build over the rest of the course.
 
+The diagram below shows how one URDF file feeds every downstream tool in the ROS pipeline.
+
+```mermaid
+flowchart LR
+    URDF[URDF File] --> RSP[robot_state_publisher]
+    RSP --> TF[TF Tree]
+    TF --> RViz[RViz Visualization]
+    URDF --> Gazebo[Gazebo Physics Simulation]
+    URDF --> MoveIt[MoveIt Motion Planning]
+```
+
 ## What URDF actually is
 URDF (Unified Robot Description Format) is an XML dialect for describing a robot as a tree of rigid bodies connected by joints. It is not a simulator, a renderer, or a physics engine — it's just data. Other tools (RViz, Gazebo, `robot_state_publisher`, MoveIt) all read the same URDF and interpret it for their own purpose: RViz draws the meshes, Gazebo adds physics to them, `robot_state_publisher` turns it into a live TF tree.
 

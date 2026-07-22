@@ -2,6 +2,17 @@
 
 This unit covers Vulcanexus, eProsima's ROS 2 distribution built specifically around Fast DDS tooling — a second, complementary answer to the DDS pain points from Units 6-7, distinct from Zenoh's approach of replacing the middleware outright.
 
+The diagram below shows how Vulcanexus adds observability tooling on top of stock Fast DDS, as a complementary approach to Zenoh's protocol swap.
+
+```mermaid
+flowchart TD
+  ROS2[Standard ROS 2 + Fast DDS] --> Mon["Fast DDS Monitor (live entity graph GUI)"]
+  ROS2 --> Spy["Fast DDS Spy (CLI discovery inspection)"]
+  Mon --> Insight[Visibility into QoS & discovery without raw packet capture]
+  Spy --> Insight
+  Insight -.compare with.-> Zenoh["Unit 8: Zenoh (replaces the middleware)"]
+```
+
 ## What Vulcanexus is
 Vulcanexus is a ROS 2 distribution (produced by eProsima, the same organization behind Fast DDS) that bundles standard ROS 2 with a curated set of Fast DDS-specific tools for monitoring, tuning, and visualizing DDS behavior that aren't part of a stock ROS 2 install. Rather than swapping the middleware (as Zenoh does), Vulcanexus keeps DDS/Fast DDS as the transport and focuses on making its behavior observable and configurable. It's distributed as both a native install and Docker images, which matters if you want to try it without disturbing an existing ROS 2 setup:
 

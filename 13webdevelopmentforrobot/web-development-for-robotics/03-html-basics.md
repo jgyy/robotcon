@@ -2,6 +2,20 @@
 
 HTML is the vocabulary you use to describe what's on a page — headings, text, tables, images — so the browser (and screen readers, and search engines) understand what each piece of content actually is. This unit covers the elements you'll reuse constantly when building robot dashboards.
 
+The tree below shows how the elements covered in this unit nest inside a page's `<body>`.
+
+```mermaid
+flowchart TD
+    Body["<body>"] --> Section["<section id=status-panel>"]
+    Section --> H2["<h2> heading"]
+    Section --> P["<p> Mode / Battery text"]
+    Body --> Table["<table>"]
+    Table --> Thead["<thead> header row"]
+    Table --> Tbody["<tbody id=joint-table-body>"]
+    Tbody --> TR["<tr data-joint-name=elbow>"]
+    Body --> Img["<img alt=camera feed>"]
+```
+
 ## Document structure and semantics
 Every page needs the boilerplate from Unit 1, but the content inside `<body>` should use the element that matches the content's meaning, not just its appearance. Use `<h1>`-`<h6>` for headings in hierarchical order, `<p>` for paragraphs, `<nav>` for navigation, `<section>`/`<article>` to group related content. This "semantic HTML" matters more than it looks: it's what lets screen readers describe your page and what keeps your CSS selectors meaningful instead of a pile of generic `<div>`s.
 

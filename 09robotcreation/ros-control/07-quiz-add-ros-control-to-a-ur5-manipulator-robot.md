@@ -2,6 +2,16 @@
 
 This capstone unit has no new theory — it's where units 1 through 6 get combined into one working pipeline on a realistic robot. The UR5 is a good target: a genuine 6-DOF industrial arm with widely available URDF/XACRO descriptions, so the exercise mirrors what you'd actually do on the job.
 
+The flowchart below lays out the five-step capstone pipeline that ties together every prior unit.
+
+```mermaid
+flowchart TD
+    S1[1. Add ros2_control block to UR5 URDF] --> S2[2. Write controller_manager YAML: joint_state_broadcaster + joint_trajectory_controller]
+    S2 --> S3[3. Bring up robot in simulator & spawn controllers]
+    S3 --> S4[4. Confirm /joint_states publishing & controllers active]
+    S4 --> S5[5. Send multi-waypoint trajectory goal]
+```
+
 ## The brief
 Starting from a UR5 (or UR-family) robot description, get it moving under `ros2_control` in simulation, end to end:
 

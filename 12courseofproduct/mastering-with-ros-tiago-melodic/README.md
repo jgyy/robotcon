@@ -2,6 +2,20 @@
 
 TIAGo, from PAL Robotics, is a mobile manipulator that packs a differential/omnidirectional base, a lifting torso, a 7-DoF arm, and an RGB-D head camera onto one platform running on ROS 1 — which makes it a good vehicle for learning how mobile navigation, arm motion planning, and 2D/3D perception fit together on a single real robot rather than as isolated exercises. This course walks from TIAGo's hardware and ROS interfaces through joint- and velocity-level control, `move_base` navigation, three units of MoveIt motion planning (from RViz-driven planning to Cartesian paths and constraints), and perception with both OpenCV and PCL, before finishing with a micro project that chains navigation, perception, and manipulation into one autonomous pick task.
 
+The diagram below shows how each unit builds on the previous one, culminating in the capstone micro project.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Introduction] --> U2[Unit 2: Control]
+    U2 --> U3[Unit 3: Navigation]
+    U3 --> U4[Unit 4: MoveIt Part 1]
+    U4 --> U5[Unit 5: MoveIt Part 2]
+    U5 --> U6[Unit 6: MoveIt Part 3]
+    U6 --> U7[Unit 7: Perception OpenCV]
+    U7 --> U8[Unit 8: Perception PCL]
+    U8 --> U9[Unit 9: Micro Project]
+```
+
 1. [Introduction to the Course](01-introduction-to-the-course.md) — TIAGo's hardware subsystems, how they map onto ROS topics/TF/controllers, and bringing up a simulation.
 2. [Control](02-control.md) — Driving the base with `cmd_vel` and moving torso/head/arm/gripper through joint trajectory controllers.
 3. [Navigation](03-navigation.md) — Localizing with `amcl`, understanding costmaps, and sending `move_base` goals from code.

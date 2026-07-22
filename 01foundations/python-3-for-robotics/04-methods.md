@@ -2,6 +2,18 @@
 
 As soon as a piece of logic is used more than once — converting degrees to radians, clamping a velocity command to safe limits — it belongs in a function. This unit covers defining and calling Python functions, the parameter styles you'll meet in robotics libraries, and where lambdas fit in.
 
+The flowchart below traces how arguments flow into a function and how its result flows back out, covering the parameter styles this unit introduces:
+
+```mermaid
+flowchart LR
+    A[Caller] -->|positional args| D[def clamp value, low, high]
+    A -->|default omitted| D
+    A -->|"*args / **kwargs"| D
+    D --> E{Explicit return?}
+    E -->|Yes| F[Value, or tuple of values,<br/>returned to caller]
+    E -->|No| G[None returned]
+```
+
 ## Defining functions and parameters
 
 A function groups code under a name so it can be called, tested, and reused, with `def`, a parameter list, and an optional `return`:

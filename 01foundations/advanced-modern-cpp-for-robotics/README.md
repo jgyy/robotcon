@@ -2,6 +2,19 @@
 
 C++ is the language most industrial and research robots actually run on, and ROS 2's core client library (`rclcpp`) is written and used idiomatically in modern C++. This course goes beyond basic syntax into the features that matter for real robotics code: the build toolchain that turns source into a linkable library, the STL containers and iterators that replace hand-rolled data structures, classes and object-oriented design for modeling sensors and actuators, precise pointer/reference/smart-pointer semantics for safe memory management, templates and lambdas for generic and callback-driven code, threads for concurrent sensor and control loops, and exception handling for the messy failure modes of physical hardware.
 
+The units build in a deliberate order, each one assuming the tools introduced by the units before it:
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Build Tools] --> U2[Unit 2: STL Library]
+    U2 --> U3[Unit 3: Classes and Objects]
+    U3 --> U4[Unit 4: OOP]
+    U4 --> U5[Unit 5: Pointers and References]
+    U5 --> U6[Unit 6: Templates and Lambdas]
+    U6 --> U7[Unit 7: Concurrency]
+    U7 --> U8[Unit 8: Exception Handling]
+```
+
 1. [Build Tools](01-build-tools.md) — Compilers, compilation flags, libraries, linking, and CMake, from source file to ROS 2-ready library.
 2. [The STL Library](02-the-stl-library.md) — Sequence and associative containers, and the iterators that let algorithms work across all of them.
 3. [Classes and Objects](03-classes-and-objects.md) — Access specifiers, constructors/destructors, static and const members, copy vs. move semantics.

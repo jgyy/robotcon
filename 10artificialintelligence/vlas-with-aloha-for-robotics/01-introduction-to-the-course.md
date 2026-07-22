@@ -2,6 +2,23 @@
 
 This unit sets the map for everything that follows: what a Vision-Language-Action (VLA) model actually is, why ALOHA became a reference platform for learning manipulation from demonstration, and how the three learning techniques in this course — behavioral cloning, actor-critic reinforcement learning, and Action Chunking Transformers (ACT) — relate to each other rather than being three unconnected topics.
 
+The diagram below contrasts a VLA's vision+language-to-action mapping with the two things it's often confused for.
+
+```mermaid
+flowchart LR
+    subgraph VLM["VLM (e.g. GPT-4V, LLaVA)"]
+        I1[Image] --> T1[Text description]
+    end
+    subgraph Planner["Classical Motion Planner"]
+        G[Explicit Goal Pose] --> IK[IK / Trajectory Solver] --> M1[Robot Motion]
+    end
+    subgraph VLA["VLA (this course)"]
+        I2[Camera Images] --> P[Learned Policy]
+        L[Language Instruction] --> P
+        P --> A[Joint / Gripper Commands]
+    end
+```
+
 ## What a VLA is, and what it isn't
 A Vision-Language-Action model takes camera images (vision) and, often, a natural-language instruction ("pick up the red block") as input, and outputs low-level robot actions — joint positions, end-effector deltas, or gripper commands — as output. This is different from two things people often conflate it with:
 

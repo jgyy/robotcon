@@ -2,6 +2,15 @@
 
 Units 4-5 used gradient descent and Adam as black boxes. This unit opens them up: how gradients are actually computed (backpropagation), how optimizers improve on plain gradient descent, how initial weights are chosen, and how overfitting is controlled.
 
+The diagram below shows how each optimizer covered in this unit builds directly on the one before it, adding one new idea at a time.
+
+```mermaid
+flowchart LR
+    GD[Full-batch Gradient Descent: accurate, slow] --> SGD[SGD: noisy per-batch steps]
+    SGD --> MOM[Momentum: velocity smooths the path]
+    MOM --> ADAM[Adam: momentum + per-parameter adaptive learning rate]
+```
+
 ## Introduction to gradient descent, revisited
 Recall the update rule `w = w - lr * dL/dw`. Two things this unit adds to that picture: first, `dL/dw` for a deep network with millions of parameters isn't computed by hand — it needs an algorithm (backpropagation). Second, plain ("vanilla") gradient descent is rarely used as-is in practice; it's slow to converge and sensitive to the learning rate, which is why SGD variants exist.
 

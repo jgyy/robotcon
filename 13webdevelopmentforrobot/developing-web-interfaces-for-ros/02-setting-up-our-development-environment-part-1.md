@@ -2,6 +2,20 @@
 
 Everything in this course depends on one running piece of infrastructure: the rosbridge WebSocket server. This unit gets it installed, launched, and verified so that later units can focus purely on the web side.
 
+The diagram below shows the install-launch-verify sequence for getting rosbridge running and reachable.
+
+```mermaid
+flowchart TD
+    A["Install rosbridge_suite<br/>apt or colcon/catkin build"] --> B["Launch rosbridge_websocket<br/>opens ws://host:9090"]
+    B --> C{"Port 9090 open?<br/>ss -tlnp"}
+    C -->|No| B
+    C -->|Yes| D["Test with websocat/wscat<br/>subscribe to /rosout"]
+    D --> E{"JSON messages<br/>streaming back?"}
+    E -->|No| F["Check firewall/subnet,<br/>use real IP not localhost"]
+    F --> D
+    E -->|Yes| G[Bridge verified end-to-end]
+```
+
 ## Installing rosbridge_suite
 `rosbridge_suite` ships as a standard ROS package and is available through your distro's package manager on both ROS 1 and ROS 2:
 

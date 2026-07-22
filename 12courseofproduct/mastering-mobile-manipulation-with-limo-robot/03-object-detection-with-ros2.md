@@ -2,6 +2,19 @@
 
 The arm can now move wherever you tell it (Unit 2), but a real pick-and-place task needs that target to come from perception, not a hardcoded pose. This unit covers turning LIMO's camera feed into a 3D grasp pose that gets fed straight into the `MoveGroupInterface` code you already wrote.
 
+The diagram below traces the data flow from raw camera pixels to a grasp pose consumed by the Unit 2 motion node.
+
+```mermaid
+flowchart LR
+    Cam["LIMO Camera\n/camera/color/image_raw"] --> Det["ObjectDetector node\n(image_transport subscriber)"]
+    Det --> Seg["Color/contour or ML detection\n(pixel u, v)"]
+    Depth["/camera/depth/image_raw\n+ camera_info intrinsics"] --> Deproj
+    Seg --> Deproj["Deproject pixel to 3D point\n(camera optical frame)"]
+    Deproj --> TF["tf2 transform to\nmycobot_arm_base_link"]
+    TF --> Pub["/detected_object_pose\n(PoseStamped)"]
+    Pub --> Mover["Unit 2 mover node\n(MoveGroupInterface)"]
+```
+
 ## Getting the camera stream into ROS2
 
 LIMO ships with an RGB (and on some variants, RGB-D) camera publishing standard `sensor_msgs/Image` topics, typically already bridged by the vendor driver. Confirm the stream and its calibration before writing any detection code:

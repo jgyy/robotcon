@@ -2,6 +2,18 @@
 
 A fleet that never charges is a fleet that eventually stops. This unit covers how RMF tracks battery state and automatically inserts charging behavior into a robot's schedule.
 
+The state diagram below shows how a robot moves between availability and charging based on the `recharge_threshold` and `recharge_soc` config values.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Available
+    Available --> Available: new task (drain simulated safe)
+    Available --> LowBattery: battery_soc < recharge_threshold
+    LowBattery --> Charging: planner auto-inserts charge task
+    Charging --> Charging: battery_soc < recharge_soc
+    Charging --> Available: battery_soc >= recharge_soc
+```
+
 ## How RMF learns about battery state
 
 Your fleet adapter's `battery_soc()` callback (introduced in Unit 5) is the only source of truth RMF has about a robot's charge level — there's no separate battery-monitoring subsystem. Every fleet state update includes this value, and RMF's task planner factors it into two decisions: whether a robot is eligible to be assigned a new task, and whether a robot needs to be sent to recharge before its current commitments would drain it too far.

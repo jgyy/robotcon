@@ -2,6 +2,20 @@
 
 Where topics are a continuous, fire-and-forget stream, services are ROS 2's request/response mechanism — the equivalent of a synchronous RPC call. This unit covers when to reach for a service instead of a topic, and how to build both sides of one.
 
+The sequence below shows the `AddTwoInts` example end to end, including the async pattern this unit recommends over a blocking call:
+
+```mermaid
+sequenceDiagram
+    participant Client as AddClient
+    participant Server as AddServer
+    Client->>Server: wait_for_service()
+    Server-->>Client: service discovered
+    Client->>Server: call_async(AddTwoInts.Request)
+    Note over Client: rclpy.spin() keeps processing<br/>other callbacks while awaiting reply
+    Server->>Server: handle_add(request, response)
+    Server-->>Client: response (sum)
+```
+
 ## What is a service in ROS 2?
 A service is a one-shot call: a client sends a request, a server processes it and sends back exactly one response, then the exchange is over. Unlike a topic, there's no ongoing stream and no fan-out to multiple listeners in the same interaction — it's point-to-point and stateless per call. Use a service when you need an answer *right now* to act on (e.g. "is the gripper currently holding something?", "recompute this once") — use a topic when you're describing an ongoing state or event stream. Services are defined with `.srv` files, which split a request and response into two message blocks separated by `---`.
 

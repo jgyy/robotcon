@@ -2,6 +2,21 @@
 
 With a working leader/follower pair from Unit 1, the next job is deciding exactly what you want the arm to learn and then producing a dataset good enough to teach it. This unit covers picking a scoped task and two complementary ways to generate demonstrations: teleoperation by hand, and automated collection with inverse kinematics and computer vision.
 
+The flowchart below shows how the two collection methods both feed the same episode log and sanity check before a dataset is considered ready for training.
+
+```mermaid
+flowchart TD
+    Task[Define a narrow,<br/>visually unambiguous task] --> Manual[Manual: teleoperate leader,<br/>follower mirrors it]
+    Task --> Auto[Automatic: CV detects<br/>object pose each episode]
+    Auto --> IK[Inverse kinematics solves<br/>target joint angles]
+    Manual --> Log[Log camera frame +<br/>joint state/action per step]
+    IK --> Log
+    Log --> Save[Save episode to<br/>structured dataset]
+    Save --> Check{Playback: image &amp; action<br/>aligned in time?}
+    Check -->|No| Fix[Fix the temporal<br/>offset bug]
+    Check -->|Yes| Ready[Dataset ready for<br/>Unit 3 training]
+```
+
 ## Choosing a task that's actually learnable
 
 A good first task is narrow, visually unambiguous, and physically short: "pick up the red cube and drop it in the bin," not "tidy the desk." Imitation-learning policies like ACT and SmolVLA learn a mapping from camera images (and sometimes a language instruction) to joint actions — they do not plan or reason about sub-goals the way a classical planner would. That means:

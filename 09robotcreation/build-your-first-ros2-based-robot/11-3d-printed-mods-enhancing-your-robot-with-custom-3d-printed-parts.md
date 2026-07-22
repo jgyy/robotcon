@@ -2,6 +2,18 @@
 
 The reference build gets your robot running end to end; this closing unit is about extending it — designing and printing your own enclosure so your robot looks and holds together like a finished product rather than an exposed prototype.
 
+The flowchart below walks through this unit's design-to-print loop, from referencing your existing chassis geometry to a validated full cover.
+
+```mermaid
+flowchart TD
+    Ref[Reference existing chassis geometry] --> Design[Design cover: clearance, access panels, cutouts]
+    Design --> Constraints[Apply FDM constraints: overhangs, wall thickness, tolerance]
+    Constraints --> Coupon[Print small test coupon]
+    Coupon --> Check{Fits within tolerance?}
+    Check -->|No| Adjust[Adjust tolerance offset] --> Coupon
+    Check -->|Yes| Full[Print full cover]
+```
+
 ## Designing the cover
 A cover (or full enclosure) for your robot has to satisfy mechanical and thermal constraints, not just aesthetics — this is where CAD skills from Unit 6 come back into play, now applied to a part that isn't structural but does need to fit precisely:
 - **Reuse your existing chassis assembly as the reference geometry.** Model the cover as a part that mates against features already on your chassis (mounting bosses, existing screw holes) rather than guessing dimensions freehand — inconsistency here is the single most common reason a first cover doesn't fit.

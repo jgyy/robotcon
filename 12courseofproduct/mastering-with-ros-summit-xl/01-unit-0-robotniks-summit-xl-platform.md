@@ -2,6 +2,20 @@
 
 This unit introduces the Summit XL, the Robotnik mobile robot you'll work with for the rest of the course, its sensor suite, and how to drive it by hand in simulation before any autonomy is layered on top.
 
+The diagram below shows how each sensor on the base feeds a distinct ROS topic that later units build on.
+
+```mermaid
+flowchart LR
+    Base[Summit XL drive base] --> Laser[Hokuyo 2D laser]
+    Base --> PTZ[PTZ RGB camera]
+    Base --> GPSIMU[GPS receiver + IMU]
+    Base --> Enc[Wheel encoders]
+    Laser -->|LaserScan| Topics[(ROS topics)]
+    PTZ -->|Image| Topics
+    GPSIMU -->|NavSatFix, Imu| Topics
+    Enc -->|Odometry| Topics
+```
+
 ## The platform itself
 
 The Summit XL is a mid-size, rugged mobile base built by Robotnik for both indoor and outdoor use — the trait that shapes this whole course, since Units 1 and 2 give you two different navigation stacks for the two environments. The stock configuration is a four-wheel skid-steer differential drive (turn by spinning the left and right wheel pairs at different speeds, like a small tank); some Summit XL variants (e.g. the Steel/HL line) swap in Mecanum wheels for true omnidirectional motion, so always check which drive geometry your specific robot description uses before assuming holonomic strafing works.

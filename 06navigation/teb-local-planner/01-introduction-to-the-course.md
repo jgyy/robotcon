@@ -2,6 +2,16 @@
 
 TEB (Timed Elastic Band) is one of the most capable local planners available for ROS Navigation, and it's the one you reach for when a simple trajectory rollout planner like DWA starts to feel too rigid. This unit orients you: what TEB actually optimizes, how it differs from the local planners you may already know, and what you'll be able to build by the end of the course.
 
+The diagram below shows where TEB sits in the Navigation Stack's data flow, between the global planner's path and the robot's velocity commands.
+
+```mermaid
+flowchart LR
+    Map[Static Map] --> GP[Global Planner]
+    GP -->|global path| TEB[TEB Local Planner]
+    LC[Local Costmap] -->|live obstacles| TEB
+    TEB -->|cmd_vel| Base[Robot Base Controller]
+```
+
 ## What a local planner does, and why TEB is different
 
 The global planner gives you a path — a sequence of waypoints from A to B that ignores dynamics and only cares about static free space. The **local planner** turns that path into actual velocity commands, moment to moment, while reacting to obstacles the global map doesn't know about (a person walking by, a chair that moved).

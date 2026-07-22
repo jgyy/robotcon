@@ -2,6 +2,19 @@
 
 Artificial Potential Fields (APF) is a fundamentally reactive, local approach: instead of searching a graph or tree for a path in advance, it treats the goal as attractive and obstacles as repulsive, and moves the robot by "rolling downhill" along the combined field at every timestep. It's the go-to conceptual model behind reactive local planners and costmap-based obstacle avoidance.
 
+The diagram below shows how the attractive and repulsive fields combine into the per-timestep control loop that this unit builds toward.
+```mermaid
+flowchart TD
+    Goal[Goal] --> Att[Attractive force: pulls robot toward goal]
+    Obs[Nearby obstacles within Q*] --> Rep[Repulsive force: pushes robot away]
+    Att --> Sum[Total force = attractive + repulsive]
+    Rep --> Sum
+    Sum --> Move[Move one small step along the negative gradient]
+    Move --> Check{Within tolerance of goal?}
+    Check -->|No| Att
+    Check -->|Yes| Done[Goal reached]
+```
+
 ## Attractive potentials
 The goal generates an attractive field that pulls the robot toward it, analogous to a ball rolling into a valley. A simple **conical** potential grows linearly with distance to the goal:
 ```

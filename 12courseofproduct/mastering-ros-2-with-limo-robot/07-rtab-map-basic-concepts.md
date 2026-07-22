@@ -2,6 +2,21 @@
 
 Everything so far assumed a 2D lidar and a flat occupancy grid. RTAB-Map (Real-Time Appearance-Based Mapping) takes a different route — building a 3D point cloud map from a depth or stereo camera — which matters for LIMO variants fitted with an RGB-D sensor and for environments where a flat lidar scan doesn't capture enough (ramps, overhanging obstacles, cluttered shelving). This unit covers the concepts before the next unit puts them to use for autonomous navigation.
 
+The diagram below traces RTAB-Map's data flow from synchronized camera topics to an accumulated point cloud with loop closure.
+
+```mermaid
+flowchart LR
+    RGB["/camera/color/image_raw"] --> SYNC["rtabmap_sync: time-align frames"]
+    DEPTH["/camera/depth/image_rect_raw"] --> SYNC
+    INFO["/camera/color/camera_info"] --> SYNC
+    ODOM["/odom"] --> CORE
+    SYNC --> CORE["RTAB-Map core node"]
+    CORE --> FEATURES["Match visual features frame-to-frame"]
+    FEATURES --> CLOUD["Accumulate 3D point cloud"]
+    FEATURES --> PLACE["Appearance-based place recognition"]
+    PLACE --> LOOPCLOSE["Loop closure across trajectory"]
+```
+
 ## Visual/RGB-D SLAM vs lidar SLAM
 
 Lidar SLAM (Unit 3) matches consecutive 2D scans to build a flat grid. RTAB-Map instead matches consecutive **images** — using visual features (distinctive, trackable points like corners) it detects in each RGB-D frame — to estimate how the camera moved between frames, then projects the depth data from each frame into a shared 3D point cloud. The core challenge RTAB-Map is named after and specifically engineered to solve is **loop closure at scale**: appearance-based place recognition (recognizing "I've seen this view before" purely from image similarity) lets it detect loop closures even after long trajectories, without that comparison growing unmanageably slow as the map grows — it uses a memory management scheme that keeps only the most relevant past frames active for real-time comparison.

@@ -2,6 +2,18 @@
 
 Before you can automate anything, you need a running Jenkins controller. This unit walks through getting Jenkins installed reproducibly (via a script, not by hand) and through the first-run wizard that unlocks it.
 
+The diagram below shows the end-to-end sequence this unit follows, from the scripted Docker install through to a verified, working dashboard.
+
+```mermaid
+flowchart TD
+    A[Create Docker volume<br/>jenkins_home] --> B[Run Jenkins container<br/>docker run jenkins/jenkins:lts]
+    B --> C[Retrieve initialAdminPassword<br/>from container logs]
+    C --> D[Unlock instance at<br/>localhost:8080]
+    D --> E[Install suggested plugins]
+    E --> F[Create first admin user]
+    F --> G[Verify via Manage Jenkins →<br/>System Information]
+```
+
 ## Choosing an installation method
 Jenkins can run as a native package (Debian/RPM), inside Docker, or as a standalone Java process (the `.war` file). For robotics work, two options dominate:
 

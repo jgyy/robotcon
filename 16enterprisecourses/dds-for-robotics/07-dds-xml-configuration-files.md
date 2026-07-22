@@ -2,6 +2,16 @@
 
 Once you understand what discovery and QoS are doing (Units 4 and 6), this unit teaches you to actually change that behavior via each vendor's XML configuration format, rather than relying on ROS 2 defaults.
 
+The diagram below shows the practical workflow this unit teaches for changing DDS behavior safely via XML rather than by guesswork.
+
+```mermaid
+flowchart TD
+  A["Reproduce problem with defaults and capture (Wireshark)"] --> B[Identify the specific setting to change]
+  B --> C[Write the smallest XML file that changes only that setting]
+  C --> D["Set CYCLONEDDS_URI / FASTRTPS_DEFAULT_PROFILES_FILE"]
+  D --> E[Re-run and re-capture to confirm wire behavior changed]
+```
+
 ## Why XML config instead of code
 DDS QoS and transport settings *can* be set per-publisher in application code (Unit 4 showed this), but that only covers what `rclpy`/`rclcpp` expose, and it has to be recompiled/redeployed per change. Vendor XML configuration files instead let you tune the underlying DDS implementation's behavior — transport selection, discovery peers, buffer sizes, thread priorities — without touching application code at all, and they're loaded via an environment variable at process startup:
 

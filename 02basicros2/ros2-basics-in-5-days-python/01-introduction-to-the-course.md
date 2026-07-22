@@ -2,6 +2,20 @@
 
 This unit sets expectations before you touch any code: what ROS 2 is, what you'll be able to build by the end of the course, and what needs to be installed and working on your machine first. Treat it as a checklist, not a lecture.
 
+The diagram below shows how the pieces described in this unit relate: the OS hosts a DDS transport layer, which is what gives ROS 2 its core capabilities, which in turn is what lets independent nodes talk to each other.
+
+```mermaid
+flowchart TD
+    OS[Linux OS] --> DDS[DDS Transport Layer]
+    DDS --> Discovery[Decentralized Node Discovery]
+    DDS --> QoS[Configurable Quality of Service]
+    DDS --> RT[Real-time & Multi-robot Support]
+    Discovery --> ROS2[ROS 2 Middleware]
+    QoS --> ROS2
+    RT --> ROS2
+    ROS2 --> Nodes[Independent Nodes Communicate via Topics/Services/Actions]
+```
+
 ## What ROS 2 actually is
 ROS 2 (Robot Operating System 2) is not an operating system in the kernel sense — it's a middleware framework that sits on top of a real OS (typically Linux) and gives you three things a robotics project always needs: a way for independent processes ("nodes") to discover and talk to each other, a standard set of message/data types for that communication, and a build/packaging convention (`ament`/`colcon`) so code from different teams composes cleanly. Compared to ROS 1, ROS 2 was rebuilt around DDS (Data Distribution Service) for its transport layer, which brings decentralized discovery (no `roscore` to babysit), configurable Quality of Service, and better support for real-time and multi-robot systems.
 

@@ -2,6 +2,17 @@
 
 This unit sets the destination before the journey: by the end of the course you will have taken a stationary, unprogrammed TurtleBot4 and turned it into a robot that can navigate using a learned model, detect objects with its camera, and track moving entities. This unit maps out how each later unit contributes to that goal and makes the case for why ML and robotics are worth learning together.
 
+The diagram below sketches the finished system's data flow: two parallel pipelines — a learned LiDAR/odometry navigator and a camera-based detection-and-tracking stack — that the rest of the course builds toward.
+
+```mermaid
+flowchart LR
+    Scan[/scan LiDAR/] --> Model[Learned Navigation Model]
+    Odom[/odom Odometry/] --> Model
+    Model --> CmdVel[/cmd_vel Twist/]
+    Camera[/camera/image_raw/] --> Detector[YOLOv5 Detector]
+    Detector --> Tracker[SORT Tracker]
+```
+
 ## The destination: what "done" looks like
 The course's running example is a TurtleBot4 in a simulated office environment. At the start it does nothing — no navigation logic, no perception, nothing but raw sensor topics being published. The end state is a robot that:
 - Consumes LiDAR scans and odometry to predict safe linear/angular velocities (a learned reactive navigator, not a classical planner).

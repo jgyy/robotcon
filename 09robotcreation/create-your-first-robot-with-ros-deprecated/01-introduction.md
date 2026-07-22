@@ -2,6 +2,18 @@
 
 This unit previews the whole course: the robot you'll end up with, the order in which you'll build it, and the mental model you need going in. It exists so that when you're knee-deep in wiring diagrams in Unit 2, you already know why that step matters to the finished robot.
 
+The diagram below is that mental model: three separate build tracks (hardware, simulation, networking) all converge on one motor driver interface, and every autonomy technique in the back half of the course is just a different node publishing to that same interface.
+
+```mermaid
+flowchart LR
+    A[Physical Chassis & Wiring] --> E["Motor Driver Node (/cmd_vel)"]
+    B[Simulated Twin - URDF] --> E
+    C[Network Link: Laptop <-> Robot] --> E
+    E --> F[Line Follower]
+    F --> G[SLAM Mapping]
+    G --> H[Deep Learning Lane Follower]
+```
+
 ## The robot you're building
 The course walks you through a small two-wheeled differential-drive robot (referred to throughout as "RIAbot" or "ROSbots") from bare parts to an autonomous machine. By the end you will have assembled the chassis and electronics, built a simulated twin of the robot, connected to the physical robot over a network, written the motor drivers that let ROS actually move the wheels, and layered increasingly sophisticated autonomy on top: line following, monocular SLAM, and a deep-learning-driven lane follower. Each unit is a strict prerequisite for the next — you cannot debug a motor driver you haven't wired, and you cannot train a lane-following model on a robot that can't yet drive straight.
 

@@ -2,6 +2,18 @@
 
 A robot standing motionless in an empty world isn't very useful. This unit wires your URDF into the ROS graph — topics, services, and the `<gazebo>` extension tags that turn a purely kinematic description into something you can drive and sense with.
 
+The diagram below traces how a velocity command reaches the wheels through the diff-drive plugin, and how a laser sensor's readings reach a ROS subscriber through the laser plugin.
+
+```mermaid
+flowchart LR
+    T["ROS node
+    publishes Twist"] -- /cmd_vel --> DD[diff_drive plugin]
+    DD -- wheel joint velocities --> W[wheel joints]
+    DD -- /odom + tf --> N[nav / localization node]
+    S[Gazebo ray sensor] --> LP[laser_plugin]
+    LP -- /scan LaserScan --> C[ROS subscriber node]
+```
+
 ## Gazebo Topics and Services
 
 Once `gazebo_ros_pkgs` is loaded (it's pulled in automatically by most ROS plugins you attach to a model), Gazebo exposes the simulation itself as part of the ROS graph, not just your robot. Useful entry points:

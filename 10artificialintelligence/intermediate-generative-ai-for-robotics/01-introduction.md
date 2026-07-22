@@ -2,6 +2,16 @@
 
 This unit orients you before any modeling begins: what the course actually covers, what you need to already know, and how the running example — a Mars rover — will be used to ground every generative AI technique that follows. Treat it as a map, not a lesson to rush past.
 
+The diagram below shows the record-to-deploy pipeline this course repeats in every unit, swapping in a different model architecture each time:
+
+```mermaid
+flowchart LR
+    A["Record expert demo<br/>(ros2 bag record)"] --> B["Extract training tensors<br/>(image + action pairs)"]
+    B --> C["Train model<br/>(BC / diffusion / transformer)"]
+    C --> D["Wrap trained model<br/>in a ROS node"]
+    D --> E["Publish actuator commands<br/>(/cmd_vel)"]
+```
+
 ## Course structure and the Mars rover thread
 Every unit in this course reuses the same fictional platform: a Mars rover equipped with a forward-facing camera, a Lidar sensor, wheel encoders, and a ROS-based software stack. Instead of switching toy examples between units (MNIST here, CartPole there), you'll build up one increasingly capable rover: first cloning an expert driver's behavior, then giving it a diffusion-based navigation goal, then adding object detection, then real-time obstacle avoidance, and finally combining all of it into a capstone.
 

@@ -2,6 +2,26 @@
 
 A node with one timer callback never has to think about concurrency. A node with a timer, two subscriptions, and a service — all of which might take meaningful time — does, because by default ROS 2's single-threaded executor runs every one of those callbacks on the same thread, one at a time. This unit covers what that default actually does, when it breaks down, and the tools (multithreaded executors, callback groups) for fixing it.
 
+The diagram below contrasts the default single-threaded executor with a multithreaded executor whose callback groups let unrelated work run concurrently.
+
+```mermaid
+flowchart TD
+    subgraph Single-Threaded Executor
+        S[One thread] --> ST[Timer]
+        S --> SS1[Sub 1]
+        S --> SS2[Sub 2]
+        S --> SSvc[Service]
+        SNote[Any slow callback<br/>blocks all the others]
+    end
+    subgraph MultiThreadedExecutor
+        M[Thread pool] --> GA[Callback Group A<br/>mutually exclusive]
+        M --> GB[Callback Group B<br/>mutually exclusive]
+        GA --> MT[Timer + Sub 1]
+        GB --> MS2[Sub 2]
+        MNote[Group A and B<br/>run concurrently]
+    end
+```
+
 ## The default: single-threaded executor
 
 `rclpy.spin(node)` runs a `SingleThreadedExecutor` under the hood: a loop that picks up ready callbacks (timers, subscriptions, services, actions) and runs them one at a time, in whatever order they become ready. This is fine as long as every callback is fast. The moment one callback blocks — a slow computation, a blocking I/O call, a service call waiting on another node's response — every other callback on that node stalls too, including ones with nothing to do with the slow one.

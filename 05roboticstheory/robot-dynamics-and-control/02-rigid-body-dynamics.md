@@ -2,6 +2,16 @@
 
 Every robot link, no matter how it's connected to its neighbors, is (to a good approximation) a rigid body. This unit works through Newton's and Euler's laws for a single rigid body in 3D space — the physics vocabulary that Unit 3 assembles into full manipulator dynamics.
 
+The flowchart below shows the two-pass recursive Newton-Euler algorithm this unit builds toward, used to compute joint torques for a chain of rigid links.
+
+```mermaid
+flowchart LR
+    Q["Known: q, q_dot, q_ddot<br/>for each joint"] --> OUT["Outward recursion<br/>base -> tip: propagate velocities & accelerations"]
+    OUT --> NE["Apply Newton-Euler per link<br/>F = m*a, tau = I*alpha + omega x (I*omega)"]
+    NE --> IN["Inward recursion<br/>tip -> base: propagate forces & torques"]
+    IN --> TAU["Joint torques tau"]
+```
+
 ## Newton's second law for translation
 For a rigid body's center of mass, Newton's second law is exactly what you remember from introductory physics:
 

@@ -2,6 +2,21 @@
 
 This capstone unit applies everything from Units 1-4 to the workflow you'll actually use to contribute to someone else's project: forking, working on a branch, and submitting a pull request back upstream — the same path used to contribute to real open-source robotics packages.
 
+The diagram below lays out the full fork-to-merge pipeline this unit walks through, end to end.
+
+```mermaid
+flowchart LR
+    A[Fork repository on GitHub] --> B["git clone your fork (origin)"]
+    B --> C["git remote add upstream"]
+    C --> D["git fetch upstream + merge into main"]
+    D --> E["git switch -c fix/your-change"]
+    E --> F[Implement change, add, commit]
+    F --> G["git push -u origin fix/your-change"]
+    G --> H[Open PR: your fork -> upstream main]
+    H --> I[Address review comments]
+    I --> J[Maintainer merges into upstream/main]
+```
+
 ## Forking vs. cloning
 
 You have push access to your own repositories, but not to someone else's. A **fork** is your own personal, full copy of another repository, hosted under your GitHub account — click "Fork" on the repository's page. You then `git clone` *your fork* (not the original), so you have push access to what you cloned:

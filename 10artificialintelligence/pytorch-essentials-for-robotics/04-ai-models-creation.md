@@ -2,6 +2,18 @@
 
 With tensors (Unit 2) and a dataset (Unit 3) in hand, this unit covers how PyTorch lets you assemble a neural network from reusable building blocks instead of writing matrix math by hand, and applies that directly to the mini keyboard detector.
 
+The diagram below traces the mini-keyboard detector's data flow from input image to output logits, layer by layer:
+
+```mermaid
+flowchart LR
+    In["Input image (3x64x64)"] --> C1["Conv2d(3→16) + ReLU + MaxPool"]
+    C1 --> C2["Conv2d(16→32) + ReLU + MaxPool"]
+    C2 --> F["Flatten"]
+    F --> L1["Linear(32*16*16→64) + ReLU"]
+    L1 --> L2["Linear(64→num_classes)"]
+    L2 --> Out["Logits per class"]
+```
+
 ## PyTorch nn.Module basics
 Every model in PyTorch — from a two-line linear layer to a full convolutional network — is a subclass of `torch.nn.Module`. A `Module` bundles together learnable parameters (weights, biases) and a `forward` method that defines how input tensors flow through them:
 

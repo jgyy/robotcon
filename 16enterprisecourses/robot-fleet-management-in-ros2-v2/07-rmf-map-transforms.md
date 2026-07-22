@@ -2,6 +2,21 @@
 
 RMF reasons about the world in its own coordinate frame (the navigation graph you'll build in Unit 15), but your robot's own localization stack reasons in its own map frame. This unit covers the transform math and configuration needed to reconcile the two.
 
+The diagram below traces how matched correspondence points become a single transform that is then applied in both directions — forward for position reporting, inverse for sending navigation goals.
+
+```mermaid
+flowchart LR
+    A["Correspondence points
+(robot frame & RMF frame)"] --> B["Least-squares fit
+(Umeyama-style)"]
+    B --> C["Transform: scale s, rotation θ,
+translation (tx, ty)"]
+    C --> D["Forward: robot → RMF
+(used by position())"]
+    C --> E["Inverse: RMF → robot
+(used before navigate())"]
+```
+
 ## Why two coordinate frames exist at all
 
 RMF's navigation graph is typically authored once, for the whole building, independent of any particular robot's SLAM map. A robot's own map — produced by its own SLAM run, at its own origin, possibly at a different scale if the map was hand-edited or rescaled — will almost never share an origin, orientation, or even scale with RMF's graph. Rather than force every robot onto one global map (impractical across vendors), RMF expects each fleet adapter to convert between "RMF world coordinates" and "this robot's native map coordinates" itself.

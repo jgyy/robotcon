@@ -2,6 +2,15 @@
 
 Everything so far has trained with tabular Q-learning, which only scales to a handful of discretized state buckets. This unit swaps the algorithm underneath the CartPole `TaskEnv` from Unit 2 for Deep Q-Networks (DQN), specifically OpenAI Baselines' `deepq` implementation — while changing nothing about the ROS or Gazebo side of the environment at all, which is the whole point of the Gym boundary from Unit 1.
 
+The diagram below contrasts the old discretize-then-lookup path with the new raw-vector-into-network path this unit introduces.
+
+```mermaid
+flowchart LR
+    O["_get_obs(): continuous 4-vector"] --> P{Which algorithm?}
+    P -->|Unit 2: tabular Qlearn| D1[discretize into bins] --> Q1[lookup Q-table] --> A1[action]
+    P -->|Unit 7: DeepQ| D2[feed raw vector directly] --> Q2["Q(state, action; θ) neural net"] --> A2[action]
+```
+
 ## Why move from tabular Q-learning to Deep Q-Networks
 
 A table entry per `(discretized_state, action)` pair works when the state space is small and coarse. Two problems show up as you scale it up: the table grows exponentially with the number of bins per dimension, and discretization throws away precision — two genuinely different pole angles that land in the same bucket are treated as identical states. A DQN replaces the table with a neural network, `Q(state, action; θ)`, trained so its output approximates the same Bellman target the tabular update used, but generalizing across *nearby* continuous states instead of requiring every state to be visited individually.

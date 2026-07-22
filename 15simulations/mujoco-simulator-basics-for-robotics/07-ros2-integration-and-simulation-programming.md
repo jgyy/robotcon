@@ -2,6 +2,23 @@
 
 MuJoCo has no native ROS2 support — it is a physics library, not a robotics middleware. This unit builds the bridge yourself so the rest of a ROS2-based stack (navigation, MoveIt, RViz) can talk to a MuJoCo simulation exactly as it would to a real robot.
 
+The sequence diagram below shows the timing of one bridge cycle from the minimal node built later in this unit: a command arriving on one topic, the timer-driven physics step, and the resulting state publish on another topic.
+
+```mermaid
+sequenceDiagram
+    participant Cmd as /joint_commands topic
+    participant Bridge as MuJoCoBridge node
+    participant Sim as MuJoCo (MjModel/MjData)
+    participant State as /joint_states topic
+
+    Cmd->>Bridge: Float64MultiArray (on_cmd)
+    Bridge->>Sim: data.ctrl[:] = msg.data
+    Note over Bridge: timer fires every model.opt.timestep
+    Bridge->>Sim: mj_step(model, data)
+    Sim-->>Bridge: updated qpos
+    Bridge->>State: publish JointState
+```
+
 ## Why Bridge MuJoCo and ROS2
 The value of the bridge is that everything downstream — controllers, planners, visualization — stays identical whether it is talking to real hardware or to MuJoCo. Concretely, a bridge node needs to do two things every cycle: publish the simulation's state (joint positions/velocities, sensor readings) as ROS2 topics, and consume ROS2 command topics to set `data.ctrl` before stepping. This mirrors how a real robot driver publishes `sensor_msgs/JointState` and subscribes to a command topic.
 

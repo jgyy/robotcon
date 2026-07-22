@@ -2,6 +2,18 @@
 
 RB-Vogui+'s payload deck is built to carry a manipulator arm, and this unit is where navigation stops being the whole story: the robot needs to see an object, work out where it is in space, and use MoveIt to actually pick it up. This unit connects perception output to MoveIt input, the same seam that shows up in any mobile-manipulation task.
 
+The diagram below traces that seam end to end, from raw point cloud to an executed MoveIt grasp.
+
+```mermaid
+flowchart LR
+    PC[PointCloud2] --> SEG[Segment plane - RANSAC]
+    SEG --> CLUSTER[Cluster remaining points]
+    CLUSTER --> CENTROID[Centroid = object pose in camera frame]
+    CENTROID --> TF[TF transform to arm_base_link]
+    TF --> COLLISION[Add collision object to planning scene]
+    COLLISION --> MOVEIT[MoveIt: plan and execute grasp]
+```
+
 ## The perception pipeline: from pointcloud to object pose
 
 An RGB-D camera mounted on or near the manipulator gives you two useful streams: a color image for detection/classification, and a depth image (or a combined `sensor_msgs/PointCloud2`) for the 3D geometry. A minimal but complete pipeline looks like:

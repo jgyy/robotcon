@@ -2,6 +2,26 @@
 
 This is the capstone unit: everything from Units 2–6 — actuator control, sensor reading, executors and timers, and a service-triggered interaction — combines into one autonomous behavior. PEDRITO will stop (or back away) whenever something gets closer than a configured threshold, and the behavior itself will be armed and disarmed through a micro-ROS service rather than always-on firmware logic.
 
+The state diagram below shows PEDRITO's two operating modes and the service call and sensor condition that move it between them.
+
+```mermaid
+stateDiagram-v2
+    [*] --> MODE_MANUAL
+    MODE_MANUAL --> MODE_AUTONOMOUS: /pedrito/set_autonomous {data: true}
+    MODE_AUTONOMOUS --> MODE_MANUAL: /pedrito/set_autonomous {data: false}
+
+    state MODE_MANUAL {
+        [*] --> DrivingFromCmdVel
+        DrivingFromCmdVel: motors follow /cmd_vel directly
+    }
+
+    state MODE_AUTONOMOUS {
+        [*] --> Watching
+        Watching --> Stopped: distance_m < stop_threshold_m
+        Stopped --> Watching: distance_m >= stop_threshold_m
+    }
+```
+
 ## Designing the behavior as a small state machine
 
 Resist the urge to bolt the obstacle-avoidance logic directly into the sensor timer callback from Unit 5. Instead, keep an explicit state on the MCU:

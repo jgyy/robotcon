@@ -2,6 +2,17 @@
 
 A robot that can only be actuated but not sensed is only half useful. This unit adds sensors to the MJCF model and shows how to drive the whole simulation loop from Python, closing the loop between sensing and control.
 
+The flowchart below traces the read-compute-apply cycle this unit builds: reading `data.sensordata`, computing an error against a target, writing `data.ctrl`, and stepping physics before repeating.
+
+```mermaid
+flowchart TD
+    A[mj_step advances physics] --> B["Sensors write to data.sensordata"]
+    B --> C["Read current = data.sensordata[adr]"]
+    C --> D["Compute error = target - current"]
+    D --> E["Write data.ctrl = kp * error"]
+    E --> A
+```
+
 ## MuJoCo Sensors Overview
 MuJoCo ships a broad library of built-in sensor types you attach to specific joints, bodies, or sites (a "site" is a massless reference frame you place anywhere on a body, often used purely as a sensor or attachment point). Common ones for robotics:
 - `jointpos` / `jointvel` — encoder-style joint angle and angular velocity

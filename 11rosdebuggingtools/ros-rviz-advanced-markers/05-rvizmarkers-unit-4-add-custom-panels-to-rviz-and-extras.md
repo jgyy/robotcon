@@ -2,6 +2,16 @@
 
 The final unit moves past subscribing to markers and into extending RViz itself: writing your own dockable panel, wiring interactive markers to real commands, and capturing your visualizations as shareable video.
 
+The diagram below shows how this unit's three extensions each turn RViz from a passive viewer into an active output: a panel, a draggable interactive marker, and the render window itself.
+
+```mermaid
+flowchart LR
+    Panel[Custom rviz_common::Panel<br/>Qt Widget] -->|button click| CmdTopic[std_msgs/Bool command topic]
+    IntMarker[6-DOF Interactive Marker] -->|drag + MOUSE_UP| Feedback[feedback_cb]
+    Feedback -->|publish PoseStamped| GoalTopic[Navigation goal topic]
+    RVizWindow[RViz Render Window] -->|ffmpeg x11grab| Video[rviz_demo.mp4]
+```
+
 ## Writing a custom RViz panel plugin
 A panel is a `pluginlib`-loaded C++ class deriving from `rviz_common::Panel`, which is itself a `QWidget` — meaning you build its UI with ordinary Qt widgets (buttons, sliders, labels) and back it with a ROS 2 node for publishing/subscribing:
 

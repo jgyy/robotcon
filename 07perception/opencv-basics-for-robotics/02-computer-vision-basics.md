@@ -2,6 +2,22 @@
 
 This is the toolbox unit: the bridge between ROS image messages and OpenCV, plus the core low-level operations — color spaces, filtering, edge detection, and convolutions — that every later unit in this course builds on.
 
+The flowchart below traces a single frame through this unit's pipeline, from the raw ROS message to a cleaned-up mask and its detected edges.
+
+```mermaid
+flowchart TD
+    A["sensor_msgs/Image"] --> B["cv_bridge: imgmsg_to_cv2()"]
+    B --> C["BGR frame"]
+    C --> D["cvtColor: BGR to HSV"]
+    D --> E["inRange: HSV threshold"]
+    E --> F["binary mask"]
+    F --> G["morphologyEx: MORPH_OPEN / MORPH_CLOSE"]
+    G --> H["cleaned mask"]
+    C --> I["cvtColor: BGR to Gray"]
+    I --> J["Canny edge detection"]
+    J --> K["edge map"]
+```
+
 ## cv_bridge: getting images out of ROS
 ROS passes images around as `sensor_msgs/msg/Image` (or the compressed variant), a message that stores raw byte data plus width, height, and an encoding string (e.g. `bgr8`, `rgb8`, `mono8`). OpenCV wants a `numpy` array. `cv_bridge` converts between the two:
 

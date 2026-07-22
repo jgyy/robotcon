@@ -2,6 +2,19 @@
 
 A URDF that only has `<visual>` tags looks correct in RViz but is invisible to physics: nothing collides, nothing has mass, and a simulator has no idea how the robot should fall, balance, or push against the world. This unit adds what's missing so your lamp robot can be spawned into Gazebo (or any URDF-consuming simulator) as a physical object.
 
+The diagram below shows which URDF tag on a link feeds which part of the simulation pipeline.
+
+```mermaid
+flowchart LR
+    Link[Robot Link] --> Visual["&lt;visual&gt; rendered in RViz"]
+    Link --> Collision["&lt;collision&gt; contact checks"]
+    Link --> Inertial["&lt;inertial&gt; mass + inertia tensor"]
+    Link --> GazeboTag["&lt;gazebo&gt; friction, sensors, plugins"]
+    Collision --> Physics[Physics Engine]
+    Inertial --> Physics
+    GazeboTag --> Physics
+```
+
 ## Why visual geometry isn't enough for simulation
 Simulators need a separate, usually simpler, geometry to run contact and collision checks against — recomputing collisions against a detailed mesh every physics step is expensive and can be numerically unstable. That's what `<collision>` is for: it lives alongside `<visual>` inside a `<link>` and is often a cruder shape (a box or cylinder standing in for a detailed mesh):
 

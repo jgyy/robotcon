@@ -2,6 +2,17 @@
 
 Once a robot program has more than a couple of related pieces of state and behavior — position, battery level, a list of sensors, methods to move and stop — plain variables and functions stop scaling. Classes let you bundle state and behavior together, which is also exactly the pattern ROS 2 itself uses for every node you'll write.
 
+The diagram below shows how this unit's classes relate through inheritance (the `Sensor` family and ROS 2's `Node`) versus composition (`RobotBase` holding sensor instances):
+
+```mermaid
+flowchart TD
+    Sensor[Sensor base class] -->|inherits| LidarSensor
+    Sensor -->|inherits| CameraSensor
+    RobotBase -->|"has a (composition)"| LidarSensor
+    RobotBase -->|"has a (composition)"| CameraSensor
+    Node["rclpy.node.Node"] -->|inherits| MyRobotNode[MyRobotNode]
+```
+
 ## Classes and objects
 
 A class is a blueprint; an object (instance) is a concrete thing built from that blueprint. `__init__` runs when an object is created and sets up its initial state (`self` refers to the instance being built):

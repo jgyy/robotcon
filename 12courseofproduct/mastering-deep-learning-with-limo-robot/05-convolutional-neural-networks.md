@@ -2,6 +2,19 @@
 
 The `Dense` networks from Units 2-4 treat every input as an unstructured vector — fine for a handful of sensor readings, hopeless for a 640x480 camera image, where flattening pixels into a vector throws away all spatial structure and produces an unmanageable number of weights. This unit introduces convolutional neural networks (CNNs), the architecture that makes learning directly from images practical, and prepares you for the object-detection work in Unit 6.
 
+The diagram below shows how data flows through the classic `Conv2D → Conv2D → MaxPooling2D` pattern used later in this unit, from raw image to class probabilities:
+
+```mermaid
+flowchart LR
+    IMG["Input Image<br/>64x64x3"] --> C1[Conv2D<br/>32 filters]
+    C1 --> P1[MaxPooling2D]
+    P1 --> C2[Conv2D<br/>64 filters]
+    C2 --> P2[MaxPooling2D]
+    P2 --> FL[Flatten]
+    FL --> D1[Dense 64]
+    D1 --> OUT["Dense + Softmax<br/>class probabilities"]
+```
+
 ## The convolution operation
 
 A **convolution** slides a small matrix of learnable weights — a **filter** or **kernel** (e.g. 3x3) — across the image, computing a weighted sum at each position. This is the same mathematical operation behind classical computer vision edge detectors (a Sobel or Laplacian kernel is a fixed, hand-designed filter); a CNN's difference is that the filter values are learned from data instead of hand-designed, and a layer typically learns dozens of filters in parallel, each specializing in detecting a different pattern (edges, corners, textures, and in deeper layers, more complex shapes).

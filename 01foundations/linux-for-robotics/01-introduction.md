@@ -2,6 +2,16 @@
 
 This unit sets the stage for the whole course: why Linux is non-negotiable for robotics work, and how the next three units build up your command-line skills through a single running project instead of disconnected exercises.
 
+The diagram below shows how several distinct robotics requirements all converge on the same conclusion: run Linux.
+
+```mermaid
+flowchart LR
+    A[Real-time scheduling needs] --> E[ROS runs best on Linux]
+    B[Direct /dev access for sensors & actuators] --> E
+    C[apt packaging for interdependent C++ libraries] --> E
+    D[Community help & driver support] --> E
+```
+
 ## Why ROS lives on Linux
 Robot Operating System (ROS and ROS 2) is developed and tested primarily against Linux, and Ubuntu specifically has first-class, binary-package support from the ROS build farm (see docs.ros.org for supported platforms per distribution). That is not an accident: robotics stacks need low-latency scheduling, mature real-time patches, direct access to device files under `/dev` for sensors and actuators, and a packaging ecosystem (`apt`) that can pull in hundreds of interdependent C++ libraries reliably. Windows and macOS support exists for some ROS 2 distributions, but you will hit fewer surprises, more community help, and better driver support running Linux — whether that's bare metal, dual-boot, a VM, or WSL2.
 

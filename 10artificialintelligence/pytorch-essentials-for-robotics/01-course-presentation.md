@@ -2,6 +2,16 @@
 
 This unit is a short orientation before you touch any code: it shows you the finished shape of what you'll build, and gets your environment ready so every later unit is "add one more piece" rather than "start from scratch."
 
+The diagram below previews the full pipeline this course builds toward, unit by unit, and how it mirrors a real robotics workflow:
+
+```mermaid
+flowchart LR
+    A[Collect or simulate data] --> B["Dataset / DataLoader (Unit 3)"]
+    B --> C["Define model with torch.nn (Unit 4)"]
+    C --> D["Train the model (Unit 5)"]
+    D --> E[Swap trained model into a ROS node or control loop]
+```
+
 ## What this course builds toward
 By the end of Unit 5 you will have trained a small image classifier — a "mini keyboard detector" — end to end: generating a labelled dataset, wrapping it in a PyTorch `Dataset`/`DataLoader`, defining a neural network with `torch.nn`, and running a real training loop that drives the loss down. Every unit after this one adds one concrete piece of that pipeline. Tensors and device placement (Unit 2) are the data structure everything else operates on. Datasets (Unit 3) are how you feed real-world examples in. Model creation (Unit 4) is how you define what the network computes. Training tools (Unit 5) are how you make the network learn from data instead of just running it once.
 

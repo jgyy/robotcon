@@ -2,6 +2,18 @@
 
 This closing unit is a self-assessment, not new material: a checklist and a capstone exercise to confirm you can actually operate Jenkins end to end for a robotics project, not just recognize the terms.
 
+The diagram below lays out the five capstone requirements in the order they build on each other, ending in the rubric check.
+
+```mermaid
+flowchart TD
+    A["1. Git repo with an<br/>intentional unit test"] --> B["2. Jenkinsfile: checkout,<br/>install, build, test, junit"]
+    B --> C["3. Trigger on push<br/>(Poll SCM or webhook)"]
+    C --> D["4. Role-based authorization:<br/>non-admin account"]
+    D --> E["5. Pipeline triggered via<br/>Jenkins CLI, exit code checked"]
+    E --> F{Self-grading rubric met?}
+    F -->|Yes| G[Course complete]
+```
+
 ## Concept checklist
 Before attempting the capstone below, make sure you can explain each of these in your own words, without looking back at earlier units:
 

@@ -2,6 +2,19 @@
 
 This is the unit the course is named for. Everything so far trained in one fixed lighting setup and one fixed background — fine for the simulator, useless the moment the model meets a real camera in a real room. Domain randomization closes that gap by making the *training* distribution deliberately wider and messier than any single environment, simulated or real.
 
+The diagram below traces the randomization loop applied before every captured frame, and why it makes the real world just another point inside the training distribution.
+
+```mermaid
+flowchart TD
+    A[Before each captured frame] --> B["Randomize lighting<br/>intensity + color temp"]
+    B --> C["Randomize textures<br/>object + floor"]
+    C --> D["Randomize object pose<br/>full workspace"]
+    D --> E["Composite onto random background<br/>+ photometric augment"]
+    E --> F[Capture frame + ground-truth XYZ]
+    F --> G[Train on wide, messy distribution]
+    G --> H["Narrower real-world room<br/>now falls inside that distribution"]
+```
+
 ## What domain randomization solves: the reality gap
 A model trained exclusively on clean, consistent simulated renders learns to rely on cues that are artifacts of the simulator — a specific lighting angle, a specific floor texture, the absence of sensor noise — rather than the object's actual visual features. When you then deploy that model against a real camera, none of those crutches are present, and accuracy collapses even though the object itself looks "the same" to a human. Domain randomization's insight, developed originally for exactly this sim-to-real transfer problem, is counterintuitive: instead of trying to make the simulation photorealistic (hard, expensive, never perfect), make it *unrealistically* varied — randomize lighting, textures, colors, camera noise, and backgrounds far beyond what reality will actually throw at the model. If the model learns to find the object correctly across thousands of wildly different renders, the narrower band of variation in one real room becomes just another point inside a distribution it already handles.
 

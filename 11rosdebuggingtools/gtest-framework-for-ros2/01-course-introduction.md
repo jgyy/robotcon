@@ -2,6 +2,17 @@
 
 Before touching a single line of test code, you need a clear picture of what software testing actually buys you and why robotics code, in particular, punishes teams that skip it. This unit sets the vocabulary and mental model the rest of the course builds on.
 
+The diagram below shows the testing pyramid this course follows and which later unit teaches each level.
+
+```mermaid
+flowchart TD
+    A[Unit tests<br/>fast, isolated, many] --> B[Integration/node tests<br/>pub-sub contracts, fewer]
+    B --> C[System tests<br/>full stack + simulation, few]
+    A -.taught in.-> U2[Unit 2]
+    B -.taught in.-> U3[Unit 3]
+    C -.taught in.-> U4[Unit 4]
+```
+
 ## Why testing matters more in robotics than in typical software
 
 A web backend that misbehaves usually produces a bad HTTP response. A robot that misbehaves can drive into a wall, crush a gripper, or drain a battery mid-mission. Robotics software also tends to have more failure surface than average: it talks to hardware with real latency and noise, it runs distributed nodes that can start in any order, and it depends on timing assumptions that are easy to violate under load. Manual testing ("build it, run it on the robot, see if it looks right") does not scale once you have more than a handful of nodes, and it actively discourages refactoring — nobody wants to touch code they can only validate by running the physical robot.

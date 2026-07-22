@@ -2,6 +2,17 @@
 
 This unit orients you before the math starts: it places deep learning inside the broader AI/ML landscape, previews the seven-unit arc of the course, and tells you what you need to already know to get the most out of it.
 
+The diagram below shows deep learning's place inside the AI/ML hierarchy and, concretely, what stacking layers buys you — each layer composing simple features from the one before it.
+
+```mermaid
+flowchart TD
+    AI[Artificial Intelligence: systems that act intelligently] --> ML[Machine Learning: improves behavior from data]
+    ML --> DL[Deep Learning: many-layer neural networks]
+    DL --> L1[Layer 1: detects edges from pixels]
+    L1 --> L2[Layer 2: combines edges into shapes]
+    L2 --> L3[Layer 3: combines shapes into object parts]
+```
+
 ## Where deep learning sits: AI, ML, and DL
 Artificial intelligence is the broad goal of building systems that perform tasks we associate with intelligence. Machine learning is a subset of AI: instead of hand-coding rules, you write an algorithm that improves its behavior from data. Deep learning is a subset of ML: it specifically uses neural networks with many layers ("deep" stacks) to learn hierarchical representations directly from raw or lightly processed data.
 

@@ -2,6 +2,21 @@
 
 This unit has no new Gazebo concepts — it's where everything from Units 1 through 5 (URDF robots, ROS plugins, custom worlds, and hand-written model plugins) gets combined into one working scenario: a mobile robot that must avoid moving obstacles in a world you built yourself.
 
+The diagram below traces the decision logic of the starting `scan_callback` you're given, which you'll improve into a smoother avoidance controller.
+
+```mermaid
+flowchart TD
+    A["/scan LaserScan received"] --> B["Compute min range: front, left, right"]
+    B --> C{front < safe_distance?}
+    C -->|Yes| D{left > right?}
+    D -->|Yes| E[Turn left]
+    D -->|No| F[Turn right]
+    C -->|No| G[Drive forward]
+    E --> H["Publish /cmd_vel"]
+    F --> H
+    G --> H
+```
+
 ## Preparing the Environment: A New ROS Package
 
 Start from a clean package rather than bolting the project onto earlier exercises — it keeps the deliverable self-contained and easy to grade against:

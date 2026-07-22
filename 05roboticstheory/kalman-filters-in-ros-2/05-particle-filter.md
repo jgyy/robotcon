@@ -2,6 +2,17 @@
 
 Every filter so far assumes belief is a single Gaussian hump. Real global localization often isn't: dropped into an unknown spot in a symmetric building, a robot might genuinely believe it's in one of three nearly-identical rooms simultaneously. A particle filter represents belief as a swarm of weighted samples instead of a formula, so it can represent that kind of multimodal uncertainty directly — at the cost of needing many samples instead of two numbers.
 
+The diagram below shows the predict → correct → resample cycle that collapses an initially spread-out particle swarm onto the robot's true pose.
+
+```mermaid
+flowchart TD
+    Init[Initialize N particles + weights] --> Predict[Predict: move each particle + noise]
+    Predict --> Correct[Correct: reweight by sensor likelihood]
+    Correct --> Resample[Resample: keep high-weight particles]
+    Resample -->|next motion + reading| Predict
+    Resample --> Converge[Swarm collapses onto true pose]
+```
+
 ## The generic particle filter algorithm
 
 A particle filter keeps `N` "particles," each a full hypothesis of the robot's state (e.g. `x, y, θ`) plus a weight representing how plausible that hypothesis currently is. The loop mirrors the Bayes filter from Unit 2 almost exactly, just implemented by sampling instead of by working with an explicit distribution:

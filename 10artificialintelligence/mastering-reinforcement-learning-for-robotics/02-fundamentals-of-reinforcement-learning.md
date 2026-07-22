@@ -2,6 +2,17 @@
 
 Before writing any RL code, you need the shared vocabulary the field runs on: MDPs, value functions, and the exploration/exploitation trade-off. Everything in Units 3 and 4 is a specific algorithm for solving the general problem this unit defines.
 
+The diagram below shows how this unit's concepts build on one another, from the raw MDP definition up to the exploration strategy every algorithm in this course relies on:
+
+```mermaid
+flowchart LR
+    MDP["MDP (S, A, P, R, γ)"] --> Policy["Policy π(a|s)"]
+    Policy --> Return["Return Gt = r + γr' + γ²r'' + ..."]
+    Return --> Value["Value functions V(s), Q(s,a)"]
+    Value --> Bellman["Bellman equation"]
+    Bellman --> EE["Exploration vs. exploitation<br/>(epsilon-greedy)"]
+```
+
 ## Markov Decision Processes
 RL problems are formalized as **Markov Decision Processes (MDPs)**, defined by a tuple `(S, A, P, R, γ)`:
 - `S` — the set of possible states.

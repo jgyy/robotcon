@@ -2,6 +2,23 @@
 
 This course is a fast, hands-on path into ROS for someone who can already program but hasn't worked in robotics middleware before. It walks from the shape of a ROS system (nodes, the graph, workspaces) through the three core communication patterns — topics, services, and actions — building real C++ nodes at every step, then closes with the debugging tools and local setup you'll rely on for every ROS project afterward. By the end you should be able to read an unfamiliar ROS package, understand its interface, and write your own nodes that publish, subscribe, serve, and act correctly.
 
+The diagram below shows how the twelve units build on each other in order, from foundational concepts through each communication pattern to debugging and setup.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Introduction] --> U2[Unit 2: ROS Deconstruction]
+    U2 --> U3[Unit 3: ROS Basics]
+    U3 --> U4[Unit 4: Topics - Publishers]
+    U4 --> U5[Unit 5: Topics - Subscribers & Messages]
+    U5 --> U6[Unit 6: Services - Clients]
+    U6 --> U7[Unit 7: Services - Server]
+    U7 --> U8[Unit 8: C++ Classes in ROS]
+    U8 --> U9[Unit 9: Actions - Clients]
+    U9 --> U10[Unit 10: Actions - Servers]
+    U10 --> U11[Unit 11: Debugging ROS Programs]
+    U11 --> U12[Unit 12: Appendix]
+```
+
 1. [Introduction](01-introduction.md) — Unit for previewing the contents of the course.
 2. [ROS Deconstruction](02-ros-deconstruction.md) — A guide to correctly following this course.
 3. [ROS Basics](03-ros-basics.md) — Basic ROS concepts: nodes, parameter server, environment variables, roscore, etc.

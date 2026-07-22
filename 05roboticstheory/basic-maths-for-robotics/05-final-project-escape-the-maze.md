@@ -2,6 +2,19 @@
 
 This capstone pulls together vectors, derivatives, and probability from Units 2-4 into one program: a simulated robot that must escape a maze using a motion model (linear algebra), a smooth speed profile (calculus), and a probabilistic belief about its own position (probability), since its sensors and motors are both noisy.
 
+The diagram below shows the predict/sense/decide loop the escape routine runs each step, combining Unit 2's motion model, Unit 3's gradient, and Unit 4's Bayes update.
+
+```mermaid
+flowchart TD
+    Start[Start at true_cell] --> Sense[Sense wall ahead: noisy reading]
+    Sense --> Update[Bayes update belief]
+    Update --> Grad[Compute gradient to goal]
+    Grad --> Move[Move to best free neighbor cell]
+    Move --> Check{Reached goal?}
+    Check -- No --> Sense
+    Check -- Yes --> Escaped[Escaped the maze]
+```
+
 ## Preliminary setup: the maze and the robot model
 Represent the maze as a 2D grid of cells, each either free (`0`) or a wall (`1`), and represent the robot's pose as a position vector `p = (x, y)` plus a heading `theta`. Moving "forward" by a step is a linear map, exactly like Unit 2's rotation-then-translate composition: rotate the local forward vector `(1, 0)` by `theta`, scale it by the step size, and add it to the current position.
 

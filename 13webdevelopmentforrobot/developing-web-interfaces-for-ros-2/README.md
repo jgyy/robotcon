@@ -2,6 +2,21 @@
 
 This course teaches you to build browser-based dashboards and control panels for ROS 2 robots using nothing but HTML, CSS, and JavaScript — no ROS installation required on the client. Starting from a bridge server (`rosbridge_suite`) that exposes the ROS graph over a WebSocket, and the `roslibjs` library that wraps that connection in a friendly API, each unit adds one capability: publishing commands, subscribing to telemetry, streaming camera video, calling services, reading/writing parameters, and rendering 2D maps and full 3D robot models. By the end you can build a complete operator console — teleoperation, live status, camera view, map, and 3D visualization — running entirely in a browser tab.
 
+The diagram below shows how each unit builds directly on the skills of the one before it, from a bare static page to a full operator console:
+
+```mermaid
+flowchart LR
+    U0[Unit 0: Course Intro] --> U1[Unit 1: Static Page + Bootstrap]
+    U1 --> U2[Unit 2: JavaScript + Vue.js]
+    U2 --> U3[Unit 3: Publish /cmd_vel]
+    U3 --> U4[Unit 4: Subscribe to Topics]
+    U4 --> U5[Unit 5: Camera Streaming]
+    U5 --> U6[Unit 6: ROS Services]
+    U6 --> U7[Unit 7: 2D Map Rendering]
+    U7 --> U8[Unit 8: ROS Parameters]
+    U8 --> U9[Unit 9: 3D Visualization]
+```
+
 0. [Course Introduction](00-course-introduction.md) — What the course covers, a preview of the full publish/subscribe pattern, and the environment you need before starting.
 1. [Setting Up Our Development Environment (Part 1)](01-setting-up-our-development-environment-part-1.md) — Creating and serving a static web page, and styling it with the Bootstrap grid system.
 2. [Setting Up Our Development Environment (Part 2)](02-setting-up-our-development-environment-part-2.md) — Embedding JavaScript, debugging with browser DevTools, and reactive UI basics with Vue.js.

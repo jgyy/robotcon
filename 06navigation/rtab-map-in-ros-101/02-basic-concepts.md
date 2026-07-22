@@ -2,6 +2,20 @@
 
 Before you launch a full mapping session, you need to understand the moving parts inside RTAB-Map: the nodes that make up `rtabmap_ros`, how loop closure detection actually decides "have I been here before," and how the memory-management model keeps things running in real time. This unit builds that mental model so the pipeline you run in Unit 3 stops being a black box.
 
+The flowchart below traces the per-frame decision RTAB-Map's loop closure detector makes every time a new image comes in:
+
+```mermaid
+flowchart TD
+    A[New RGB image arrives] --> B[Extract visual features]
+    B --> C[Build bag-of-words signature]
+    C --> D{Score vs. prior<br/>locations exceeds threshold?}
+    D -- Yes --> E[Declare loop closure]
+    E --> F[Add constraint to pose graph]
+    F --> G[Correct accumulated<br/>odometry drift]
+    D -- No --> H[Add image to location database]
+    H --> I[Continue building map forward]
+```
+
 ## The `rtabmap_ros` node graph
 
 `rtabmap_ros` is not one monolithic node — it's a small pipeline of cooperating nodes, typically:

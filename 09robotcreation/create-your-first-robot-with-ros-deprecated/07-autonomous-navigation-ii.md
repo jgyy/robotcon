@@ -2,6 +2,19 @@
 
 Line following in Unit 6 required a purpose-built environment (a line to follow). This unit moves to general-purpose navigation: using ORB-SLAM2 to build a map of an arbitrary environment and localize the robot within it, using nothing but the same monocular camera you already have mounted.
 
+The diagram below shows why SLAM is "simultaneous": the estimated pose depends on the map, and each new pose estimate extends the map, feeding back into the next frame's feature matching.
+
+```mermaid
+flowchart LR
+    Frames[Camera Frames] --> ORB[ORB Feature Detection]
+    ORB --> Match[Match Features Across Frames]
+    Match --> Tri[Triangulate 3D Points]
+    Tri --> Map[(Sparse Map)]
+    Map --> Pose[Estimate Camera Pose]
+    Pose --> Match
+    Pose --> Traj[Trajectory in rviz]
+```
+
 ## What SLAM solves that line following doesn't
 SLAM (Simultaneous Localization and Mapping) answers two questions at once, each of which depends on the other: "where am I?" (localization) and "what does the environment around me look like?" (mapping). You can't localize without a map to localize against, and you can't build a map without knowing where you were when you observed each part of it — hence "simultaneous." Unlike line following, a SLAM-equipped robot doesn't need the environment prepared for it; it discovers structure (walls, corners, distinctive visual features) as it drives.
 

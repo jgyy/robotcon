@@ -2,6 +2,17 @@
 
 This capstone unit adds a few more XACRO tools beyond basic macros — conditionals and mirrored macro reuse — and applies everything from the course to a robot you design yourself: a "Boxing Robot" with a torso and two punching arms.
 
+The diagram below shows the Boxing Robot's tree, built from one `arm` macro instantiated twice with opposite `reflect` signs.
+
+```mermaid
+flowchart TD
+    base[base_link] --> torso[torso]
+    torso -->|left_shoulder_joint reflect=1| left_upper[left_upper_arm]
+    left_upper -->|left_elbow_joint| left_fist[left_fist]
+    torso -->|right_shoulder_joint reflect=-1| right_upper[right_upper_arm]
+    right_upper -->|right_elbow_joint| right_fist[right_fist]
+```
+
 ## Advanced XACRO: conditionals
 `xacro:if` and `xacro:unless` let a macro emit different XML depending on a parameter, which is useful for things like left/right mirroring or optional attachments (a gripper only on one arm, say):
 

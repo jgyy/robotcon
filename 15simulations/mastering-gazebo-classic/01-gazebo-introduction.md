@@ -2,6 +2,18 @@
 
 Before you build anything, you need a working mental model of what Gazebo actually is, how its processes and files fit together, and how to drive the GUI without guessing. This unit takes you from a blank terminal to a running simulation you can navigate, inspect from the command line, and reason about.
 
+The diagram below shows how the `gzserver`/`gzclient` process split relates to the world, model, and plugin files each `GAZEBO_*` environment variable locates.
+
+```mermaid
+flowchart LR
+    W[World .world file] -- loaded by --> GZS["gzserver
+    physics + sensors + plugins"]
+    M[Model files] -- found via GAZEBO_MODEL_PATH --> GZS
+    PL[Plugin .so] -- found via GAZEBO_PLUGIN_PATH --> GZS
+    GZS <-- GAZEBO_MASTER_URI --> GZC["gzclient
+    GUI viewer"]
+```
+
 ## What Gazebo Is, and Why Simulate
 
 Gazebo Classic (versions 1 through 11) is a 3D rigid-body physics simulator purpose-built for robotics: it integrates an ODE/Bullet/DART-class physics engine, sensor models (cameras, lidars, IMUs, contact sensors), and a rendering pipeline behind a single application. The payoff over hand-rolled test scripts is that you get physically plausible contact, gravity, and sensor noise "for free," so a controller or perception pipeline that works in simulation has a real chance of working on hardware — and you can crash a simulated robot into a wall as many times as you like without buying a new one.

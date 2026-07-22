@@ -2,6 +2,27 @@
 
 Now you move from reading someone else's TF tree to producing your own. This unit works through a small, self-contained example — a 3D take on turtlesim — so you can broadcast a moving frame and then look it up from another node.
 
+The sequence below shows the timing relationship between a broadcaster publishing on every timer tick and a listener that may query before any data has arrived.
+
+```mermaid
+sequenceDiagram
+    participant B as TurtleBroadcaster
+    participant T as /tf topic
+    participant Buf as Buffer + TransformListener
+    participant L as Listener node
+
+    loop every timer tick (0.05s)
+        B->>T: sendTransform(world → turtle1)
+    end
+    T-->>Buf: transforms accumulate over time
+    L->>Buf: lookup_transform(world, turtle1)
+    alt transform already buffered
+        Buf-->>L: TransformStamped
+    else nothing received yet
+        Buf-->>L: raises LookupException
+    end
+```
+
 ## Broadcasting a transform
 A `TransformBroadcaster` wraps the boilerplate of stamping and publishing a `TransformStamped` message onto `/tf`. Typically you call it once per timer tick or once per pose update, not on some fixed unrelated schedule — the transform's timestamp should match the moment the pose was actually true.
 

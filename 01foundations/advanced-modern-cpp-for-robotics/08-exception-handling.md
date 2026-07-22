@@ -2,6 +2,20 @@
 
 Robots interact with the physical world, which fails in ways your code must handle gracefully: a serial port disconnects, a config file is malformed, a planner is asked for an unreachable pose. This unit covers C++ exceptions — how to raise them, catch them, and design your own — as the mechanism for separating error-handling code from the normal control flow.
 
+The diagram below maps the standard hierarchy this unit builds on, plus where the unit's own custom exception classes attach to it.
+
+```mermaid
+flowchart TD
+    Ex["std::exception"] --> Logic["std::logic_error"]
+    Ex --> Runtime["std::runtime_error"]
+    Logic --> OutOfRange["std::out_of_range"]
+    Logic --> InvalidArg["std::invalid_argument"]
+    Runtime --> SystemError["std::system_error"]
+    Runtime --> SensorTimeout["SensorTimeoutException (custom)"]
+    Runtime --> NavException["NavigationException (custom)"]
+    NavException --> GoalUnreachable["GoalUnreachableException (custom)"]
+```
+
 ## Throwing exceptions and basic try/catch
 `throw` raises an exception of any type (though in practice you should throw objects derived from `std::exception`); a `try`/`catch` block catches it, unwinding the stack and running destructors along the way (which is exactly why RAII from Unit 3 matters — resources get cleaned up automatically even mid-throw).
 

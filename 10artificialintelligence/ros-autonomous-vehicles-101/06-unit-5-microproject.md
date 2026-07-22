@@ -2,6 +2,22 @@
 
 This unit is where Units 1-4 stop being separate exercises and become one system: drive the car, using CAN-Bus for actuation and GPS for navigation, to the gas station — stopping or rerouting around whatever obstacles are in the way.
 
+The diagram below visualizes the `mission_node` state machine that ties Units 1-4 together, including the watchdog's one-way trip into `STOPPED_NEEDS_DRIVER`.
+
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+    IDLE --> DRIVING
+    DRIVING --> AVOIDING: obstacle_close
+    AVOIDING --> DRIVING: path clear
+    DRIVING --> ARRIVED: distance_to_goal < tol
+    AVOIDING --> ARRIVED: distance_to_goal < tol
+    DRIVING --> STOPPED_NEEDS_DRIVER: watchdog fails
+    AVOIDING --> STOPPED_NEEDS_DRIVER: watchdog fails
+    STOPPED_NEEDS_DRIVER --> STOPPED_NEEDS_DRIVER: no auto-recovery
+    ARRIVED --> [*]
+```
+
 ## The brief
 Mission: starting from a parked state, drive autonomously to a fixed GPS waypoint representing a gas station, using only the sensors and interfaces you've already built:
 

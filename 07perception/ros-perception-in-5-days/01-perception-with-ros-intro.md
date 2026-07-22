@@ -2,6 +2,15 @@
 
 This unit sets the map for the whole course: what "perception" means for a robot, which ROS building blocks carry image and point cloud data, and how the eight projects ahead (blob tracking through the hexapod capstone) fit together as one growing skill set.
 
+The diagram below shows the publish-subscribe shape every perception node in this course follows: a sensor driver publishes raw data, a perception node converts and processes it, and the result feeds a downstream consumer.
+
+```mermaid
+flowchart LR
+    S[Sensor driver node] -->|sensor_msgs/Image or PointCloud2| P[Perception node]
+    P -->|cv_bridge / PCL processing| R["Higher-level result<br/>Point / BoundingBox / PoseStamped"]
+    R --> C["Consumer node<br/>navigation / arm control / pan-tilt"]
+```
+
 ## What perception means for a robot
 A robot's perception stack turns raw sensor signal — pixels, depth values, laser ranges — into structured information it can act on: "there is a red ball at this pixel," "a face is present," "the table surface is here." Perception sits between raw sensor drivers and the decision-making/control stack. In this course everything is built on ROS 1 (Noetic), so nodes communicate over topics and services, and each project you build follows the same shape: a sensor driver node publishes data, a perception node subscribes, processes it, and republishes a higher-level result (a `Point`, a bounding box, a `PoseStamped`) that another node (navigation, arm control, a servo pan-tilt) consumes.
 

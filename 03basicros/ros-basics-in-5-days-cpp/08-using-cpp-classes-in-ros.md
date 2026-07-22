@@ -2,6 +2,19 @@
 
 Every node so far has been a single `main()` function with lambdas and free functions. That's fine for a 20-line demo, but it stops scaling the moment a node owns more than one publisher, subscriber, or piece of state that callbacks need to share. This unit shows the class-based pattern real ROS C++ code actually uses.
 
+The diagram below shows the `GreetingRelay` class's internal wiring: the subscription callback is a member function that reads and updates shared member state before publishing.
+
+```mermaid
+flowchart LR
+    subgraph GreetingRelay["class GreetingRelay : public rclcpp::Node"]
+        sub_["sub_ (Subscription)"] -->|std::bind| cb["on_greeting() member fn"]
+        cb -->|reads/writes| count_["count_ (member state)"]
+        cb -->|uses| pub_["pub_ (Publisher)"]
+    end
+    Topic1["/greeting"] --> sub_
+    pub_ --> Topic2["/relayed_greeting"]
+```
+
 ## Why wrap a node in a class
 Free-function callbacks that need to share state (a running average, a counter, a cached last message) end up reaching for global variables, which is exactly the kind of code you already know to avoid outside of ROS. Wrapping the node in a class fixes this the normal C++ way: shared state becomes member variables, callbacks become member functions with natural access to that state, and setup logic moves into a constructor instead of being scattered through `main()`.
 

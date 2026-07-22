@@ -2,6 +2,22 @@
 
 The client from Unit 9 needs a server to talk to. Building one is the most involved node type in this course, because unlike a service callback (run once, return), an action server callback typically runs a loop — publishing feedback, checking for cancellation, and eventually producing a result.
 
+The state diagram below shows a goal's lifecycle on the server side, from acceptance through the feedback loop to its terminal state.
+
+```mermaid
+stateDiagram-v2
+    [*] --> PendingGoal
+    PendingGoal --> Rejected: handle_goal() rejects
+    PendingGoal --> Executing: handle_goal() accepts
+    Executing --> Executing: publish_feedback() each iteration
+    Executing --> Canceling: is_canceling() true
+    Canceling --> Canceled: goal_handle->canceled(result)
+    Executing --> Succeeded: goal_handle->succeed(result)
+    Rejected --> [*]
+    Canceled --> [*]
+    Succeeded --> [*]
+```
+
 ## Anatomy of an action server
 An action server registers three callbacks: one to decide whether to **accept or reject** an incoming goal, one to decide whether to accept a **cancel request**, and one that actually **executes** the goal once accepted — this last one is where your real work and your feedback-publishing loop live. The execution callback typically runs on its own thread (or is dispatched to one), since it may run for seconds or longer and must not block the node's other callbacks.
 

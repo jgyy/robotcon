@@ -2,6 +2,17 @@
 
 With a map and a localized robot in hand, the remaining question is how to get from here to a goal. This unit covers the global side of that question: costmaps, what they represent, and the global planner that turns them into a route.
 
+The diagram below shows how the three costmap layers stack into one combined costmap before the global planner searches it for a path:
+
+```mermaid
+flowchart LR
+    Static[Static Layer: base map] --> Stack[Layered Costmap]
+    Obstacle[Obstacle Layer: live /scan] --> Stack
+    Inflation[Inflation Layer: cost falloff near obstacles] --> Stack
+    Stack --> Planner[Global Planner: Dijkstra / A*]
+    Planner --> Path[Path published on /plan]
+```
+
 ## Global vs. local planning, and why it's split in two
 
 The Navigation Stack deliberately splits "get to the goal" into two separate problems running at different rates:

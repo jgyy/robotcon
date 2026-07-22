@@ -2,6 +2,16 @@
 
 A single number like battery percentage fits in a variable; a laser scan's hundreds of range readings do not. This unit covers JavaScript's `Array` type and the methods you'll use to process the array-shaped data ROS 2 sensor messages actually send.
 
+The diagram below shows the typical pipeline for turning a raw array of laser scan readings into a single displayed value.
+
+```mermaid
+flowchart LR
+    Raw[ranges: raw LaserScan array] --> Filter[filter: drop out-of-range readings]
+    Filter --> Map[map: convert units]
+    Filter --> Reduce[reduce: closest obstacle]
+    Reduce --> Display[Update range tile in DOM]
+```
+
 ## Creating arrays
 Arrays hold an ordered list of values, declared with literal syntax:
 

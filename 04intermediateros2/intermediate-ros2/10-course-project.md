@@ -2,6 +2,19 @@
 
 This capstone pulls together the whole course into one package: a node that detects circular shapes (posts, table legs, trash cans) from 2D laser scan data, packaged with a proper build system, launched with a configurable launch file, tuned via parameters, and published with QoS appropriate to its inputs and outputs.
 
+The flowchart below traces the detection pipeline this unit builds, from a raw laser scan to a published set of detected circles.
+
+```mermaid
+flowchart TD
+    A[LaserScan message] --> B[polar_to_cartesian]
+    B --> C[cluster_points<br/>by cluster_gap param]
+    C --> D[fit_circle per cluster]
+    D --> E{radius in range AND<br/>fit error <= max_fit_error?}
+    E -->|Yes| F[add to detected circles]
+    E -->|No| G[discard cluster]
+    F --> H[publish_detections<br/>as PoseArray]
+```
+
 ## Framing the problem
 
 A `sensor_msgs/msg/LaserScan` message is a flat array of ranges at fixed angular increments around the sensor. A circular obstacle produces a short, contiguous run of range readings that curves smoothly and consistently — points at the edge of the circle facing the sensor are closer, points curving away are progressively farther, in a way distinguishable from a flat wall (all points roughly equidistant along a line) or a corner (a sharp discontinuity). The classic approach: convert the relevant scan points to Cartesian `(x, y)` coordinates in the sensor frame, cluster contiguous points into candidate segments, and fit a circle to each segment, keeping the ones whose fit residual is low and whose radius falls in a plausible range.

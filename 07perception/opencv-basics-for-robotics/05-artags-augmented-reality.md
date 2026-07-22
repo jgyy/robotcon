@@ -2,6 +2,18 @@
 
 Where Unit 4's feature matching gives approximate, sometimes-unreliable correspondences, fiducial markers (AR tags) give a robot near-perfect, unambiguous identification and pose estimation for anything you're willing to stick a printed marker on.
 
+The diagram below traces a marker from detection in a camera frame through to a pose the rest of the robot's stack can consume.
+
+```mermaid
+flowchart LR
+    Cam[Camera Frame] --> Det["ArucoDetector.detectMarkers()"]
+    Det --> IDs["Marker corners + IDs"]
+    IDs --> PnP["solvePnP()<br/>+ camera calibration"]
+    PnP --> Pose["rvec, tvec (6-DOF pose)"]
+    Pose --> TF["geometry_msgs/PoseStamped or TF"]
+    TF --> Stack[Navigation / Manipulation stack]
+```
+
 ## What ArUco markers are and why robots use them
 An ArUco marker is a square black-and-white grid pattern, like a simplified QR code, drawn from a known dictionary of patterns designed to be robustly distinguishable and to detect and correct bit errors from partial occlusion or blur. Because the marker's real-world size and the camera's intrinsic calibration are known, detecting the four corners of a marker in an image is enough to solve for its full 6-DOF pose (position and orientation) relative to the camera. This is dramatically more reliable than natural-feature matching and is why AR tags are so common in robotics for tasks like docking stations, calibration rigs, warehouse shelf identification, and pick-and-place targets — cheap to deploy, unambiguous to read, and precise enough for manipulation.
 

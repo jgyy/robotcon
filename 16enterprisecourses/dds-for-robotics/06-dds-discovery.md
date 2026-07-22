@@ -2,6 +2,22 @@
 
 Discovery is the process by which DDS participants find each other without any central broker or configuration file — and it's the single most common source of "it just doesn't connect" bugs on wireless robot networks, which is why it gets its own dedicated unit.
 
+The sequence below shows the two discovery phases — multicast PDP for finding participants, then unicast EDP for matching their writers and readers.
+
+```mermaid
+sequenceDiagram
+  participant A as Participant A
+  participant M as Multicast Group (domain D)
+  participant B as Participant B
+  A->>M: PDP announce (multicast)
+  M->>B: PDP announce received
+  B->>M: PDP announce (multicast)
+  M->>A: PDP announce received
+  A->>B: EDP: writer/reader info (unicast)
+  B->>A: EDP: writer/reader info (unicast)
+  Note over A,B: Endpoints matched, data flow begins
+```
+
 ## Simple Discovery Protocol (SDP), in outline
 By default, most DDS implementations use the RTPS Simple Discovery Protocol: every DomainParticipant periodically multicasts an announcement of itself (Participant Discovery Protocol, PDP) to a well-known multicast group derived from the DDS *domain ID*. Once two participants discover each other, they exchange their writers and readers directly (Endpoint Discovery Protocol, EDP) over unicast. This is why the domain ID matters so much — it's baked directly into the multicast address/port math:
 

@@ -2,6 +2,19 @@
 
 With a dynamic model in hand (Unit 3), this unit builds a full-state feedback controller — the technique behind balancing robots, from simple inverted pendulums to segway-style mobile bases and walking robots recovering from a push.
 
+The diagram below shows the design pipeline this unit follows, from the nonlinear dynamics model to a stabilizing feedback gain.
+
+```mermaid
+flowchart TD
+    NL["Nonlinear dynamics<br/>M(q)q_ddot + C q_dot + G = tau"] --> LIN["Linearize about equilibrium<br/>x_dot = A*x + B*u"]
+    LIN --> CTRB{"Controllable?"}
+    CTRB -->|yes| POLE["Pole placement<br/>place_poles"]
+    CTRB -->|yes| LQR["LQR<br/>solve_continuous_are"]
+    POLE --> K["Gain matrix K"]
+    LQR --> K
+    K --> CL["Closed loop: x_dot = (A-B@K)x<br/>stable balance"]
+```
+
 ## Why balancing is different from tracking
 Units in a typical PID-control course (see the Robot Control Basics course) deal with tracking a commanded setpoint on an inherently stable joint — let go of the joint and it just stays put (or droops under gravity, but doesn't run away). A balancing system is different: it's an *unstable* equilibrium. An inverted pendulum standing straight up, or a two-wheeled robot balancing on its wheels, will fall over faster and faster if left uncontrolled — small errors grow rather than decay. Full state feedback is the standard way to stabilize this kind of system: instead of reacting to just one error signal (position), you feed back the *entire* state (every position and velocity that matters) to compute a control action that actively counteracts the instability.
 

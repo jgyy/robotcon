@@ -2,6 +2,22 @@
 
 Everything so far has been static: the same HTML and CSS every time the page loads. JavaScript is what reacts to events, updates content without a page reload, and — critically for this course — talks to Rosbridge to move data between the robot and the browser. You already know how to program; this unit is about JavaScript's particular idioms, not programming from scratch.
 
+The sequence below shows how a form submission travels from the operator's click to the console log via the DOM event handler built in this unit.
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant Form as <form> (DOM)
+    participant JS as submit event listener
+
+    Operator->>Form: click "Send Command"
+    Form->>JS: dispatch 'submit' event
+    JS->>JS: event.preventDefault()
+    JS->>Form: read form.elements['linear'].valueAsNumber
+    JS->>JS: console.log(linear velocity)
+    Note over JS: Unit 8+: becomes a Rosbridge publish call
+```
+
 ## Variables, types, and JS's quirks
 JavaScript is dynamically typed like Python, but with a few sharp edges worth knowing up front. Use `let` for variables that change and `const` for ones that don't — avoid the old `var`, which has confusing function-level (not block-level) scoping.
 

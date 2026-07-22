@@ -2,6 +2,19 @@
 
 This unit adds vision. An ESP32-CAM module gives PEDRITO a camera, and because a camera stream is a fundamentally different kind of data than the small, frequent messages you've published so far, you'll also build a small dashboard that brings image, distance, and motor state together into one view.
 
+The diagram below shows why the camera takes a separate path onto the ROS 2 graph instead of going through the micro-ROS/XRCE-DDS transport used by everything else.
+
+```mermaid
+flowchart LR
+    Cam["ESP32-CAM<br/>HTTP/MJPEG server"] -->|frames over HTTP| Bridge["pedrito_cam_bridge<br/>(plain rclpy node)"]
+    Bridge -->|sensor_msgs/Image| ImgTopic["/pedrito/image_raw"]
+    MCU["Main MCU<br/>(micro-ROS firmware)"] -->|sensor_msgs/Range| RangeTopic["/pedrito/range"]
+    MCU -->|last cmd| CmdTopic["/cmd_vel"]
+    ImgTopic --> Dash["rviz2 / rqt<br/>integrated dashboard"]
+    RangeTopic --> Dash
+    CmdTopic --> Dash
+```
+
 ## Why the camera doesn't go through micro-ROS the same way
 
 A single 320x240 JPEG frame is already tens of kilobytes — far larger than the payloads micro-ROS's XRCE-DDS transport (especially over serial) is designed for, and well beyond what fits comfortably in an MCU's limited RAM as a ROS 2 message. Two practical patterns exist:

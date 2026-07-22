@@ -2,6 +2,16 @@
 
 This unit is where you go from theory to a running state machine: writing your first FlexBE state, then wiring two or more states together into a behavior you can execute from the OCS.
 
+The diagram below shows the two-state behavior built later in this unit: each state's `done` outcome drives the transition to the next state, or to the behavior's own terminal outcome.
+
+```mermaid
+stateDiagram-v2
+    [*] --> WAIT_1
+    WAIT_1 --> WAIT_2: done
+    WAIT_2 --> finished: done
+    finished --> [*]
+```
+
 ## Anatomy of a FlexBE state
 
 A state is a Python class decorated so the FlexBE framework can discover it. At minimum it declares its possible **outcomes** (the labels it can return when it finishes) and implements `execute()`, which runs once per control cycle while the state is active.

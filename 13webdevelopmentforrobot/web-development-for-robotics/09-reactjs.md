@@ -2,6 +2,17 @@
 
 Once a dashboard grows past a handful of DOM elements, hand-written `document.getElementById` calls scattered through your JavaScript become hard to track — you lose sight of what depends on what. React organizes a page as a tree of components that each own their own state and re-render automatically when that state changes. This unit gets a minimal React project running.
 
+The cycle below is the core mental shift this unit introduces: you never touch the DOM directly, you update state and React re-renders for you.
+
+```mermaid
+flowchart LR
+    State["useState(100)"] --> Render[Component renders JSX from state]
+    Render --> UI["Browser shows: Battery: 100%"]
+    UI --> Click["User clicks 'Simulate drain'"]
+    Click --> SetState["setBattery(b => b - 5)"]
+    SetState --> Render
+```
+
 ## Why a framework, and why React
 Plain JavaScript (Units 7-8) is fine for a page with a few live values. But a real robot dashboard has a camera feed, a joint table, a command form, a log panel, and a connection-status badge — all updating independently as different topics publish. Manually keeping each DOM node in sync with the right piece of state is exactly the class of bug component frameworks were built to eliminate: you describe *what the UI should look like for a given state*, and the framework figures out *what actually needs to change in the DOM*.
 

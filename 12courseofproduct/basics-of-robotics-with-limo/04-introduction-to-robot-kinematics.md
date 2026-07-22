@@ -2,6 +2,20 @@
 
 Kinematics is the study of how a robot's motion in its own frame relates to what its actuators are doing, without worrying about the forces involved. For a wheeled robot this boils down to one question: given a desired velocity command, what should each wheel/motor do — and, just as importantly, what velocities is the robot physically *incapable* of producing at all?
 
+The diagram below shows how the same `Twist` command is converted into different wheel behavior depending on which drive mode is active.
+
+```mermaid
+flowchart TD
+    Twist["Twist command\n(linear.x, linear.y, angular.z)"] --> Diff[Differential Drive]
+    Twist --> Ackermann[Ackermann Steering]
+    Twist --> Omni[Omnidirectional / Mecanum]
+    Twist --> Track[Track / Skid-Steer]
+    Diff --> DiffOut["left/right wheel speeds\ncan rotate in place"]
+    Ackermann --> AckOut["steering angle + drive speed\nmin turning radius, no in-place turn"]
+    Omni --> OmniOut["independent x/y/rotation\ncan strafe sideways"]
+    Track --> TrackOut["left/right side speeds\nmore slip"]
+```
+
 ## The unicycle model and Twist
 
 Almost every mobile robot control interface, regardless of its underlying chassis, is commanded through the same abstraction: a `geometry_msgs/msg/Twist`, carrying a linear velocity and an angular velocity:

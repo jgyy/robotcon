@@ -2,6 +2,25 @@
 
 Services (Units 6-7) are for quick questions. Actions are for goals: "navigate to this point," "close the gripper" — things that take real time, that you might want to cancel partway through, and where you want progress updates rather than silence until it's done. This unit covers calling an action; the next covers building one.
 
+The sequence below shows a client sending a goal, receiving repeated feedback while it executes, and either getting a final result or cancelling partway through.
+
+```mermaid
+sequenceDiagram
+    participant C as Action Client
+    participant S as Action Server (fibonacci)
+    C->>S: wait_for_action_server
+    C->>S: async_send_goal(order=10)
+    loop feedback
+        S-->>C: feedback (partial_sequence)
+    end
+    alt client cancels mid-goal
+        C->>S: async_cancel_goal
+        S-->>C: canceled result
+    else goal runs to completion
+        S-->>C: result (sequence)
+    end
+```
+
 ## Why not just use a service?
 Technically you could implement "long-running task" as a service and just wait a long time for the response — but you'd lose two things actions give you for free: **feedback** (periodic progress messages while the goal executes, e.g. "40% of the path traveled") and **cancellation** (the client can ask the server to abort cleanly mid-goal). Under the hood, an action is actually built from topics and services combined, but you interact with it through a single higher-level action client/server API rather than wiring that up yourself.
 

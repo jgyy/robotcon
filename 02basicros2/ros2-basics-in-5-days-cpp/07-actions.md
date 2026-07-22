@@ -2,6 +2,25 @@
 
 Some tasks are neither an instant request/response nor a raw data stream — they take a while, you want progress updates, and you might want to cancel partway through. That's what ROS 2 **actions** are for: "drive to this waypoint," "run this arm trajectory," "return to base." This unit covers interacting with actions from the CLI and writing your own action servers and clients.
 
+The sequence below shows all three action phases — goal, streaming feedback, and result — across time, which is exactly what sets actions apart from a topic's stream or a service's single reply.
+
+```mermaid
+sequenceDiagram
+    participant C as NavigateTo client
+    participant S as NavigateServer
+    C->>S: send goal (target)
+    S-->>C: ACCEPT_AND_EXECUTE
+    loop while driving
+        S-->>C: feedback (distance_remaining)
+    end
+    alt goal cancelled
+        C->>S: cancel request
+        S-->>C: result (success=false)
+    else goal completes
+        S-->>C: result (success=true, "Arrived")
+    end
+```
+
 ## What is an action, and how does it differ from topics and services?
 
 An action is built out of three parts, defined together in a `.action` file:

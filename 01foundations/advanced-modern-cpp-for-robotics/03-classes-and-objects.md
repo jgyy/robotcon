@@ -2,6 +2,23 @@
 
 Almost every ROS 2 node you write will be a class. This unit covers the mechanics of C++ classes in depth — the parts that Python's classes hide from you (explicit construction/destruction order, `const` correctness, ownership semantics) but that matter enormously when you're managing hardware resources like sensors and actuators.
 
+The sequence below shows the `LidarDriver` example's RAII lifecycle: the initializer list runs before the constructor body, and the destructor fires automatically once the object goes out of scope.
+
+```mermaid
+sequenceDiagram
+    participant Code
+    participant Driver as LidarDriver
+    Code->>Driver: LidarDriver(port, baud)
+    activate Driver
+    Driver->>Driver: initializer list sets port_, baud_rate_
+    Driver->>Driver: openConnection()
+    Code->>Driver: use driver...
+    Code->>Driver: (object goes out of scope)
+    Driver->>Driver: ~LidarDriver()
+    Driver->>Driver: closeConnection()
+    deactivate Driver
+```
+
 ## Structures, classes, and access specifiers
 `struct` and `class` are identical in C++ except for default access: `struct` members are `public` by default, `class` members are `private`. Convention: use `struct` for plain data bundles, `class` when you have invariants to protect.
 

@@ -2,6 +2,20 @@
 
 Here you combine `robot_localization` with AMCL, a map-based particle-filter localizer that is external to (not part of) the `robot_localization` package. The goal is to get AMCL's global corrections without losing the smooth, high-rate local estimate you built in Unit 2.
 
+The diagram below shows the two-instance EKF pattern this unit introduces: a local filter that never sees AMCL, and a global filter that absorbs AMCL's corrections on its own transform link.
+
+```mermaid
+flowchart LR
+    OD[Wheel Odometry] --> LEKF["Local EKF<br/>world_frame: odom"]
+    IMU[IMU] --> LEKF
+    LEKF --> TFB["TF: odom → base_link"]
+
+    OD --> GEKF["Global EKF<br/>world_frame: map"]
+    IMU --> GEKF
+    AMCL["/amcl_pose"] --> GEKF
+    GEKF --> TFM["TF: map → odom"]
+```
+
 ## What AMCL provides, and where it falls short
 
 AMCL (Adaptive Monte Carlo Localization) matches incoming laser scans against a known static map to estimate the robot's pose in the `map` frame. Its strength is that it is globally referenced and bounded — it does not drift over long runs the way odometry does. Its weaknesses: it typically runs at a lower rate than odometry/IMU, its pose estimate can be noisy scan-to-scan, and when it re-localizes (e.g. after the robot was picked up, or through the "kidnapped robot" recovery), its output can *jump* discontinuously. Feeding that jumpy signal directly into your smooth local EKF would corrupt the very smoothness you just built.

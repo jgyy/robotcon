@@ -2,6 +2,18 @@
 
 Every robot program is, underneath, just data being read, stored, and transformed — a sensor reading becomes a variable, a set of joint angles becomes a list, a robot's configuration becomes a dictionary. This unit covers Python's variables, core types, and built-in collections, the raw material everything else in the course builds on.
 
+The flowchart below maps the shape of your data to the Python type you'd reach for, matching the guidance in the Collections section:
+
+```mermaid
+flowchart TD
+    A[Raw robot data] --> B{What shape is it?}
+    B -->|Single value| C["variable<br/>int / float / str / bool"]
+    B -->|Ordered, changes over time| D["list<br/>joint_names"]
+    B -->|Fixed-size, read-only| E["tuple<br/>home_position"]
+    B -->|Keyed lookup by name| F["dict<br/>joint_limits"]
+    B -->|Only membership matters| G["set<br/>active_topics"]
+```
+
 ## Variables and dynamic typing
 
 Python variables are names bound to objects; you don't declare a type, and a name can be rebound to a value of a different type at any time:

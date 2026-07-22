@@ -2,6 +2,21 @@
 
 A real robot is inherently concurrent: sensor drivers stream data, control loops run at fixed rates, and planners think in the background — all at once. This unit covers `std::thread` and friends so you can write correct, non-racy concurrent C++, and connects it to how ROS 2's executor model actually runs your callbacks.
 
+The sequence below shows the producer/consumer pattern this unit builds toward: a sensor thread pushing a reading behind a mutex, then waking a processing thread via a condition variable instead of busy-waiting.
+
+```mermaid
+sequenceDiagram
+    participant Producer as Sensor Thread
+    participant Queue as Shared queue + mutex
+    participant Consumer as Processing Thread
+    Producer->>Queue: lock_guard acquires mutex, push(reading)
+    Queue-->>Producer: mutex released (RAII, end of scope)
+    Producer->>Consumer: condition_variable.notify_one()
+    Consumer->>Queue: wake, acquire mutex, pop(reading)
+    Consumer->>Consumer: process reading
+    Consumer->>Queue: mutex released
+```
+
 ## Thread basics: std::thread
 `std::thread` launches a function on a new OS thread. You must `join()` (wait for it to finish) or `detach()` (let it run independently) every thread before it's destroyed, or your program terminates.
 

@@ -2,6 +2,19 @@
 
 Unit 3 configured controllers for a simple, low-DOF mobile base. This unit repeats the exercise on a more demanding target — a 6-DOF manipulator arm — to surface the extra complexity that shows up once joint count, ordering, and trajectory timing actually matter.
 
+The sequence diagram below shows how a multi-joint trajectory goal flows from client to the `joint_trajectory_controller`, which coordinates all six joints together rather than treating them independently.
+
+```mermaid
+sequenceDiagram
+    participant Client as Trajectory Client (CLI/MoveIt)
+    participant JTC as joint_trajectory_controller
+    participant Arm as 6-DOF Arm Joints
+    Client->>JTC: send_goal FollowJointTrajectory (waypoints, joint order)
+    JTC->>Arm: interpolate & command joints 1-6 in sync
+    JTC-->>Client: feedback (progress along trajectory)
+    JTC-->>Client: result (goal reached / aborted)
+```
+
 ## Why an arm is harder than a base
 A differential-drive base has two independent, decoupled joints and a controller (`diff_drive_controller`) built specifically for that kinematic shape. A 6-DOF arm has six joints that must move *in coordinated, time-synchronized trajectories* — you can't just send each joint an independent setpoint and expect a straight-line end-effector motion. That's exactly what `joint_trajectory_controller` is for: it accepts a full trajectory (positions, optionally velocities/accelerations, per waypoint, per joint, with timestamps) and interpolates all six joints together.
 

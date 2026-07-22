@@ -2,6 +2,18 @@
 
 A Jenkins instance that can build, test, and deploy code is a powerful thing to leave wide open. This unit covers locking it down: who can log in, and what they're allowed to do once they have.
 
+The diagram below separates authentication (who are you?) from authorization (what can you do?), and shows how the role-based strategy maps a user onto a specific permission set.
+
+```mermaid
+flowchart TD
+    A[User attempts login] --> B{Authentication<br/>Security Realm}
+    B -->|Invalid credentials| C[Access denied]
+    B -->|Valid credentials| D{Authorization:<br/>which role?}
+    D -->|developer| E[Overall/Read, Job/Build,<br/>Job/Read, Job/Workspace]
+    D -->|maintainer| F[developer permissions +<br/>Job/Configure, Job/Create, Job/Delete]
+    D -->|admin| G[Overall/Administer]
+```
+
 ## Authentication vs. authorization
 These are two separate questions Jenkins security answers independently, under **Manage Jenkins → Security**:
 

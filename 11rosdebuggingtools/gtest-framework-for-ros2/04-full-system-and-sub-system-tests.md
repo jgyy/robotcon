@@ -2,6 +2,24 @@
 
 Unit tests check pieces in isolation, and Unit 3's node tests check one node's pub/sub contract. This unit goes a level higher: verifying that a whole stack of nodes — potentially including simulation — behaves correctly together, using Nav2 over Gazebo as the running example.
 
+The sequence diagram below shows the timeline a `launch_testing` system test follows: bring the stack up, then drive it with an action goal and wait on the result.
+
+```mermaid
+sequenceDiagram
+    participant LT as launch_testing
+    participant Gazebo
+    participant Nav2 as Nav2 stack
+    participant Client as rclpy ActionClient (test)
+
+    LT->>Gazebo: launch simulation + robot
+    LT->>Nav2: launch planner/controller/BT navigator
+    LT->>LT: wait for ReadyToTest
+    Client->>Nav2: send_goal_async(NavigateToPose)
+    Nav2->>Gazebo: drive robot toward goal pose
+    Nav2-->>Client: result (status)
+    Client->>Client: assertEqual(status, SUCCEEDED)
+```
+
 ## Where system tests fit, and their trade-offs
 
 A system test launches (part of) your real application — multiple nodes, possibly a simulator, possibly real config files — and asserts on end-to-end behavior, such as "the robot reaches the goal pose" or "the safety node stops the base within 200 ms of an obstacle appearing." These catch integration bugs that no combination of unit tests will ever find: misconfigured parameters, wrong topic remappings between packages, timing assumptions that only break under real message rates. The cost is that they are slow (seconds to minutes), flaky if not written carefully, and hard to debug when they fail because the failure could be anywhere in the stack. This is why the pyramid from Unit 1 says: write many unit tests, some node tests, and only as many system tests as you need to cover critical end-to-end behaviors.

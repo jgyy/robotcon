@@ -2,6 +2,17 @@
 
 Every decision the car makes downstream depends on what its sensors report right now. This unit covers the standard sensor suite for an autonomous car, the ROS message types each one uses, and how to actually look at the data in RViz instead of trusting it blindly.
 
+The diagram below maps each sensor to its ROS topic and message type, and shows how all of them ultimately feed into RViz for visualization.
+
+```mermaid
+flowchart LR
+    Cam["Camera"] -->|"/camera/image_raw<br/>sensor_msgs/Image"| RViz["RViz visualization"]
+    Lidar["LiDAR / Laser"] -->|"/scan<br/>sensor_msgs/LaserScan"| RViz
+    GPS["GPS receiver"] -->|"/gps/fix<br/>sensor_msgs/NavSatFix"| RViz
+    IMU["IMU"] -->|"/imu<br/>sensor_msgs/Imu"| RViz
+    Odom["Wheel odometry"] -->|"/odom<br/>nav_msgs/Odometry"| RViz
+```
+
 ## The sensor suite
 A conditionally-automated car typically carries some combination of:
 

@@ -2,6 +2,17 @@
 
 Before Kalman filters, you need the Bayes filter — the general recursive framework that every filter in this course (Kalman, EKF, UKF, particle) is a special case of. This unit builds it from scratch over a simple 1D grid world so you see the mechanics without any Gaussian math getting in the way yet.
 
+The diagram below traces one cycle of the predict/correct loop that this unit implements over a discrete belief array.
+
+```mermaid
+flowchart TD
+    B[bel(x): current belief array] --> P[Predict: convolve with motion_kernel]
+    P --> B2[Spread-out belief]
+    B2 --> C[Correct: multiply by likelihood, renormalize]
+    C --> B3[Sharpened belief]
+    B3 -->|next motion + reading| P
+```
+
 ## What is a Bayes Filter?
 
 A Bayes filter maintains a **belief**: a full probability distribution over where the robot might be, `bel(x)`, instead of a single point estimate. Every time step, it does exactly two things, in order:

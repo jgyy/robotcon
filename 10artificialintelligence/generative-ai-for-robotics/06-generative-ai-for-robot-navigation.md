@@ -2,6 +2,22 @@
 
 This closing unit brings everything together: tokenization, model fine-tuning, and natural language understanding, applied to full autonomous navigation. Instead of a robot that reacts to a single command with a velocity, you'll build one that can be told "go to the kitchen" and navigate there using ROS 2's Nav2 stack.
 
+The sequence below shows the timing of a full request: the fine-tuned model translates the instruction into a pose, and Nav2's `NavigateToPose` action carries it through goal, feedback, and result.
+```mermaid
+sequenceDiagram
+    participant User
+    participant T5 as Fine-tuned T5 model
+    participant Client as send_nav_goal (action client)
+    participant Nav2 as Nav2 NavigateToPose (action server)
+
+    User->>T5: "navigate: go to the kitchen"
+    T5-->>User: "x=4.20 y=1.10 yaw=0.00"
+    User->>Client: parsed (x, y, yaw)
+    Client->>Nav2: send_goal_async(PoseStamped)
+    Nav2-->>Client: feedback (distance remaining)
+    Nav2-->>Client: result (goal reached)
+```
+
 ## Language-based autonomous navigation with Nav2
 Nav2 already solves the hard geometric problem of navigation — planning a collision-free path and following it — given a target pose (`x, y, yaw` in a known frame) via its `NavigateToPose` action. What it doesn't solve is turning "go to the kitchen" into that pose. That's the gap generative AI fills here: a fine-tuned model translates a natural-language instruction into either a set of named waypoint coordinates or, more generally, the arguments Nav2's action interface expects, and a thin ROS 2 layer sends the resulting goal:
 ```python

@@ -2,6 +2,18 @@
 
 This unit orients you before you touch any code: what OpenCV is, why it sits at the center of most robot perception stacks, and how the five units that follow build on each other.
 
+The diagram below shows the data path a camera frame takes from the robot's sensor into the OpenCV code this course teaches, which is the key architectural idea this unit establishes.
+
+```mermaid
+flowchart LR
+    Cam[Robot Camera] --> Img["sensor_msgs/Image (ROS topic)"]
+    Img --> Bridge[cv_bridge]
+    Bridge --> Mat["OpenCV array (numpy / cv::Mat)"]
+    Mat --> Vision["Units 2-6: ROS-agnostic OpenCV code"]
+    Vision --> Bridge2[cv_bridge]
+    Bridge2 --> Out["sensor_msgs/Image (processed, published)"]
+```
+
 ## Why vision, and why OpenCV
 A robot with only range sensors (LIDAR, sonar, IMU) knows *where* things are but rarely *what* they are. Cameras are cheap, information-dense, and let a robot answer questions like "is that a person or a chair?" or "which way is this door handle facing?". OpenCV (Open Source Computer Vision Library) is the de facto toolkit for turning raw pixel data into that kind of structured information — it has been the backbone of robotics vision since long before deep learning made object detection mainstream, and it remains essential for the lower-level steps (color filtering, edge detection, feature matching) that deep models still rely on for preprocessing, calibration, and lightweight on-robot tasks where a full neural network is overkill.
 

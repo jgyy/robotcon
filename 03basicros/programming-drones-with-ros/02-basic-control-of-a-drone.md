@@ -2,6 +2,20 @@
 
 Before you can map an environment or plan a 3D path through it, you need reliable low-level control: getting the drone off the ground, holding it steady, moving it deliberately, and bringing it back down. This unit covers the command and telemetry interface every later unit builds on.
 
+The state diagram below shows the flight states a drone driver tracks and the commands that move it between them:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Landed
+    Landed --> TakingOff: takeoff
+    TakingOff --> HoveringFlying: reached altitude
+    HoveringFlying --> HoveringFlying: cmd_vel (Twist)
+    HoveringFlying --> Landing: land
+    Landing --> Landed
+    HoveringFlying --> Landed: reset/emergency
+    TakingOff --> Landed: reset/emergency
+```
+
 ## Flight states and the takeoff/land/reset interface
 A drone driver typically exposes three simple actions as topics or services:
 - **Takeoff** — arms the motors and climbs to a default hover altitude.

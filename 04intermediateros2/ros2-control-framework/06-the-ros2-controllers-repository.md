@@ -2,6 +2,18 @@
 
 You've written a hardware interface; now survey the controllers you get "for free." The `ros2_controllers` repository ships a set of general-purpose controllers covering the vast majority of robot joints, so before writing a custom controller (Unit 7), it's worth knowing exactly what already exists and which one fits your command interface.
 
+The diagram below shows how to pick the right `ros2_controllers` package based on the command interface your hardware exports and the shape of input you need to send it.
+
+```mermaid
+flowchart TD
+    Q{What command interface does<br/>your hardware export?} -->|position, single target| PC[position_controllers/<br/>JointGroupPositionController]
+    Q -->|effort/torque, single target| EC[effort_controllers/<br/>JointGroupEffortController]
+    Q -->|velocity, single target| VC[velocity_controllers/<br/>JointGroupVelocityController]
+    Q -->|non-standard interface name| FC[forward_command_controller/<br/>ForwardCommandController]
+    Q -->|position, multi-waypoint<br/>trajectory| JTC[joint_trajectory_controller/<br/>JointTrajectoryController]
+    Q -->|two-wheel diff-drive base| DDC[diff_drive_controller/<br/>DiffDriveController]
+```
+
 ## Available Controllers at a Glance
 
 Controllers in `ros2_controllers` fall into two families: **broadcasters**, which publish hardware state to ROS topics without commanding anything (e.g., `joint_state_broadcaster`, `imu_sensor_broadcaster`), and **command controllers**, which claim one or more command interfaces and drive them from a ROS input (topic, action, or service). Picking the right command controller is really a question of "what command interface did my hardware interface export, and what input shape does my application need to send?"

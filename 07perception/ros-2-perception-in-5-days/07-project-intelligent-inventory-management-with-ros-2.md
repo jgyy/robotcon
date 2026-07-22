@@ -2,6 +2,17 @@
 
 This capstone unit is where Units 2-6 stop being separate exercises and become one pipeline. You'll build a robot that follows a line through a warehouse-style layout, stops at marked points, and identifies and counts inventory by color — combining sensor handling, image processing, and object detection into a single working system.
 
+The state machine below is exactly the drive/inspect split this capstone project implements.
+
+```mermaid
+stateDiagram-v2
+    [*] --> FOLLOWING_LINE
+    FOLLOWING_LINE --> FOLLOWING_LINE: steer_toward_line(frame)
+    FOLLOWING_LINE --> INSPECTING: detect_stop_marker(frame)
+    INSPECTING --> INSPECTING: inspect_shelf() / classify_color()
+    INSPECTING --> FOLLOWING_LINE: counts published, resume
+```
+
 ## Project brief: what "intelligent inventory management" means here
 The scenario: a mobile robot patrols a set of shelves connected by a painted line on the floor. At each shelf, it needs to determine what stock is present using color as a stand-in for product type (e.g. "red boxes are Product A, blue boxes are Product B"), and report a count. The project decomposes cleanly into three pipelines that map directly onto earlier units:
 

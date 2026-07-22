@@ -2,6 +2,18 @@
 
 This is where you start typing for real. You'll learn the small set of commands and tools that account for the vast majority of everything you do at a Linux prompt, and you'll build a little practice workspace you'll keep extending in later units.
 
+The flowchart below strings this unit's commands together into the everyday workflow they support — finding where you are, creating and writing a file, then reading and editing it:
+
+```mermaid
+flowchart LR
+    A["pwd: where am I?"] --> B["ls -la: what's here?"]
+    B --> C["cd: move around"]
+    C --> D["mkdir / touch: create"]
+    D --> E["echo > file: write"]
+    E --> F["cat / grep: read & search"]
+    F --> G["vi / nano: edit in place"]
+```
+
 ## Finding your way around the filesystem
 Linux has one filesystem tree, rooted at `/` — there's no `C:\` or `D:\`, just one tree that everything (including USB drives and network folders) gets attached into. Your personal files live under `/home/<you>`, shortened to `~`.
 

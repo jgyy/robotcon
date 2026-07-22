@@ -2,6 +2,16 @@
 
 Training the RoboCube agent in Unit 5 is worthless if the result evaporates the moment the script exits. This unit covers persisting a learned policy to disk and loading it back for evaluation — a small piece of engineering that matters far more in practice than its size suggests, since every later unit (DeepQ, HER) needs the same checkpoint discipline.
 
+The diagram below shows how a policy moves from the training loop to disk and back into an evaluation-only run.
+
+```mermaid
+flowchart LR
+    A[Training loop] -->|every N episodes| B["save_policy()<br/>pickle.dump(qlearn.q)"]
+    B --> C[(checkpoint .pkl file)]
+    C --> D["load_policy()<br/>pickle.load"]
+    D --> E["evaluate.py<br/>epsilon = 0, pure exploitation"]
+```
+
 ## What "the policy" actually is for tabular Q-learning
 
 For the `QLearn` class from Unit 5, the entire learned policy *is* the `self.q` dictionary — a mapping from `(discretized_state, action)` pairs to a float. There's no separate "model" to export; if you serialize that one dictionary, you've serialized everything the agent knows. This is worth stating explicitly because it changes in Unit 7: once you move to a neural network, "the policy" becomes a set of weight tensors instead of a dict, and the save/load mechanics change with it (framework checkpoint format instead of pickle).

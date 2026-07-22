@@ -2,6 +2,17 @@
 
 Real robot software has many moving parts — sensors, controllers, state machines — and classes are how C++ keeps that complexity manageable. This unit covers defining classes, controlling access to their data, and the constructor/destructor lifecycle, all through the lens of modeling a piece of a robot.
 
+The state diagram below traces a `Motor` object through its lifecycle, from construction through repeated (encapsulated, clamp-enforcing) use to destruction:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Constructed: Motor(name, max_speed_rps)
+    Constructed --> Running: set_speed(speed_rps)
+    Running --> Running: set_speed(speed_rps)\n(clamped to max_speed_rps_)
+    Running --> Destroyed: object goes out of scope
+    Destroyed --> [*]
+```
+
 ## Defining a class
 A class bundles data (member variables) with the functions that operate on that data (member functions/methods). Encapsulating a robot component — say, a single motor — as a class keeps its internal state and behavior together instead of scattered across loose variables and functions.
 

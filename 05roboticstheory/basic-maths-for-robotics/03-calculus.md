@@ -2,6 +2,16 @@
 
 Calculus is how you go from "where is the robot" to "how fast is it getting there" and "what setting minimizes the error" — it underlies every trajectory, controller, and optimizer you will write. This unit covers functions, differentiation, multivariable extensions (gradients, Jacobians, Hessians), and integration.
 
+The diagram below shows the differentiation chain (position to velocity to acceleration) and its inverse via integration, both covered in this unit.
+
+```mermaid
+flowchart LR
+    P["Position x(t)"] -->|derivative d/dt| V["Velocity v(t)"]
+    V -->|derivative d/dt| A["Acceleration a(t)"]
+    A -->|integral over dt| V
+    V -->|integral over dt| P
+```
+
 ## Functions and common functions
 A function `f(x)` maps an input to an output; in robotics `x` is often time, joint angle, or a state vector, and `f(x)` is position, sensor reading, or cost. The functions that show up constantly:
 - **Polynomials** (`x^2`, cubic splines) for smooth trajectory generation.

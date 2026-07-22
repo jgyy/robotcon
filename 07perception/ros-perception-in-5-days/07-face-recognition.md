@@ -2,6 +2,25 @@
 
 Detection (Unit 6) answers "is there a face here?"; recognition answers "whose face is this?" This unit adds an identity layer on top of the detector, which is what lets a robot like Fetch greet specific people by name instead of treating every face identically.
 
+The diagram below separates the one-time offline step of building the known-faces database from the runtime loop that matches each detected face against it.
+
+```mermaid
+flowchart TD
+    subgraph Offline["Offline: build database"]
+        P1[Known person photo] --> E1["face_encodings -> 128-d vector"]
+        E1 --> DB[(known_encodings + known_names)]
+    end
+    subgraph Runtime["Runtime: recognize"]
+        F[Live frame] --> L[face_locations]
+        L --> ENC[face_encodings per face]
+        ENC --> CMP[face_distance vs known_encodings]
+        DB --> CMP
+        CMP --> M{min distance < 0.6?}
+        M -->|Yes| NAME[Assign matched name]
+        M -->|No| UNK[Label unknown]
+    end
+```
+
 ## Encodings instead of raw pixels
 Comparing face images pixel-by-pixel is fragile — lighting, angle, and expression all change the raw pixels for the same person. Face recognition libraries instead compute a face *encoding*: a fixed-length numeric vector (commonly 128 dimensions) produced by a neural network trained so that encodings of the same person's face sit close together in vector space, and different people's encodings sit far apart:
 ```python

@@ -2,6 +2,19 @@
 
 Every algorithm so far has assumed a discretized grid you can exhaustively search. RRT drops that assumption entirely and searches continuous configuration space via random sampling — a completely different strategy that scales far better in high-dimensional or large continuous spaces, at the cost of optimality guarantees.
 
+The flowchart below walks through one iteration of the tree-growing loop described next.
+```mermaid
+flowchart TD
+    A[Sample random point q_rand in configuration space] --> B[Find q_near: closest existing tree node]
+    B --> C[Step from q_near toward q_rand by step_size to get q_new]
+    C --> D{Segment q_near to q_new obstacle-free?}
+    D -->|No| A
+    D -->|Yes| E[Add q_new to tree with q_near as parent]
+    E --> F{q_new within goal_tolerance of goal?}
+    F -->|No| A
+    F -->|Yes| G[Connect to goal, extract path via parent pointers]
+```
+
 ## Step by step: how RRT works
 RRT builds a tree rooted at the start configuration, growing it one random branch at a time:
 1. Sample a random point `q_rand` in the configuration space (uniformly, most of the time; occasionally biased toward the goal to speed convergence).

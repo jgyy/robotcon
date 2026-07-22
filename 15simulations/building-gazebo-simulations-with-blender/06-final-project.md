@@ -2,6 +2,17 @@
 
 This unit is the capstone: pulling modeling, texturing, robot assembly, and animation into a single working simulation, built end-to-end the way a real project would demand it.
 
+The diagram below shows the recommended build order that ties together every prior unit into one reproducible simulation.
+
+```mermaid
+flowchart TD
+    A[Block out world geometry - Unit 2] --> B[Texture the environment - Unit 3]
+    B --> C[Model & rig robot links - Unit 4]
+    C --> D[Assemble SDF/URDF, spawn robot]
+    D --> E[Wire up joint control]
+    E --> F[Add animated actor - Unit 5]
+```
+
 ## Scoping the project
 
 Pick either Gazebo Classic or Gazebo Sim as your target (Sim if you want animated actors from Unit 5; Classic is a perfectly valid choice if you're prioritizing joint-driven robot behavior over decorative animation). Define three things before opening Blender:

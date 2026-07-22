@@ -2,6 +2,18 @@
 
 Cameras and 2D masks tell you *where in the image* something is; point clouds tell you *where in the world* it is. This unit introduces PCL and two workflows built on it: finding flat surfaces, and finding discrete objects sitting on them.
 
+The flow below shows the two-stage pipeline: RANSAC removes the known flat surface, then clustering turns the remaining points into discrete object markers.
+
+```mermaid
+flowchart TD
+    A["sensor_msgs/PointCloud2"] --> B["RANSAC plane fitting"]
+    B --> C["Inliers -> /surface topic"]
+    B --> D["Outliers -> /objects topic"]
+    D --> E["DBSCAN / EuclideanClusterExtraction"]
+    E --> F["Per-cluster centroid + bounding box"]
+    F --> G["Marker per detected object in RViz"]
+```
+
 ## What is PCL?
 The Point Cloud Library (`pointclouds.org`) is to 3D point data roughly what OpenCV is to images: a large collection of algorithms for filtering, segmenting, and matching point clouds. In ROS 2, a `sensor_msgs/PointCloud2` message is converted to and from PCL's native cloud types using `pcl_conversions`, mirroring how `cv_bridge` bridges `Image` messages to OpenCV. In Python, many workflows skip a full PCL binding and instead work with clouds as plain NumPy arrays of `(x, y, z)` points via `sensor_msgs_py.point_cloud2`, applying the same conceptual algorithms (plane fitting, clustering) using libraries like `open3d` or hand-rolled NumPy/`scikit-learn` — the underlying technique matters more than which library implements it.
 

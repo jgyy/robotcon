@@ -2,6 +2,19 @@
 
 Navigation in the previous unit relied on LiDAR and a pre-built map. This unit switches to a purely vision-driven behavior — line following — which is a compact, self-contained introduction to closing a control loop around camera input, a pattern you'll reuse in every remaining perception unit.
 
+The diagram below shows the three-stage vision-to-control pipeline this unit builds, from raw image to a steering command.
+
+```mermaid
+flowchart LR
+    A["Camera Image (sensor_msgs/Image)"] --> B[cv_bridge: convert to OpenCV frame]
+    B --> C[HSV threshold + bottom-strip mask]
+    C --> D[Compute centroid -> pixel offset]
+    D --> E{Line visible?}
+    E -->|Yes| F["Proportional control: angular.z = -Kp * error"]
+    E -->|No| G[Stop / search behavior]
+    F --> H[Publish /cmd_vel]
+```
+
 ## The pipeline: image in, velocity out
 
 Line following breaks into three stages that map cleanly onto three pieces of code: get an image, extract the line's position from it, and convert that position into a steering command. Each stage is independently testable, which matters a lot when debugging — if the robot swerves wildly, you want to know whether the *vision* stage or the *control* stage is at fault before touching either.

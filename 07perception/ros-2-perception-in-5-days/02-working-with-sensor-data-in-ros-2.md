@@ -2,6 +2,21 @@
 
 Every perception technique in this course starts from one of three message types. This unit teaches you to read and reason about `LaserScan`, `Image`, and `PointCloud2` messages directly, before any OpenCV or PCL processing gets layered on top.
 
+The diagram below shows how each sensor driver publishes its own message type onto a topic that your node subscribes to.
+
+```mermaid
+flowchart LR
+    subgraph Sensors
+        L[2D Lidar] -->|publishes| ST["/scan (LaserScan)"]
+        C[Camera] -->|publishes| IT["/camera/image_raw (Image)"]
+        D[Depth Sensor] -->|publishes| PT["/points (PointCloud2)"]
+    end
+    ST --> N[Your rclpy Node]
+    IT --> N
+    PT --> N
+    N --> O[Logged summary / decisions]
+```
+
 ## Sensor integration in ROS 2
 A sensor driver node's only job is to wrap hardware (or a simulated equivalent) and publish standardized messages on a topic — this is what lets a line-follower node written against `sensor_msgs/Image` work unmodified whether the camera is a real USB webcam or a Gazebo camera plugin. Discovering what a running robot publishes is the first skill worth building:
 

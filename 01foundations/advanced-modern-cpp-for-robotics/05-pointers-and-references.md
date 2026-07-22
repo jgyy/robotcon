@@ -2,6 +2,25 @@
 
 Memory management is where C++ diverges most sharply from Python. Robotics code frequently deals with hardware buffers, shared sensor data, and callback-based APIs (ROS 2 subscriptions hand you data through pointers/references), so understanding pointers precisely — not just "kind of" — is non-negotiable.
 
+The sequence below tracks how `use_count()` on a `shared_ptr<Pose2D>` rises and falls as it is passed to and returned from two consumer functions, exactly like the "Try it yourself" exercise below asks you to observe.
+
+```mermaid
+sequenceDiagram
+    participant Main
+    participant ConsumerA
+    participant ConsumerB
+    Main->>Main: make_shared<Pose2D>()
+    Note over Main: use_count = 1
+    Main->>ConsumerA: pass shared_ptr (by value)
+    Note over ConsumerA: use_count = 2
+    ConsumerA-->>Main: returns, local copy destroyed
+    Note over Main: use_count = 1
+    Main->>ConsumerB: pass shared_ptr (by value)
+    Note over ConsumerB: use_count = 2
+    ConsumerB-->>Main: returns, local copy destroyed
+    Note over Main: use_count = 1
+```
+
 ## Pointer basics and pointers to arrays
 A pointer is a variable holding a memory address. `T*` points at a `T`; dereferencing (`*ptr`) accesses the value there; `&x` takes the address of `x`.
 

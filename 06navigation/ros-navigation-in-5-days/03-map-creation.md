@@ -2,6 +2,20 @@
 
 Navigation needs somewhere to navigate *in*. This unit covers what a ROS map actually is, how SLAM produces one, and how to configure mapping so it works with whatever robot and sensors you have — not just the reference platform in a tutorial.
 
+The diagram below traces the SLAM loop described later in this unit — how each new scan either closes a loop or simply extends the map before the cycle repeats:
+
+```mermaid
+flowchart TD
+    Odom[Odometry: motion prior] --> Match[Match scan against growing map]
+    Scan[New Laser Scan] --> Match
+    Match --> Loop{Loop closure detected?}
+    Loop -- Yes --> Correct[Correct accumulated drift]
+    Loop -- No --> Update[Update occupancy grid]
+    Correct --> Update
+    Update --> Publish[Publish map and map->odom TF]
+    Publish --> Odom
+```
+
 ## What a map means in ROS Navigation
 
 A ROS map is, at its core, a `nav_msgs/OccupancyGrid`: a 2D grid where each cell holds a probability that it's occupied (0), free (100 in some conventions, or the reverse — check your consumer), or unknown (-1). It comes with a resolution (meters/cell), an origin pose, and width/height in cells. Two files usually represent it on disk:

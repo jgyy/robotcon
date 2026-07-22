@@ -2,6 +2,20 @@
 
 Dijkstra's algorithm is the foundation every other planner in this course either builds on or reacts against. This unit walks through the algorithm mechanically, implements it in Python against a grid map, and is honest about where it starts to struggle.
 
+The flowchart below traces the frontier-expansion loop described in the step-by-step walkthrough.
+```mermaid
+flowchart TD
+    A[Init: cost_so_far = 0 for start, infinity elsewhere; push start to queue] --> B[Pop lowest-cost node from queue]
+    B --> C{Is it the goal?}
+    C -->|Yes| D[Stop: this cost is optimal]
+    C -->|No| E[For each neighbor: compute new_cost]
+    E --> F{new_cost cheaper than known cost?}
+    F -->|Yes| G[Update cost, set came_from, push to queue]
+    F -->|No| B
+    G --> B
+    D --> H[Reconstruct path by walking came_from backward]
+```
+
 ## The problem to solve
 Model the environment as a graph: each free cell in a grid is a node, and edges connect it to its (typically 4- or 8-connected) free neighbors, weighted by the cost of moving between them (often just Euclidean distance, or 1 for orthogonal moves and sqrt(2) for diagonals). Given a start node and goal node, find the minimum-total-cost path between them. Dijkstra solves this optimally for graphs with non-negative edge weights, which grid maps naturally satisfy.
 

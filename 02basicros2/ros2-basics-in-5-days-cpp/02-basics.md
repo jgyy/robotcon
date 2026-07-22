@@ -2,6 +2,20 @@
 
 This unit covers the mechanics you'll use in every unit after this one: what a ROS 2 package is, how to build one with colcon, how to write and run your first node, and how to inspect and launch it.
 
+The flow below is the edit-build-run cycle you'll repeat for essentially every exercise in this course, whether running a node directly or through a launch file.
+
+```mermaid
+flowchart TD
+    A[ros2 pkg create] --> B[Write node source + CMakeLists.txt]
+    B --> C[colcon build --packages-select]
+    C --> D[source install/setup.bash]
+    D --> E{Run how?}
+    E -->|single node| F[ros2 run]
+    E -->|multiple nodes| G[ros2 launch]
+    F --> H[ros2 node info to inspect]
+    G --> H
+```
+
 ## What is a package, and how is a workspace organized?
 
 A ROS 2 **package** is the smallest unit of software you can build, install, and depend on independently — source files, a manifest (`package.xml`), and a build description (`CMakeLists.txt` for C++). Packages live inside a **workspace**, conventionally under `~/ros2_ws/src/`. You never build inside `src/`; colcon builds out-of-tree into sibling `build/`, `install/`, and `log/` directories.

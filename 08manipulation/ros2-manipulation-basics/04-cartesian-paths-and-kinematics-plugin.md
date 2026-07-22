@@ -2,6 +2,17 @@
 
 Joint-space and pose-goal planning (Unit 3) don't guarantee a straight-line path — the planner is free to take any collision-free route. This unit covers Cartesian path planning, where you control the path itself, and the kinematics plugin that underlies every IK solve behind the scenes.
 
+The diagram below shows how a waypoint list becomes a trajectory, with the kinematics plugin doing the per-step IK work that determines the returned `fraction`.
+
+```mermaid
+flowchart TD
+    W["Waypoint list<br/>(e.g. current pose - 10cm z)"] --> CCP["computeCartesianPath(waypoints, eef_step)"]
+    CCP --> IK["Kinematics plugin solves IK<br/>at each eef_step interval<br/>(kdl_kinematics_plugin or IKFast)"]
+    IK -->|all waypoints reachable| F1["fraction = 1.0<br/>full trajectory returned"]
+    IK -->|solver fails near a<br/>singularity/joint limit| F2["fraction < 1.0<br/>partial trajectory returned"]
+    F2 --> R["Shorten waypoints or<br/>move start pose"]
+```
+
 ## Cartesian path planning
 
 `computeCartesianPath()` takes a list of waypoints and asks MoveIt2 to interpolate a straight-line (in Cartesian space) trajectory through all of them, rather than just planning to a final goal and letting the planner choose the route:

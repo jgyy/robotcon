@@ -2,6 +2,16 @@
 
 This unit turns the link/joint sketch from Unit 1 into real XML: the tags that give a link a visible shape, the tags that connect links into a moving tree, and the tools that let you check your work without waiting until Gazebo to find out you got it wrong.
 
+The diagram below traces the lamp robot's link/joint chain built in this unit, from the Unit 1 sketch through to validation.
+
+```mermaid
+flowchart LR
+    Sketch[Unit 1 link/joint sketch] --> base_link[base_link]
+    base_link -->|shoulder_joint: revolute| upper_arm[upper_arm]
+    upper_arm -->|elbow_joint: revolute| lamp_head[lamp_head]
+    lamp_head --> Validate[check_urdf + RViz sliders]
+```
+
 ## Anatomy of a `<link>`
 A link's visible appearance lives in its `<visual>` block, which itself contains `<geometry>`, an `<origin>`, and optionally a `<material>`:
 

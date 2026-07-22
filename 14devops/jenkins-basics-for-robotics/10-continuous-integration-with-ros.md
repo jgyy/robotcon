@@ -2,6 +2,19 @@
 
 This unit is where the course pays off: combining everything so far — pipelines, source control triggers, and test integration — into one realistic Jenkins pipeline for a ROS package, matching the sketch you drafted back in Unit 1.
 
+The diagram below traces the full ROS pipeline this unit builds, from checkout inside a `osrf/ros` container through to the launch-file smoke test and result reporting.
+
+```mermaid
+flowchart LR
+    A["Checkout<br/>(checkout scm)"] --> B["Install dependencies<br/>(rosdep install)"]
+    B --> C["Build<br/>(colcon build)"]
+    C --> D["Test<br/>(colcon test)"]
+    D --> E["Launch smoke test<br/>(ros2 launch + node list check)"]
+    E --> F{post}
+    F -->|always| G[junit: publish test results]
+    F -->|failure| H[echo failing-stage message]
+```
+
 ## The shape of a ROS CI pipeline
 The core challenge specific to ROS is environment setup: build steps need the ROS environment sourced, and dependencies resolved, before `colcon` commands mean anything. The cleanest way to get a reproducible environment on any Jenkins agent is to run the actual build inside a container, rather than relying on whatever happens to be installed on the agent host.
 

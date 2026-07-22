@@ -2,6 +2,16 @@
 
 Unit 5 ended on a problem: a single slow callback blocks every other callback on a node. This unit covers ROS 2's answer — executors and callback groups — so you can let independent callbacks run concurrently without turning your node into a manual threading exercise.
 
+The diagram below shows this unit's recommended pattern: a `MultiThreadedExecutor` feeding two separate callback groups so the timing-sensitive callback is never delayed by the slow one:
+
+```mermaid
+flowchart TD
+    Executor[MultiThreadedExecutor: thread pool] --> GroupA[MutuallyExclusiveCallbackGroup: safety_group]
+    Executor --> GroupB[ReentrantCallbackGroup: vision_group]
+    GroupA --> Timer[on_tick timer callback: never overlaps itself]
+    GroupB --> Image[on_image callback: may overlap itself]
+```
+
 ## Why you need multithreading
 By default, `rclpy.spin(node)` uses a `SingleThreadedExecutor`: one thread, callbacks dispatched strictly one at a time, in the order they become ready. That's fine for simple nodes, but breaks down as soon as one callback can legitimately take a while (an image-processing subscriber, a slow service call) while other callbacks (a safety-critical timer, a heartbeat publisher) need to keep running on schedule regardless. The fix is a `MultiThreadedExecutor`, which dispatches ready callbacks to a thread pool instead of a single thread:
 ```python

@@ -2,6 +2,19 @@
 
 Turtlebot3 is the de-facto reference platform for learning mobile robotics with ROS: small, cheap enough to own two of, well documented, and popular enough that almost every tutorial, forum post, and package you'll find assumes it. This unit sets expectations for the course, walks through the hardware you'll be working with, and gets your workspace ready so every later unit can jump straight into content.
 
+The diagram below shows the workspace setup sequence and where the Burger/Waffle choice branches, since that choice affects only which unit later touches manipulation.
+
+```mermaid
+flowchart TD
+    A[Clone turtlebot3, turtlebot3_msgs, turtlebot3_simulations] --> B[rosdep install & colcon build]
+    B --> C[Set TURTLEBOT3_MODEL in shell profile]
+    C --> D{Burger or Waffle?}
+    D -->|Burger| E[2D LiDAR + camera<br/>navigation & vision units]
+    D -->|Waffle / Waffle Pi| F[+ OpenManipulator arm<br/>enables the MoveIt unit]
+    E --> G[Bring up sim, verify /odom & /scan publish]
+    F --> G
+```
+
 ## Burger vs. Waffle: two robots, one course
 
 Turtlebot3 ships in two main configurations built on the same differential-drive base and the same ROS stack, but with different sensor and payload trade-offs:

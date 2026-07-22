@@ -2,6 +2,18 @@
 
 This unit previews the whole course and gets your tooling in place. By the end you should know what each later unit builds on top of, and you should have a working Python environment that can run a minimal agent-environment loop end to end.
 
+The diagram below shows the agent-environment loop every algorithm in this course drives, repeated one timestep at a time.
+
+```mermaid
+sequenceDiagram
+    participant Agent
+    participant Environment
+    loop every timestep
+        Agent->>Environment: action a_t
+        Environment-->>Agent: reward r_t, state s_t+1
+    end
+```
+
 ## Course roadmap
 This course builds one idea at a time, and each unit depends on the one before it:
 - **Unit 2** formalizes what "the reinforcement learning problem" actually is: the multi-armed bandit as a simplified warm-up, then the full Markov Decision Process (MDP), and the value functions and Bellman equation that every later algorithm is built from.

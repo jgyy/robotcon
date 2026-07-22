@@ -2,6 +2,21 @@
 
 This course takes Turtlebot3 — the Burger and Waffle variants alike — from first bringup through autonomous navigation, vision-driven behaviors (line following, blob tracking, object recognition), MoveIt-based arm motion planning, and finally a two-part capstone project that forces navigation, perception, and manipulation to work together on one robot rather than as isolated demos.
 
+The diagram below shows how each unit builds on the one before it, from first bringup to the capstone project and its wrap-up.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Introduction] --> U2[Unit 2: Basic Usage]
+    U2 --> U3[Unit 3: Navigation]
+    U3 --> U4[Unit 4: Follow a Line]
+    U4 --> U5[Unit 5: Blob Tracking]
+    U5 --> U6[Unit 6: Object Recognition]
+    U6 --> U7[Unit 7: MoveIt Motion Planning]
+    U7 --> U8[Unit 8: Project Part 1]
+    U8 --> U9[Unit 9: Project Part 2]
+    U9 --> U10[Unit 10: Final Recommendations]
+```
+
 1. [Introduction to the Course](01-introduction-to-the-course.md) — Burger vs. Waffle, course scope, and getting a Turtlebot3 workspace built and running.
 2. [Basic Usage](02-basic-usage.md) — Bringing the robot up, teleoperating it, reading odometry and TF, and publishing your own velocity commands.
 3. [Navigation with Burger](03-navigation-with-burger.md) — SLAM mapping, costmaps, AMCL localization, and sending autonomous navigation goals.

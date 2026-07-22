@@ -2,6 +2,21 @@
 
 Unit 13 covered the door interface abstractly. This unit goes hands-on: placing an RMF-enabled door in the traffic editor from Unit 15 and connecting it to a working (simulated) door adapter.
 
+The sequence below shows how the traffic scheduler requests and waits on a door around the robot's arrival, without the fleet adapter needing any door-specific logic.
+
+```mermaid
+sequenceDiagram
+    participant R as Robot
+    participant TS as Traffic Scheduler
+    participant DA as Door Adapter
+    TS->>DA: DoorRequest (open, ahead of arrival)
+    DA-->>TS: DoorState = OPEN (after actuation delay)
+    TS-->>R: release itinerary hold
+    R->>R: cross through doorway
+    TS->>DA: DoorRequest (close, after robot passes)
+    DA-->>TS: DoorState = CLOSED
+```
+
 ## Placing a door in the traffic editor
 
 Within `rmf_traffic_editor`, a door is drawn as a special edge between two vertices on a wall segment, tagged with a door type (single sliding, double sliding, single swing, double swing) and a name. This name is what your navigation graph and fleet adapters will reference — a robot's route that needs to cross this wall will include a lane that passes through it, and RMF automatically knows to request the door before the robot's itinerary reaches that lane.

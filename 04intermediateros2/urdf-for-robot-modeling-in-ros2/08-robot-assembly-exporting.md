@@ -2,6 +2,16 @@
 
 Hand-writing every dimension and joint origin is fine for simple robots, but real hardware is usually designed in CAD first. This unit covers going from a CAD assembly to a working URDF instead of typing geometry by hand — using Onshape, a browser-based CAD tool with a documented export path to URDF, as the concrete example.
 
+The diagram below traces the path from a CAD assembly to a launch-ready URDF, including the manual correction step most exports need.
+
+```mermaid
+flowchart LR
+    CAD[Onshape CAD assembly + mates] --> API[Onshape URDF exporter API]
+    API --> Export[".urdf file + mesh folder"]
+    Export --> Fix["Post-export corrections:<br/>axes, inertials, mesh detail"]
+    Fix --> Launch[robot_state_publisher / RViz2 / Gazebo Sim]
+```
+
 ## Onshape and account setup
 
 Onshape is a cloud-based CAD platform; because the whole assembly lives online rather than in a local file, exporting from it is done through its API rather than a local "File > Export" menu. Getting started requires creating an Onshape account and, since this course's export tooling doesn't require a local installation, most of the workflow happens through the browser and API keys rather than desktop software.

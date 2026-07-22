@@ -2,6 +2,27 @@
 
 Parameters are how you tune a running node's behavior without restarting it — PID gains, speed limits, feature toggles. This unit uses `ROSLIB.Param` to build a web panel that reads and writes them live, which is a genuinely useful tool for tuning control algorithms without touching a terminal.
 
+The diagram below shows the get/set/get-again exchange used to read, write, and confirm a live ROS parameter.
+
+```mermaid
+sequenceDiagram
+    participant U as Operator
+    participant P as Web Page
+    participant B as rosbridge
+    participant N as ROS Node
+    P->>B: Param.get(name)
+    B->>N: get_parameters
+    N-->>B: value
+    B-->>P: populate input field
+    U->>P: drag slider (debounced 150ms)
+    P->>B: Param.set(name, value)
+    B->>N: set_parameters (fire-and-forget)
+    P->>B: Param.get(name) after 200ms
+    B->>N: get_parameters
+    N-->>B: confirmed value
+    B-->>P: log confirmed value
+```
+
 ## Reading a parameter
 `ROSLIB.Param` wraps the get/set parameter services behind a small, synchronous-feeling API:
 

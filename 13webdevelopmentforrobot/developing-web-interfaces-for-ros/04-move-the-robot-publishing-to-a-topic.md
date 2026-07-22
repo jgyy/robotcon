@@ -2,6 +2,25 @@
 
 This is the first unit where your browser actually changes what the robot does. You'll use `ROSLIB.Topic` to publish `geometry_msgs/Twist` messages and drive a robot base directly from a web page.
 
+The diagram below shows the timed publish loop that starts on button-down and ends with a guaranteed zero-velocity message on release.
+
+```mermaid
+sequenceDiagram
+    participant U as Operator
+    participant P as Web Page
+    participant B as rosbridge
+    participant T as /cmd_vel Topic
+    U->>P: mousedown on forward button
+    loop every 100ms while held
+        P->>B: publish Twist(linear, angular)
+        B->>T: forward message
+    end
+    U->>P: mouseup
+    P->>B: publish Twist(0, 0)
+    B->>T: forward zero-velocity message
+    T-->>U: robot stops
+```
+
 ## The ROSLIB.Topic publisher pattern
 Every publisher in roslibjs follows the same three-step shape: describe the topic (name + message type), then call `.publish()` with a message object whenever you have data to send. Nothing needs to be "advertised" explicitly first — roslibjs handles that handshake for you on the first publish.
 

@@ -2,6 +2,19 @@
 
 Unit 3 flattened the world into a 2D floor plan, which is fine at a fixed altitude but throws away the drone's real advantage: it can fly over, under, and around obstacles in full 3D. This unit repurposes MoveIt — normally a robot-arm motion planning framework — to plan collision-free paths through 3D space for the drone itself.
 
+The diagram below shows how MoveIt turns a goal pose into an obstacle-avoiding trajectory that gets executed as closed-loop velocity commands:
+
+```mermaid
+flowchart LR
+    P[Planning Scene<br/>Octomap from RTABMap] --> O[OMPL Sampling Planner]
+    J[Floating Joint Model<br/>6-DOF drone pose] --> O
+    Goal[Goal Pose] --> O
+    O --> TR[Collision-Free Trajectory]
+    TR --> W[Waypoint-by-Waypoint<br/>Velocity Conversion]
+    W --> CV[cmd_vel to Drone]
+    CV -->|odometry feedback| W
+```
+
 ## Treating the drone as a "manipulator" with a floating joint
 MoveIt plans motion for a *planning group*: a chain of joints with defined limits, connected by a kinematic model described in a URDF/SRDF pair, going to some end-effector pose. A robot arm's planning group is its chain of revolute joints. A drone has no joints at all — it's a single rigid body free to translate and rotate in space. MoveIt handles this by modeling the drone's pose as a **virtual floating joint**: a 6-degree-of-freedom joint (3 translation + 3 rotation) connecting a fixed "world" frame to the drone's body frame. The "planning group" then consists of that single virtual joint, and the "end effector" is the drone body itself.
 

@@ -2,6 +2,21 @@
 
 Everything so far used a single-chain arm — one link leads to the next in a straight line. A real robot is rarely that simple: this unit builds "Gurdy," a three-legged robot where the base branches into three identical leg chains, forcing you to plan a tree with multiple branches and handle the repetition that comes with it (a preview of why Unit 5 introduces XACRO).
 
+The diagram below shows Gurdy's branching kinematic tree, with each leg's joint names and types labeled on the edges.
+
+```mermaid
+flowchart TD
+    base[base_link] -->|leg1_hip_joint: revolute| leg1_upper[leg1_upper]
+    leg1_upper -->|leg1_knee_joint: revolute| leg1_lower[leg1_lower]
+    leg1_lower --> leg1_foot[leg1_foot]
+    base -->|leg2_hip_joint: revolute| leg2_upper[leg2_upper]
+    leg2_upper -->|leg2_knee_joint: revolute| leg2_lower[leg2_lower]
+    leg2_lower --> leg2_foot[leg2_foot]
+    base -->|leg3_hip_joint: revolute| leg3_upper[leg3_upper]
+    leg3_upper -->|leg3_knee_joint: revolute| leg3_lower[leg3_lower]
+    leg3_lower --> leg3_foot[leg3_foot]
+```
+
 ## Planning the kinematic tree for a multi-legged robot
 Before writing any XML, draw the tree. Gurdy's shape is: one central `base_link`, with three legs attached at 120° around it, and each leg made of an upper segment and a lower segment ending in a foot:
 

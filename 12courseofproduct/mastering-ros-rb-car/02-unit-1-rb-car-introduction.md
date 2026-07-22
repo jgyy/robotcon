@@ -2,6 +2,17 @@
 
 Where Unit 1 was about *what* RB-CAR is, this unit is about *how to talk to it*: the topic/TF graph, the Ackermann command interface, and the basic loop of sending commands and reading state back. By the end you should be able to drive the robot around by hand and understand every message flowing past.
 
+The diagram below shows the TF frame hierarchy you'll rely on constantly, from the fixed `map` frame down to each sensor's mounting frame.
+
+```mermaid
+flowchart TD
+    map[map] --> odom[odom]
+    odom --> base[base_link / base_footprint]
+    base --> velodyne[velodyne_link]
+    base --> imu_link[imu_link]
+    base --> gps_link[gps_link]
+```
+
 ## The topic and TF graph
 
 RB-CAR's software, like any ROS robot, is a graph of nodes communicating over topics, services, and TF frames. The frames you'll rely on constantly are:

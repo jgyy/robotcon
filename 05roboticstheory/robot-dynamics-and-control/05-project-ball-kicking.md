@@ -2,6 +2,17 @@
 
 This project pulls together every previous unit into one concrete task: program a dynamic controller for a 2-link arm (RRBot — "Revolute-Revolute Robot", a standard teaching model in Gazebo/ROS tutorials) that swings its tip through a ball resting on the floor, kicking it forward.
 
+The state diagram below shows the three-phase motion the kicking controller must drive the arm through in sequence.
+
+```mermaid
+stateDiagram-v2
+    [*] --> WindUp
+    WindUp --> SwingThrough: build run-up distance
+    SwingThrough --> Contact: max torque toward ball
+    Contact --> FollowThrough: tip meets ball
+    FollowThrough --> [*]: decelerate, no abrupt stop
+```
+
 ## Understanding the RRBot arm
 RRBot is a planar 2-link, 2-joint arm mounted on a fixed base, with both joints revolute — mechanically identical to the 2-link arm you extended the equations of motion for in Unit 3's "Try it yourself." If you're working in simulation, RRBot ships as a standard example URDF/SDF in many ROS/Gazebo tutorial packages; if you don't have a simulator set up, the same task works perfectly well against your own Python equations-of-motion model from Unit 3, treating "kicking" as a purely dynamics/control problem and checking the outcome analytically (tip velocity and position at the moment of contact) rather than visually. Either way, the two things you need before writing any control code are: (1) `M(q), C(q,q_dot), G(q)` for this specific arm (masses, link lengths — either from the URDF's `<inertial>` tags or your own assumed values), and (2) the forward kinematics mapping `q -> (x_tip, y_tip)` so you know where the ball needs to be for the tip to reach it.
 

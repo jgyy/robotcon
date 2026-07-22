@@ -2,6 +2,19 @@
 
 Before TEB can plan anything, you need a Navigation Stack that's already bringing a robot from a map and a goal to *some* working local planner — even a bad one. This unit gets that scaffolding in place and shows exactly where TEB will be swapped in.
 
+The diagram below shows the setup process this unit walks through, from installing the package to confirming TEB is actually active.
+
+```mermaid
+flowchart TD
+    A[Install teb_local_planner package] --> B[Verify prerequisites: costmaps, global planner, footprint]
+    B --> C[Point local planner / controller plugin at TEB]
+    C --> D[Launch the navigation stack]
+    D --> E{cmd_vel non-zero and log names TEB as loaded plugin?}
+    E -->|Yes| F[Setup confirmed]
+    E -->|No| G[Check plugin class name and ROS distro build]
+    G --> C
+```
+
 ## Install the package
 
 TEB is not part of the core navigation packages by default; it's an extra plugin you install alongside your existing stack.

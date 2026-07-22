@@ -2,6 +2,22 @@
 
 Jenkins is a self-hosted, plugin-extensible automation server that has been the default open-source choice for continuous integration and delivery for years — and its self-hosted nature makes it a natural fit for robotics projects, which often need CI wired into unusual infrastructure (build farms, simulator licenses, or eventually real hardware) that hosted CI products don't reach. This course takes you from installing Jenkins for the first time through jobs, pipelines-as-code, source control and test integration, users and security, the CLI, and finally a realistic end-to-end pipeline for a ROS package.
 
+The diagram below shows how each unit builds directly on the ones before it, from first install through to the capstone exam.
+
+```mermaid
+flowchart TD
+    U1[Unit 1: Introduction] --> U2[Unit 2: Installation and Setup]
+    U2 --> U3[Unit 3: Jenkins Jobs Part 1]
+    U3 --> U4[Unit 4: Jenkins Jobs Part 2]
+    U4 --> U5[Unit 5: Users and Security]
+    U5 --> U6[Unit 6: Pipelines]
+    U6 --> U7[Unit 7: SCM Integration]
+    U7 --> U8[Unit 8: Test Integration]
+    U8 --> U9[Unit 9: Jenkins CLI]
+    U9 --> U10[Unit 10: CI with ROS]
+    U10 --> U11[Unit 11: Exam]
+```
+
 1. [Introduction](01-introduction.md) — What Jenkins is, why robotics projects benefit from CI, and how the pieces of this course fit together.
 2. [Installation and Initial Setup](02-installation-and-initial-setup.md) — Script a Jenkins install and complete the first-run setup wizard.
 3. [Jenkins Jobs (Part 1)](03-jenkins-jobs-part-1.md) — Create and run your first Freestyle job, and read build output and status.

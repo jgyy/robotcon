@@ -2,6 +2,17 @@
 
 This unit sets the stage for the rest of the course: why version control matters for robotics work specifically, what Git actually is, and how the course is structured so you can get the most out of the hands-on units that follow.
 
+The diagram below shows how the distinct pain points of robotics development all funnel into the same underlying need that Git addresses.
+
+```mermaid
+flowchart LR
+    A[Multiple moving parts<br/>ROS 2 ws, URDF, sim worlds, calibration] --> V[Version Control / Git]
+    B[Long-lived experiments<br/>compare old vs. new controller gains] --> V
+    C[Collaboration across hardware & software<br/>parallel work without overwriting] --> V
+    D[Reproducibility<br/>know exactly what code ran on the robot] --> V
+    V --> R[Structured, queryable project history]
+```
+
 ## Challenges in the robotics software development process
 
 Robotics projects tend to break version control workflows that were designed for simple web apps, for a few reasons:

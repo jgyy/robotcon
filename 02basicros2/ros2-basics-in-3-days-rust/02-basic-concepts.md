@@ -2,6 +2,17 @@
 
 This unit covers the scaffolding every ROS 2 Rust project sits on: how a package is laid out and built, what a node and a client library actually are, and how a launch file starts several of them together. Get comfortable here before Unit 3, where you write real publish/subscribe logic.
 
+The diagram below traces how the pieces this unit covers — package files, the message build script, the compiled artifacts, and the launch file — connect into one running node:
+
+```mermaid
+flowchart LR
+    PKG[package.xml + Cargo.toml] --> BUILD[colcon build]
+    MSG[build.rs message codegen] --> BUILD
+    BUILD --> INSTALL[install/setup.bash]
+    INSTALL --> LAUNCH[ros2 launch .launch.py]
+    LAUNCH --> NODE[rclrs Node process]
+```
+
 ## ROS 2 packages and the Cargo/colcon relationship
 A ROS 2 package is a directory with a `package.xml` manifest declaring its name, dependencies, and build type. For a Rust package, that directory also contains a normal `Cargo.toml`. The `ament_cargo` build type tells `colcon` (ROS 2's workspace build tool) to shell out to `cargo build` for that package while still respecting ROS 2's cross-package dependency graph and install layout. In practice, your workspace looks like:
 

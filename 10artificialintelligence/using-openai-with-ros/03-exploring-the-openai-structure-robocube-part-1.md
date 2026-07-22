@@ -2,6 +2,17 @@
 
 Unit 2 walked through an existing environment. This unit — the first of three on "RoboCube," a moving cube balanced on a single actuated disk — starts the more valuable skill: porting a robot you don't already have wired into `openai_ros`. Part 1 covers the scaffolding decisions you make before writing a line of environment logic.
 
+The flowchart below shows the order every `RobotEnv` subclass follows before it can be considered ready, which is the contract this unit introduces.
+
+```mermaid
+flowchart TD
+    A["__init__: subscribe sensor topics,<br/>create actuator publishers"] --> B["_check_all_systems_ready()<br/>block until every topic has published"]
+    B --> C{All required topics received?}
+    C -- No --> B
+    C -- Yes --> D["env_setup() (optional)<br/>e.g. enable a specific controller"]
+    D --> E[RobotEnv ready for a TaskEnv to build on]
+```
+
 ## Anatomy of a new openai_ros robot package
 
 A new robot integration is typically its own ROS package with a predictable layout:

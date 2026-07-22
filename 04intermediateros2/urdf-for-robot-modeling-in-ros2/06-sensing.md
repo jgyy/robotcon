@@ -2,6 +2,17 @@
 
 A robot that can move but can't perceive anything is only half-useful. This unit adds simulated sensors to the URDF you've been building, using the same `<gazebo>` plugin pattern you saw for movement in the previous unit.
 
+The diagram below shows the shared link+plugin pattern this unit uses for every sensor, and which ROS2 topic type each one ends up publishing.
+
+```mermaid
+flowchart LR
+    Link[Sensor link + fixed joint] --> Plugin[gazebo sensor plugin]
+    Plugin --> Lidar["Lidar -> sensor_msgs/LaserScan"]
+    Plugin --> Camera["Camera -> sensor_msgs/Image"]
+    Plugin --> PointCloud["Depth camera -> sensor_msgs/PointCloud2"]
+    Plugin --> IMU["IMU -> sensor_msgs/Imu"]
+```
+
 ## The general pattern: sensor link + plugin
 
 Every simulated sensor in this course follows the same two-step recipe: (1) add a small link to the URDF at the physical location where the sensor sits (a `fixed` joint to the chassis, typically), and (2) attach a `<sensor>` block with a simulator plugin to that link, configured with the sensor's update rate, field of view, range, and the ROS2 topic it should publish to. Because the sensor lives on its own link with its own `fixed` joint, it also gets its own `tf2` frame for free — this is exactly why sensor messages in ROS2 always carry a `frame_id`: it's the name of that link.

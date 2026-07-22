@@ -2,6 +2,17 @@
 
 Before you can plan a single motion for the mycobot arm mounted on the LIMO base, MoveIt2 needs a package that describes the robot's geometry, joint groups, and controllers. This unit builds that package from scratch and explains what every generated file is actually for, so you aren't just clicking "Next" in a wizard.
 
+The flow below traces the whole build process, from combining the two Xacro descriptions to a verified, runnable MoveIt2 config package.
+
+```mermaid
+flowchart TD
+    A[Combine LIMO base + mycobot Xacro into one URDF] --> B[Validate with check_urdf]
+    B --> C[Run MoveIt Setup Assistant]
+    C --> D[Define planning groups, kinematics solver, named poses]
+    D --> E["Generated limo_mycobot_moveit_config package\n(SRDF, kinematics.yaml, moveit_controllers.yaml)"]
+    E --> F[Verify with demo.launch.py: plan & execute in RViz]
+```
+
 ## Why a MoveIt2 config package exists
 
 MoveIt2 is generic — it knows nothing about "LIMO" or "mycobot arm" out of the box. It plans motion for *any* robot as long as it's handed three things: a kinematic model (URDF), a semantic description of which joints form which planning group (SRDF), and a way to talk to the hardware/simulation controllers (ros2_control + a controllers YAML). The config package is the glue that bundles these together into a set of launch files MoveIt can consume. Once generated, it is a normal ROS2 package you keep in version control alongside the rest of your robot's software — it is not disposable scaffolding.

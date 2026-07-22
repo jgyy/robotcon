@@ -2,6 +2,20 @@
 
 Topics are how most data flows through a robot: sensor readings, robot state, commanded velocities. This unit covers the publish side of that pattern — the next unit covers subscribing and defining your own message types.
 
+The sequence below shows a timer-driven publisher: it fires on its own schedule and publishes onto the topic regardless of whether any subscriber is listening.
+
+```mermaid
+sequenceDiagram
+    participant T as Timer (100ms)
+    participant P as Publisher Node
+    participant Topic as /greeting (topic)
+    loop every tick
+        T->>P: fire callback
+        P->>Topic: publish(msg)
+    end
+    Note over Topic: 0..N Subscribers may or may not be listening
+```
+
 ## What a topic is
 A topic is a named, typed data channel. "Named" means it has a string identifier like `/cmd_vel` or `/scan`. "Typed" means every message sent on it must match a single declared message type — you can't publish a string on a topic declared to carry numbers. Publishing is fire-and-forget and many-to-many: zero, one, or many nodes can publish to the same topic, and zero, one, or many nodes can subscribe, and the publisher never knows or cares who (if anyone) is listening. This decoupling is the entire point — a camera driver doesn't need to know whether zero or five nodes are consuming its images.
 

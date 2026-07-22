@@ -2,6 +2,20 @@
 
 Part 1 taught you to plan by dragging a marker in RViz. This unit does the same job from code with MoveIt's Python interface — the step that turns motion planning into something you can call from a larger program instead of a person clicking buttons.
 
+The diagram below traces the programmatic plan/execute call sequence, including how a collision object added via `PlanningSceneInterface` feeds into planning.
+
+```mermaid
+flowchart TD
+    A[Create MoveGroupCommander] --> B[set_pose_target / set_joint_value_target]
+    B --> C[plan]
+    C --> D{Plan succeeded?}
+    D -->|Yes| E[go]
+    E --> F[stop]
+    F --> G[clear_pose_targets]
+    D -->|No| G
+    H[PlanningSceneInterface.add_box] -.obstacle info.-> C
+```
+
 ## The MoveGroupCommander
 
 `moveit_commander` wraps the `move_group` node behind a Python object scoped to one planning group. Creating one and asking it for the robot's current pose is the standard first move in any MoveIt script:

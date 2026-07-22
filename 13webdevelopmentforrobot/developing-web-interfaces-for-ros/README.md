@@ -2,6 +2,28 @@
 
 This course teaches you to build browser-based interfaces that control and monitor a ROS-powered robot in real time, using nothing but HTML, JavaScript, and the `rosbridge_suite` / `roslibjs` bridge that translates the ROS graph into WebSocket-friendly JSON. Starting from a bare development environment, you'll progressively add teleoperation controls, live telemetry, camera streaming, service and action calls, map rendering, parameter tuning, and full 3D visualization, before combining all of it into a single operator dashboard in the final project.
 
+The diagram below shows how each unit builds on the previous one, grouped into four learning phases before the capstone.
+
+```mermaid
+flowchart LR
+    subgraph Foundations["Foundations"]
+        U1[1: Introduction] --> U2[2: Env Setup Part 1] --> U3[3: Env Setup Part 2]
+    end
+    subgraph Teleop["Teleop & Telemetry"]
+        U4[4: Publish / Drive] --> U5[5: Joystick] --> U6[6: Subscribe / Odometry]
+    end
+    subgraph Perception["Perception & Interaction"]
+        U7[7: Camera] --> U8[8: Services] --> U9[9: Map]
+    end
+    subgraph Advanced["Advanced Visualization"]
+        U10[10: Parameters] --> U11[11: 3D Visualization] --> U12[12: Actions]
+    end
+    U3 --> U4
+    U6 --> U7
+    U9 --> U10
+    U12 --> U13[13: Final Project Dashboard]
+```
+
 1. [Introduction](01-introduction.md) — why browsers need a bridge to ROS, and how rosbridge + roslibjs provide one.
 2. [Setting up our development environment (Part 1)](02-setting-up-our-development-environment-part-1.md) — installing and launching the rosbridge WebSocket server.
 3. [Setting up our development environment (Part 2)](03-setting-up-our-development-environment-part-2.md) — adding roslibjs, a dev server, and a reusable project layout.

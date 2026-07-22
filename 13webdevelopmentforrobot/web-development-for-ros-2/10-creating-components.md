@@ -2,6 +2,16 @@
 
 A single `App` component holding every button, tile, and piece of state becomes unmanageable fast. This unit splits your panel into focused, reusable components — the same organizational instinct as breaking a large ROS 2 node into smaller classes or functions — and covers how those components talk to each other.
 
+The diagram below shows how data flows down to child components as props while a child triggers parent behavior back up through a callback.
+
+```mermaid
+flowchart LR
+    App[App: holds state] -- percentage prop --> BatteryTile
+    App -- closest prop --> LaserTile
+    App -- onStop callback --> StopButton
+    StopButton -- calls onStop --> App
+```
+
 ## Creating a new component
 A component is just a function that returns JSX, imported and used like an HTML tag. Pull the battery readout out of `App` into its own file:
 

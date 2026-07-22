@@ -2,6 +2,19 @@
 
 This closing unit is deliberately less prescriptive than the others: you take a ROS2 package (yours, or one you build for the purpose) and write a test suite that proves it behaves as expected, applying everything from Units 2 through 4 without step-by-step hand-holding.
 
+The flowchart below captures the decision process for choosing the right level of test for a given behavior, which is the core skill this course has been building.
+
+```mermaid
+flowchart TD
+    A[Behavior to validate] --> B{Pure logic with<br/>clear input/output?}
+    B -->|Yes| C[Unit test - Unit 2]
+    B -->|No| D{Single node's<br/>pub/sub contract?}
+    D -->|Yes| E[Node test - Unit 3]
+    D -->|No| F{Only emerges when<br/>multiple nodes run together?}
+    F -->|Yes| G[System test - Unit 4]
+    F -->|No| A
+```
+
 ## The brief
 
 Pick (or build) a small ROS2 package with at least: one piece of pure logic worth unit testing (a transform, a filter, a planner utility — anything with clear inputs and outputs), and one node with a publisher and/or subscriber worth testing in isolation. If you want to push further, add a second node so you have something worth a system test. Your goal is not to test *everything* — it is to demonstrate you can choose the *right level* of test for each piece of behavior, which is the actual skill this course has been building.

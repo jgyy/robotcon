@@ -2,6 +2,24 @@
 
 Every RMF deployment so far in this course has relied on a navigation graph and a simulation world — this unit covers actually authoring both, using RMF's dedicated traffic editor tool, instead of relying on the bundled demo maps.
 
+The flowchart below shows the pipeline from a floor plan image through the traffic editor to the generated simulation world and navigation graph that later units' fleet adapters consume.
+
+```mermaid
+flowchart TD
+    Img["Floor plan image"] --> Trace["Trace walls in
+rmf_traffic_editor"]
+    Trace --> Waypoints["Place & name nav graph
+waypoints/lanes"]
+    Waypoints --> Building["my_building.building.yaml"]
+    Building --> GazeboGen["building_map_generator gazebo"]
+    Building --> NavGen["building_map_generator nav"]
+    GazeboGen --> World["Gazebo/Ignition world"]
+    NavGen --> NavGraph["nav_graph_file"]
+    World --> Launch["Launch file
+(e.g. office.launch.xml)"]
+    NavGraph --> Launch
+```
+
 ## What the traffic editor produces
 
 The traffic editor (`rmf_traffic_editor`) is a 2D CAD-like tool for building a building model that RMF can consume: floor polygons, walls, the navigation graph (waypoints and lanes), and placements for doors and lifts. Its output — a `.building.yaml` file — is the single source of truth that both the Gazebo/Ignition simulation generator and the fleet adapters' navigation graph reference back to.

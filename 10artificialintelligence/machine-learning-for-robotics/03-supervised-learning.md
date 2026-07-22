@@ -2,6 +2,16 @@
 
 This is where the course stops being abstract: you set up a real ROS 2 package, pull live LiDAR/odometry/camera data off a simulated TurtleBot4, and start exploring it. Everything built here — the package structure and the raw dataset — is what Units 4 and 5 will train models on.
 
+The diagram below shows the data-collection architecture this unit builds: two sensor topics feeding a single collector node that writes a synchronized CSV dataset.
+
+```mermaid
+flowchart LR
+    Scan[/scan LaserScan/] --> Collector[DataCollector Node]
+    Odom[/odom Odometry/] --> Collector
+    Collector --> CSV[training_data.csv]
+    CSV --> Explore[pandas Exploration]
+```
+
 ## From theory to hands-on robotics work
 Unit 2 covered classifiers and clustering on toy datasets; this unit's job is regression on real sensor data — predicting continuous outputs (linear and angular velocity) from continuous inputs (LiDAR ranges, odometry). Regression differs from classification in one key way: instead of predicting a class label, you're predicting a real-valued number, so evaluation uses error metrics like mean squared error (MSE) or mean absolute error (MAE) rather than accuracy/precision/recall.
 

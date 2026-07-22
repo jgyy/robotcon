@@ -2,6 +2,19 @@
 
 This is where sensor messages turn into decisions. You'll bridge ROS 2 images into OpenCV, isolate objects by color, and use that to build two working robot behaviors: a blob tracker and a line follower.
 
+The pipeline below traces a raw camera frame through cv_bridge, HSV thresholding, and blob-centroid extraction to the final steering command.
+
+```mermaid
+flowchart TD
+    A["sensor_msgs/Image"] --> B["cv_bridge: imgmsg_to_cv2(bgr8)"]
+    B --> C["cv2.cvtColor: BGR to HSV"]
+    C --> D["cv2.inRange: color mask"]
+    D --> E["cv2.findContours: blobs"]
+    E --> F["Largest contour centroid (cx, cy)"]
+    F --> G["Steering error = cx - image center"]
+    G --> H["Twist published to cmd_vel"]
+```
+
 ## OpenCV and cv_bridge
 OpenCV (`docs.opencv.org`) is a general-purpose computer vision library — it has no idea what a ROS 2 topic is. `cv_bridge` is the small translation layer that converts between `sensor_msgs/Image` and OpenCV's native array representation (a NumPy array in Python, `cv::Mat` in C++), in both directions.
 

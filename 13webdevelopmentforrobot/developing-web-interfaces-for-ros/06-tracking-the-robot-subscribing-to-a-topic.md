@@ -2,6 +2,16 @@
 
 Publishing (Units 4-5) is one direction of the bridge; this unit covers the other — pulling live data out of ROS and rendering it in the DOM, using odometry as the running example.
 
+The diagram below shows how subscription rate and render rate are decoupled so high-frequency odometry doesn't overwhelm the DOM.
+
+```mermaid
+flowchart LR
+    Odom["/odom topic<br/>20-50 Hz"] -->|subscribe callback| Var[latestPose variable]
+    Var -->|read each frame| RAF[requestAnimationFrame loop]
+    RAF --> DOM[Update pos-x / pos-y in DOM]
+    Unsub[unsubscribe on teardown] -.->|stops| Odom
+```
+
 ## The ROSLIB.Topic subscriber pattern
 Subscribing mirrors publishing: describe the topic, then register a callback that fires for every incoming message. roslibjs handles the underlying rosbridge `subscribe` handshake for you.
 

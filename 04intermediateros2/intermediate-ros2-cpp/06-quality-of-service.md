@@ -2,6 +2,17 @@
 
 "Why is my subscriber not receiving anything, even though the publisher is clearly running?" is one of the most common ROS 2 debugging questions, and the answer is very often Quality of Service (QoS). This unit covers what QoS is, the individual policies that matter most, how mismatches break communication, and how QoS interacts with recording.
 
+The flowchart below shows the compatibility check DDS performs between a publisher's and a subscriber's QoS settings, and why a mismatch fails silently instead of raising an error.
+
+```mermaid
+flowchart TD
+    Pub["Publisher QoS (e.g. BEST_EFFORT)"] --> Check{"Compatible with subscriber QoS?"}
+    Sub["Subscriber QoS (e.g. RELIABLE)"] --> Check
+    Check -->|Yes| Connect["Connection forms, data flows"]
+    Check -->|No| Refuse["DDS refuses the connection silently"]
+    Refuse --> Symptom["Topic exists, but no data ever arrives"]
+```
+
 ## What QoS is and why it matters
 
 ROS 2 communication is built on DDS, which was designed for distributed real-time systems where you often need to trade reliability for latency, or bound how much history a late-joining subscriber can catch up on. QoS is the set of policies, attached to every publisher and subscriber, that make those tradeoffs explicit instead of hardcoded. A camera feed doesn't need every single frame delivered — dropping old, unreplayed frames under load is preferable to falling behind — while a one-off configuration message must arrive exactly once. QoS is how you tell ROS 2 which behavior you want.

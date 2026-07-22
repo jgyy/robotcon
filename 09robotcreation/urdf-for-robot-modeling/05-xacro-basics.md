@@ -2,6 +2,21 @@
 
 Gurdy's three hand-copied legs in Unit 4 already felt repetitive with just two joints per leg — real robots have far more repeated structure than that. XACRO (XML Macros) is a preprocessor for URDF that adds variables, math, and reusable templates, and this unit teaches the basics you need to make Gurdy's legs maintainable.
 
+The diagram below shows how properties and one parameterized macro expand into the final URDF that `robot_state_publisher` actually loads.
+
+```mermaid
+flowchart LR
+    Props["xacro:property<br/>leg_length, hip_radius"] --> Macro["xacro:macro 'leg'<br/>params: prefix, angle_deg"]
+    Macro --> Leg1["xacro:leg prefix=leg1<br/>angle_deg=0"]
+    Macro --> Leg2["xacro:leg prefix=leg2<br/>angle_deg=120"]
+    Macro --> Leg3["xacro:leg prefix=leg3<br/>angle_deg=240"]
+    Leg1 --> Processor[xacro processor]
+    Leg2 --> Processor
+    Leg3 --> Processor
+    Processor --> URDF[Expanded plain URDF]
+    URDF --> RSP[check_urdf / robot_state_publisher]
+```
+
 ## Why XACRO: the problem of repetition
 Plain URDF has no notion of "repeat this with different numbers." Every leg, every wheel, every finger on a gripper has to be spelled out link-by-link and joint-by-joint. That means: fixing a bug (wrong collision size, wrong mass) requires editing it in every copy, and there's no single source of truth for "what does one leg look like." XACRO solves this the same way a function solves repeated code in a normal program — write the pattern once, parameterize what changes, instantiate it as many times as you need.
 

@@ -2,6 +2,27 @@
 
 Unit 4 gave you the generic template; this unit applies it to a real, commonly-used actuator family — ROBOTIS Dynamixel servos — so you see what changes when "hardware" stops being an abstract concept and becomes a serial bus with real timing, real safety, and a vendor SDK.
 
+The diagram below shows the request/response timing of a single `read()`/`write()` cycle as it travels from the controller manager through the Dynamixel SDK to the servo over the serial bus.
+
+```mermaid
+sequenceDiagram
+    participant CM as Controller Manager
+    participant HI as Hardware Interface
+    participant SDK as Dynamixel SDK
+    participant SV as Servo (serial bus)
+
+    CM->>HI: read()
+    HI->>SDK: read4ByteTxRx(ADDR_PRESENT_POSITION)
+    SDK->>SV: TxRx over serial
+    SV-->>SDK: raw position (ticks)
+    SDK-->>HI: raw_pos
+    HI-->>CM: hw_positions_ updated
+
+    CM->>HI: write()
+    HI->>SDK: write(ADDR_GOAL_POSITION, ticks)
+    SDK->>SV: TxRx over serial
+```
+
 ## The ROBOTIS Dynamixel SDK and why real hardware differs from templates
 
 Dynamixel servos are daisy-chained on a serial bus (TTL or RS-485) and addressed by numeric ID; you talk to them through ROBOTIS's Dynamixel SDK, which exposes C/C++ functions to open a port, set a baud rate, and read/write specific "control table" addresses (position, velocity, torque-enable, operating mode, and more — documented per-model in ROBOTIS's e-Manual). The key difference from the stub in Unit 4: every `read()`/`write()` call now costs real serial-bus time, and multiple joints on the same bus share bandwidth, so batching reads/writes (the SDK provides `GroupSyncRead`/`GroupSyncWrite` for exactly this) matters far more than it did with a simulated joint.

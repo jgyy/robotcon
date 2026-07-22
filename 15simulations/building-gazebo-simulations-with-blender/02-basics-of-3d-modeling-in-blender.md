@@ -2,6 +2,18 @@
 
 Before you can build anything useful for a simulation, you need enough fluency in Blender's interface and modeling tools to go from "empty scene" to "exportable mesh." This unit covers navigation, primitive-based modeling, and the export settings that matter for Gazebo.
 
+The flow below traces that "empty scene to exportable mesh" pipeline through the steps this unit covers.
+
+```mermaid
+flowchart TD
+    A[Empty scene] --> B[Add primitives: cube, cylinder, plane]
+    B --> C[Edit Mode: extrude, loop cut, bevel]
+    C --> D[Set units to Metric, scale 1.0]
+    D --> E[Set Origin to Geometry / 3D Cursor]
+    E --> F[Export: Collada .dae or glTF .glb]
+    F --> G[Gazebo-ready mesh]
+```
+
 ## Navigating the interface
 
 Blender's default layout has a 3D viewport, an outliner (scene hierarchy) top-right, and a properties panel bottom-right. The controls that matter immediately:

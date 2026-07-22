@@ -2,6 +2,20 @@
 
 Publishers are only half of the topic story. This unit covers the receiving end — subscribers — and how to define your own message type when none of the standard ones fit your data.
 
+The sequence below shows what `rclpy.spin()` actually does: it's the loop that notices a new message and drives your callback, rather than your code calling the callback itself.
+
+```mermaid
+sequenceDiagram
+    participant Pub as MinimalPublisher
+    participant Topic as /chatter topic
+    participant Spin as rclpy.spin()
+    participant Sub as listener_callback()
+    Pub->>Topic: publish(msg)
+    Topic->>Spin: new message arrives
+    Spin->>Sub: invoke callback(msg)
+    Sub->>Sub: get_logger().info(...)
+```
+
 ## The topic subscriber
 
 A **subscriber** registers interest in a topic and a callback function; ROS invokes that callback every time a new message arrives, asynchronously, on the executor's thread. Unlike a normal function call, you never call the callback yourself — you hand control to `rclpy.spin()` and let the ROS executor drive your node's callbacks as messages arrive on any subscribed topic, timer, service, or action.

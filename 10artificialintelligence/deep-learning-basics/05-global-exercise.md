@@ -2,6 +2,18 @@
 
 This unit is a capstone: instead of a new concept per subsection, it walks the entire pipeline from Units 2-4 end to end on a real task — training a feedforward network to recognize alphanumeric characters, so the Gatekeeper robot can read a cake recipe from a photographed cookbook page.
 
+The diagram below shows the full capstone pipeline, from raw character images through the trained classifier to the three-level inference chain that reads a whole page.
+
+```mermaid
+flowchart TD
+    A[Character image dataset] --> B[Preprocess: flatten + standardize to 784-d vector]
+    B --> C[CharacterNet: 784 -> 128 -> 64 -> num_classes]
+    C --> D[Train with Adam + CrossEntropyLoss]
+    D --> E[Character: classify one segmented glyph]
+    E --> F[Word: segment + classify each character]
+    F --> G[Text_Image: segment page into words]
+```
+
 ## The problem
 The goal: given a dataset of labeled character images (single letters and digits, each a small grayscale image), train a classifier that maps an image to the character it depicts, then chain that classifier into a pipeline that reads a whole photographed line of recipe text. This mirrors a genuinely common robotics sub-task — turning pixels into structured, usable information — and forces you to exercise every piece from the previous three units in one place.
 

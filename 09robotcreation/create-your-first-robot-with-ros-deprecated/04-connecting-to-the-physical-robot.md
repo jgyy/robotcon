@@ -2,6 +2,20 @@
 
 With a working simulation as your reference behavior, this unit gets your development machine talking to the real robot's onboard computer over the network — first over a wired Ethernet link for reliability while you set things up, then over WiFi so the robot can move untethered.
 
+The sequence below shows the order of connectivity checks: reachability, shell access, starting the ROS master, and confirming the ROS graph is visible, repeated once over WiFi.
+
+```mermaid
+sequenceDiagram
+    participant L as Laptop
+    participant R as Robot SBC
+    L->>R: ping <robot-ip>
+    L->>R: ssh <user>@<robot-ip>
+    R->>R: roscore (ROS master)
+    L->>R: rostopic list (ROS_MASTER_URI set)
+    R-->>L: topic list returned
+    Note over L,R: repeat the same checks over WiFi<br/>before disconnecting Ethernet
+```
+
 ## The development-machine / robot split
 From here on you're working with two computers: your **development machine** (laptop, where you edit code and watch data) and the robot's **onboard computer** (the SBC from Unit 2, which actually runs the motor driver and talks to the hardware). In classic ROS, exactly one `roscore` master process exists on the network and every other node — on either machine — registers with it. Decide now which machine hosts the master (usually the robot, so it stays operational even if your laptop disconnects) and export `ROS_MASTER_URI` on the other machine to point at it:
 ```bash

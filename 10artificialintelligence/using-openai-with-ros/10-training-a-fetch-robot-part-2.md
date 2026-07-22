@@ -2,6 +2,19 @@
 
 With `FetchEnv` from Part 1 able to read the gripper's position and move it, this unit builds the `TaskEnv` for a reaching task, and introduces both a new reward structure (sparse, goal-conditioned) and a new algorithm to handle it: Hindsight Experience Replay (HER) from OpenAI Baselines, layered on top of DDPG.
 
+The diagram below shows how HER relabels failed transitions with achieved goals so the replay buffer has usable reward signal from the start.
+
+```mermaid
+flowchart TD
+    A["Episode runs: store observation, achieved_goal, desired_goal per step"] --> B[Episode ends]
+    B --> C["Real transitions: reward via compute_reward vs desired_goal"]
+    B --> D["HER: sample a later achieved_goal as substitute desired_goal"]
+    D --> E[Recompute reward for the relabeled goal]
+    C --> F[Replay buffer]
+    E --> F
+    F --> G[DDPG trains on the buffer]
+```
+
 ## Goal-conditioned RL: achieved_goal vs desired_goal
 
 Every task so far has had one implicit goal, baked into the reward function (stay upright). A reaching task is different: "success" depends on a *target position* that changes every episode, so the environment needs to tell the agent what it's trying to do this time, not just what happened. The standard pattern (matching the classic Gym `GoalEnv` convention) is a dict observation with three keys:

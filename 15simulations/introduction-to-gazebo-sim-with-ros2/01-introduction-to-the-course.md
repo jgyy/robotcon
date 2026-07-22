@@ -2,6 +2,16 @@
 
 Before touching URDF or plugins, you need to know what "Gazebo" even means today and be able to find your way around its GUI without hunting for buttons — this unit gets you oriented so every later unit can jump straight to content.
 
+The diagram below traces the codebase's naming history and shows which ROS 2 integration package pairs with which name.
+
+```mermaid
+flowchart LR
+    GC[Gazebo Classic<br/>gazebo11 - maintenance mode] -->|2018 ground-up rewrite| IG[Ignition Gazebo<br/>split into gz-physics, gz-transport, gz-sim, ...]
+    IG -->|Ignition brand retired| GS[Gazebo Sim<br/>same codebase, current name]
+    GC -->|ROS 2 integration via| GRP[gazebo_ros_pkgs]
+    GS -->|ROS 2 integration via| RGZ[ros_gz family]
+```
+
 ## Gazebo Sim, Ignition Gazebo, and Gazebo Classic: Sorting Out the Names
 The name "Gazebo" refers to two different codebases, and the naming history trips up a lot of newcomers searching for tutorials. **Gazebo Classic** (versions up to `gazebo11`) is the original, monolithic simulator that has shipped with ROS for over a decade. Around 2018, Open Robotics began a ground-up rewrite under the "Ignition" brand, splitting the simulator into independent libraries (`gz-physics`, `gz-rendering`, `gz-transport`, `gz-sensors`, `gz-msgs`, `sdformat`, and the simulation runtime itself, `gz-sim`). That rewrite was called **Ignition Gazebo**, and after Open Robotics retired the "Ignition" brand it was renamed **Gazebo Sim** — same codebase, new name.
 

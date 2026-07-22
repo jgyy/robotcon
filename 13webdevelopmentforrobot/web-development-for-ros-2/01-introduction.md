@@ -2,6 +2,18 @@
 
 This course teaches you to build web front-ends that talk to a live ROS 2 robot: HTML/CSS for structure and style, JavaScript for behavior, and Rosbridge as the bridge that turns ROS 2 topics and services into ordinary WebSocket messages a browser can consume. This unit sets expectations before you write a line of code.
 
+The diagram below shows the architecture this whole course builds toward: the browser never talks to ROS 2 directly, only through Rosbridge's WebSocket bridge.
+
+```mermaid
+flowchart LR
+    Browser[Browser: HTML/CSS/JS/React] -- WebSocket --> Rosbridge[Rosbridge Server :9090]
+    Rosbridge -- topics/services --> ROS2[ROS 2 Graph]
+    ROS2 --> Robot[Robot or Simulation]
+    Robot -- sensor data --> ROS2
+    ROS2 -- JSON messages --> Rosbridge
+    Rosbridge -- WebSocket --> Browser
+```
+
 ## What is this course about?
 A robot with no interface is only usable by the person who wrote its code. A web interface changes that: anyone with a browser — on a phone, a tablet, a wall-mounted display — can see the robot's state and send it commands, with no ROS 2 install on the client side at all. That last point is the core idea you'll build toward: **the browser never talks to ROS 2 directly**. It talks to Rosbridge over a WebSocket, and Rosbridge is the only piece that actually speaks the ROS 2 graph. Everything in this course — HTML, CSS, JavaScript, React — exists to build a good client for that WebSocket connection.
 

@@ -2,6 +2,21 @@
 
 You've now taken a Turtlebot3 from teleop through navigation, vision-based control, object recognition, arm motion planning, and a multi-stage integration project. This closing unit is about consolidating that into habits and pointing you toward what to learn next.
 
+The diagram below maps the habits this unit recommends keeping and the directions it points you toward from here.
+
+```mermaid
+flowchart TD
+    A[Completed Turtlebot3 course] --> B[Stress-test the capstone project]
+    A --> C[Habits worth keeping]
+    C --> D["One owner of /cmd_vel at a time"]
+    C --> E["Inspect before you trust: echo, hz, RViz, tf2_echo"]
+    C --> F[Require confirmation streaks before acting on noisy data]
+    A --> G[Where to go next]
+    G --> H[Multi-robot coordination]
+    G --> I[Learned end-to-end perception]
+    G --> J[Different locomotion: legged, ackermann, aerial]
+```
+
 ## Revisit your project with fresh eyes
 
 Go back to the search-approach-retrieve project from Units 8-9 and stress it in ways the "Try it yourself" exercises didn't force you to: run it with a different starting pose, a cluttered search zone with distractor objects, or degraded lighting for the camera stages. Robustness that survives one clean run rarely survives a second, differently-imperfect one — this is a genuinely useful signal about whether you understand *why* your code works, not just that it happened to work.

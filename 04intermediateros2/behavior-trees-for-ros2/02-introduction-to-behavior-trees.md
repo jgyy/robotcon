@@ -2,6 +2,19 @@
 
 This unit builds the vocabulary and mental model you'll use for the rest of the course: what a node is, what "ticking" means, the three-status return contract, and the handful of control-flow node types that every BT is built from.
 
+The state diagram below shows the three-status contract every node obeys each time it is ticked, including the `RUNNING` cycle that lets a node be re-ticked before it settles.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Ticked: tick()
+    Ticked --> RUNNING: work not finished
+    Ticked --> SUCCESS: work finished ok
+    Ticked --> FAILURE: work finished bad
+    RUNNING --> Ticked: re-ticked next cycle
+    SUCCESS --> [*]
+    FAILURE --> [*]
+```
+
 ## Nodes, ticks, and status
 
 A Behavior Tree is a directed tree of nodes. Execution happens by "ticking" the root at some frequency (or reactively, on an event); a tick propagates down through children according to each node's own rules, and every ticked node returns exactly one of three statuses:

@@ -2,6 +2,20 @@
 
 Every ROS 2 topic, service, and action connection has a Quality of Service (QoS) profile attached to it — a set of policies governing how the underlying middleware handles delivery, buffering, and reliability. ROS 1 didn't expose this; ROS 2 does, because it's built on DDS (next unit), which was designed for exactly this kind of tunable, real-time-aware networking. Getting QoS wrong is the single most common reason two ROS 2 nodes that should be talking to each other simply aren't.
 
+The sequence diagram below shows why a QoS mismatch produces silence rather than an error, compared to a compatible pairing.
+
+```mermaid
+sequenceDiagram
+    participant Pub as Publisher (BEST_EFFORT)
+    participant Sub1 as Subscriber (BEST_EFFORT)
+    participant Sub2 as Subscriber (RELIABLE)
+
+    Pub->>Sub1: QoS compatible — connection forms
+    Pub-->>Sub1: messages delivered normally
+    Pub--xSub2: QoS incompatible — no connection formed
+    Note over Pub,Sub2: no error, no exception —<br/>just no messages, ever
+```
+
 ## The policies that matter most
 
 Two policies cause the vast majority of real problems:

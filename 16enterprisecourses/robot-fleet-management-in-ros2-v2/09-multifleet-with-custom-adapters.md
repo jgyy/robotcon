@@ -2,6 +2,20 @@
 
 Unit 4 ran two fleets using the bundled demo adapters. This unit combines that with the custom adapter work from Units 5-6, running two *different, custom-built* fleet adapters — potentially for two entirely different robot platforms — side by side against the same RMF core.
 
+The diagram below shows how each custom adapter gets its own namespace while still referencing the same shared navigation graph and negotiating through one traffic scheduler.
+
+```mermaid
+flowchart LR
+    Graph[("Shared Nav Graph")] --> AdapterF["forkliftFleet Adapter
+(ns: /forklift_adapter)"]
+    Graph --> AdapterC["cleanerFleet Adapter
+(ns: /cleaner_adapter)"]
+    AdapterF <--> Core["RMF Core / Traffic Scheduler"]
+    AdapterC <--> Core
+    Core --> FS["/fleet_states shows
+both fleets independently"]
+```
+
 ## Why this is harder than either piece alone
 
 Each custom adapter you write in isolation only has to be internally consistent. Running two of them together against shared infrastructure surfaces integration bugs that don't show up in single-fleet testing:

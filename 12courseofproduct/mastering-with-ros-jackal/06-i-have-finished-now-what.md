@@ -2,6 +2,17 @@
 
 You've taken Jackal from an unfamiliar platform to a robot that maps a room, navigates by GPS outdoors, detects people with two different sensors, and patrols reactively. This closing unit is about consolidating that into skills you can carry to the next robot, and turning the simulated project into something you'd trust running for real.
 
+The diagram below distills the recurring perceive-localize-plan-act-react loop that underlies everything you built across the course.
+
+```mermaid
+flowchart LR
+    Perceive[Perceive: laser and camera sensing] --> Localize[Localize: AMCL / EKF fused pose]
+    Localize --> Plan[Plan: Nav2 costmaps and planner]
+    Plan --> Act[Act: drive to waypoint]
+    Act --> React[React: pause, alert, resume on detection]
+    React --> Perceive
+```
+
 ## What You Built in This Course
 
 Stack the units up and you've effectively assembled a security-patrol robot: platform and sensor fundamentals, indoor SLAM and navigation, outdoor GPS-fused navigation, dual-sensor person detection, and a reactive state machine tying it all together. That's not a toy exercise — it's the same shape (perceive, localize, plan, act, react) that underlies most real mobile-robot applications, just scaled up or down depending on the domain.

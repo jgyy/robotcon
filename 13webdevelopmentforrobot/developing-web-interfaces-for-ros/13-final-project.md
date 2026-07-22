@@ -2,6 +2,22 @@
 
 This capstone unit doesn't introduce new ROS-web concepts — it's where you combine everything from Units 1-12 into a single, coherent robot dashboard, which is the real test of whether the individual pieces actually compose cleanly.
 
+The diagram below shows how the shared ROS connection fans out into each dashboard module and how a connection loss is handled centrally.
+
+```mermaid
+flowchart TD
+    Main[main.js] --> Ros[shared ROSLIB.Ros connection]
+    Ros --> Cam[camera.js]
+    Ros --> Tel[teleop.js]
+    Ros --> Map[map.js]
+    Ros --> Telem[telemetry.js]
+    Ros -->|close/error| Recon[Centralized reconnect handler]
+    Recon -->|grays out| Cam
+    Recon -->|grays out| Tel
+    Recon -->|grays out| Map
+    Recon -->|grays out| Telem
+```
+
 ## Scoping the dashboard
 A realistic "operator console" for a mobile robot typically needs, at minimum: a live camera view, a teleoperation control (joystick or buttons), an odometry/pose readout, a map with the robot's position overlaid, and a way to trigger at least one service or action (e.g. "return to dock" or "navigate to goal"). That's Units 4 through 12 in one page. Treat parameter tuning (Unit 10) and full 3D visualization (Unit 11) as optional add-ons if time allows — they're valuable but not essential to a minimum viable dashboard.
 

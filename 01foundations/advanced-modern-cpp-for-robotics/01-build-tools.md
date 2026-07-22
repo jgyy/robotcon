@@ -2,6 +2,17 @@
 
 Before you can write serious C++ for a robot, you need to understand what actually happens between saving a `.cpp` file and having an executable (or a library) that ROS 2 can load. This unit demystifies the toolchain so that CMake errors and linker failures stop feeling like magic.
 
+The diagram below traces a single source file through every pipeline stage described in this unit, showing where a library gets folded in at the final link step.
+
+```mermaid
+flowchart LR
+    Source["main.cpp"] -->|"preprocess (-E)"| Preprocessed["main.i"]
+    Preprocessed -->|"compile (-S)"| Assembly["main.s"]
+    Assembly -->|"assemble (-c)"| Object["main.o"]
+    Lib["libmath.a / libmath.so"] -->|link| Executable["main"]
+    Object -->|link| Executable
+```
+
 ## Compilers and the compilation pipeline
 A compiler (GCC, Clang, MSVC) translates C++ source into machine code. But "compiling" a single translation unit is really four separate stages: preprocessing, compilation proper, assembly, and linking. You can see each stage explicitly with Clang or GCC:
 

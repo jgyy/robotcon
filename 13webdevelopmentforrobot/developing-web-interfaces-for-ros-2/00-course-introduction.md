@@ -5,6 +5,16 @@ This unit sets expectations for the whole course: what you'll be able to build b
 ## What this course covers
 Every unit in this course teaches one way of connecting an ordinary web page to a live ROS 2 system, using only HTML, CSS, and JavaScript — no ROS client library compiled into the browser. The recurring pattern is: a bridge node (typically `rosbridge_server` from `rosbridge_suite`) exposes the ROS graph over a WebSocket as a small JSON protocol, and a JavaScript library (`roslibjs`) wraps that protocol in an object-oriented API you call from your page. By the end you will have published to topics (teleoperation), subscribed to topics (telemetry), streamed camera images, called services, read/written parameters, rendered an occupancy-grid map, and rendered a 3D robot model — all from a browser tab with zero ROS installed on the client machine.
 
+The diagram below shows the bridging pattern every unit reuses: the browser never talks to ROS directly, only to rosbridge, which relays messages to and from the real ROS 2 graph.
+
+```mermaid
+flowchart LR
+    Page[Web Page: HTML/CSS/JS] -->|new ROSLIB.Ros| Bridge[rosbridge_server WebSocket :9090]
+    Bridge <-->|JSON protocol| Graph[ROS 2 Graph: topics / services / params]
+    Page -->|Topic.publish| Bridge
+    Bridge -->|subscribe callback| Page
+```
+
 ## A quick taste: controlling a robot from a browser
 Before diving into setup, it's worth seeing the destination. A minimal teleoperation control, stripped to its essentials, looks like this:
 

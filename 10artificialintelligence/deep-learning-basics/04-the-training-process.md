@@ -2,6 +2,21 @@
 
 Units 2 and 3 built network architectures with random weights. This unit covers the full pipeline that turns those random weights into a model that actually predicts something useful: collecting and preparing data, defining a loss function, optimizing it, and honestly measuring whether the result generalizes.
 
+The diagram below traces that pipeline end to end, including the bias/variance decision the test-set comparison at the end feeds into.
+
+```mermaid
+flowchart TD
+    A[Collect labeled data] --> B[Preprocess: normalize, train/test split, label-encode]
+    B --> C[Forward pass: compute predictions]
+    C --> D[Loss function: cross-entropy]
+    D --> E[Gradient descent: update weights]
+    E --> C
+    D --> F[Evaluate on held-out test set]
+    F --> G{Train loss vs test loss}
+    G -->|both high| H[Bias / underfitting]
+    G -->|train low, test high| I[Variance / overfitting]
+```
+
 ## Defining the model and the task
 Take a concrete supervised classification problem: predicting a sauce's category (pure tomato, carrot-tomato, or tomato-cream) from a vector of chemical property measurements. This is supervised learning because training relies on labeled pairs `(x, y)` — a measurement vector and its known correct category. The network architecture (from Unit 3) determines the *hypothesis space* — the set of functions the model could learn — but the architecture alone predicts nothing useful until it's fit to data.
 

@@ -2,6 +2,18 @@
 
 Freestyle jobs configured through clicks don't scale and don't version-control well. Pipelines fix both problems by expressing your whole build-test-deploy flow as code, checked in alongside the robot software it builds.
 
+The diagram below traces the example `Jenkinsfile` from this unit: its sequential stages, and the `post` conditions that run once they finish.
+
+```mermaid
+flowchart LR
+    A[agent any] --> B["stage: Build<br/>colcon build --symlink-install"]
+    B --> C["stage: Test<br/>colcon test"]
+    C --> D["stage: Package<br/>tar + archiveArtifacts"]
+    D --> E{post}
+    E -->|always| F[junit: publish test results]
+    E -->|failure| G[echo failure message]
+```
+
 ## Why pipeline-as-code
 A `Jenkinsfile` is a text file, usually committed at the root of your repository, that fully defines what Jenkins should do. This gets you: code review on changes to the CI process itself, a history of *why* a build step changed (via `git log`/`git blame`), and the ability to reproduce the exact same pipeline for any branch, since the pipeline definition travels with the code it's testing.
 

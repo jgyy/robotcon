@@ -2,6 +2,16 @@
 
 Before DDS traffic makes any sense in a packet capture, you need working knowledge of how Linux names, addresses, and routes traffic at the interface level — this unit covers exactly the subset that matters for diagnosing robot networks.
 
+The diagram below shows the order to check these layers in when DDS traffic isn't reaching another host, from interfaces down to firewalls.
+
+```mermaid
+flowchart TD
+  A["Interfaces & Routes (ip addr / ip route)"] --> B["Ports & Sockets (ss -uln / lsof)"]
+  B --> C["Multicast Reachability (ip maddr / tcpdump)"]
+  C --> D["Firewalls & Namespaces (iptables / docker network)"]
+  D --> E{DDS traffic reaches the other host?}
+```
+
 ## Interfaces, addresses, and routes
 Every network path a DDS packet takes starts at a Linux network interface. On a robot you'll typically see a wired interface (`eth0`/`enp*`), WiFi (`wlan0`/`wlp*`), and a loopback (`lo`) used for same-host communication between nodes. Inspect and manipulate these with `ip`, the modern replacement for `ifconfig`/`route`:
 

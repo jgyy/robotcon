@@ -2,6 +2,16 @@
 
 Everything so far has been static: HTML that never changes and CSS that styles it once. JavaScript is what lets your panel react — to a button click, to an incoming Rosbridge message, to the passage of time. This is the language unit of the course; because you already know how to program, the goal here is JavaScript's specific syntax and quirks, not programming from scratch.
 
+The diagram below shows JavaScript's event-driven lifecycle: your script runs once top-to-bottom, then only reacts to events.
+
+```mermaid
+stateDiagram-v2
+    [*] --> ScriptLoading
+    ScriptLoading --> Idle: top-level code finishes
+    Idle --> HandlingEvent: click / WebSocket message / timer fires
+    HandlingEvent --> Idle: callback returns
+```
+
 ## Initial Setup
 Link a script file the same way you link a stylesheet, at the end of `<body>` so the DOM exists before your script runs:
 

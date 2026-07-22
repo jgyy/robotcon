@@ -2,6 +2,17 @@
 
 This unit closes the loop on Unit 4: how to receive data on a topic, and how to define your own message type once the built-in ones (strings, numbers, poses) don't fit what you need to send.
 
+The diagram below traces a custom message from its `.msg` definition through code generation to use in a publisher and an asynchronously-invoked subscriber callback.
+
+```mermaid
+flowchart TD
+    Msg[msg/RobotStatus.msg] -->|declared in| Build[CMakeLists.txt + package.xml]
+    Build -->|generates| Type[your_package::msg::RobotStatus]
+    Type --> Pub[Publisher fills fields & publishes]
+    Type --> Sub[Subscriber callback receives & reads fields]
+    Sub -->|async, push-based| Spin[rclcpp::spin dispatches callback]
+```
+
 ## What a subscriber is
 A subscriber registers interest in a topic and a callback function to run every time a message arrives. Unlike a service call, this is asynchronous and push-based — you never poll; ROS invokes your callback whenever data shows up, on whatever thread is running `spin()`. That means callback code should be fast: expensive work in a subscriber callback delays processing of every other callback on that node.
 

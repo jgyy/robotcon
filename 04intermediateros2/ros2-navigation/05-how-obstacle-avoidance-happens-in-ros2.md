@@ -2,6 +2,22 @@
 
 Planning and control (Unit 4) assume they know what's free space and what isn't. This unit covers where that information actually comes from — **costmaps** — and finishes by assembling everything from Units 2–5 into one launch file.
 
+The diagram below shows how each costmap stacks its own layers into a per-cell cost grid that feeds a different consumer server.
+
+```mermaid
+flowchart LR
+    subgraph Global Costmap
+        S[Static Layer: saved map] --> GC[Combined: max cost per cell]
+        I1[Inflation Layer] --> GC
+    end
+    subgraph Local Costmap
+        O[Obstacle Layer: live scan] --> LC[Combined: max cost per cell]
+        I2[Inflation Layer] --> LC
+    end
+    GC --> Planner[planner_server]
+    LC --> Controller[controller_server]
+```
+
 ## Costmaps: turning sensor data into navigable space
 
 A costmap (`nav2_costmap_2d`) is a 2D grid, much like the occupancy grid map, but where each cell holds a *cost* rather than a raw occupancy probability: 0 for free space, up to 254 (`LETHAL_OBSTACLE`) for cells the robot's center absolutely cannot occupy, plus a gradient of intermediate values near obstacles representing increasing risk. Planners and controllers use this cost field directly — a path through low-cost cells is preferred, and lethal cells are treated as impassable. Costmaps are built from **layers** stacked together, each contributing information independently before being combined (typically by taking the maximum cost per cell across layers).

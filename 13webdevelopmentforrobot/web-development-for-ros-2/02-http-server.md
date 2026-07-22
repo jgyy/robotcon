@@ -2,6 +2,18 @@
 
 Before you can view a web page in a browser, something has to serve it — and "just double-click the HTML file" breaks the moment your page needs to load JavaScript modules or make network requests, both of which are restricted under the `file://` protocol. This unit gets a proper local HTTP server running so every later unit has somewhere to load its pages from.
 
+The sequence below shows what actually happens, request by request, when a browser loads a page from this server.
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant S as HTTP Server
+    B->>S: GET /index.html
+    S-->>B: 200 OK + Content-Type + file bytes
+    B->>S: GET /style.css
+    S-->>B: 200 OK + file bytes
+```
+
 ## What is an HTTP server?
 An HTTP server is a program that listens on a TCP port and responds to browser requests (`GET /index.html`, `GET /style.css`, ...) by returning the matching file's bytes plus a `Content-Type` header telling the browser how to interpret them. This matters for two concrete reasons in web development: browsers enforce stricter security rules for pages loaded over `http://` than `file://` (JavaScript modules, `fetch`, and WebSocket connections to Rosbridge all expect a proper origin), and it mirrors how your page will eventually be deployed — served from a server, not opened as a local file.
 

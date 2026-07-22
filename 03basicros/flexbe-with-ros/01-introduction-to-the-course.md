@@ -2,6 +2,16 @@
 
 This unit sets the stage: what FlexBE actually is, where it fits relative to plain ROS nodes and action servers, and what you will have built by the end of the course.
 
+The diagram below previews how FlexBE layers on top of plain ROS: states wrap ROS primitives, a behavior chains states into a state machine, and the OCS gives a human operator live visibility and control.
+
+```mermaid
+flowchart LR
+    A[ROS topics / services / actions] --> B[FlexBE states]
+    B --> C[FlexBE behavior state machine]
+    C --> D[Operator Control Station]
+    D -->|pause / resume / confirm| C
+```
+
 ## What problem FlexBE solves
 
 Most non-trivial robot tasks are not single actions, they are sequences and decision trees: "navigate to the kitchen, if the door is closed then open it, then pick up the object, if the grasp fails then retry twice before aborting." You *could* encode this as a tangle of `if`/`else` in a single Python script that calls action clients directly, but that script becomes unreadable and untestable fast, and it gives you no visibility into what the robot is doing while it runs.

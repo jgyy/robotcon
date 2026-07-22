@@ -2,6 +2,18 @@
 
 This is the capstone: combine indoor/outdoor navigation (Units 1-2) with the person detection and recognition pipeline (Unit 3) into one reactive patrol program that walks a route and responds when it finds someone.
 
+The diagram below shows the patrol state machine and the events that drive each transition.
+
+```mermaid
+stateDiagram-v2
+    [*] --> PATROLLING
+    PATROLLING --> PATROLLING: goal reached, advance waypoint
+    PATROLLING --> INVESTIGATING: person detected
+    INVESTIGATING --> PATROLLING: recognized & authorized
+    INVESTIGATING --> PAUSED: unrecognized or unauthorized
+    PAUSED --> PATROLLING: manually resumed
+```
+
 ## Defining a patrol route as waypoints
 
 A patrol route is just an ordered list of poses the robot cycles through, looping back to the start once it reaches the end. Keep the list as plain data, not hard-coded into your control logic — it makes the route trivial to edit or extend later:

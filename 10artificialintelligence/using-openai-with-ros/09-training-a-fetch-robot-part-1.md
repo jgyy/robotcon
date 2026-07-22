@@ -2,6 +2,15 @@
 
 Fetch is the most complex robot in this course: a mobile-manipulator arm with a gripper, versus CartPole and RoboCube's single actuated joint. This unit builds the `RobotEnv` layer for Fetch — reading its arm state and driving it — while Unit 10 adds the goal-conditioned `TaskEnv` on top.
 
+The diagram below shows how `FetchEnv` reads the end-effector pose via `tf2` and commands it via Cartesian deltas resolved through IK.
+
+```mermaid
+flowchart LR
+    T["/joint_states (7 arm joints + gripper)"] --> CB["_joints_cb(msg)"] --> S["self.joints"]
+    TF["tf2 buffer: base_link -> gripper_link"] --> EE["get_ee_position()"]
+    MV["move_ee(delta_xyz)"] --> IK["IK / MoveIt service"] --> AC[arm controller] --> Gz[Gazebo]
+```
+
 ## Fetch robot's actuators and sensors in Gazebo
 
 Fetch's arm has seven joints plus a two-finger gripper, all reporting through the same `/joint_states` topic pattern you've seen since CartPole — just with many more entries in the `name`/`position`/`velocity` arrays. Rather than reading raw joint angles as the observation (as CartPole and RoboCube did), Fetch tasks are usually framed around the *end-effector's Cartesian pose* — where the gripper is in 3D space — since that's what actually matters for a reaching or grasping task, and it stays low-dimensional (a 3-vector position, optionally plus orientation) regardless of how many joints the arm has.

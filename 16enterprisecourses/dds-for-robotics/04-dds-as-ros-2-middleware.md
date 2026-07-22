@@ -2,6 +2,18 @@
 
 With Linux networking and Wireshark in hand, this unit connects the wire protocol back to the ROS 2 API surface — showing exactly how a `Publisher` in your code becomes a DDS Data Writer on the network.
 
+The diagram below maps each ROS 2 API concept onto the DDS entity it actually becomes underneath.
+
+```mermaid
+flowchart LR
+  N[ROS 2 Node] --> DP[DDS DomainParticipant]
+  P[ROS 2 Publisher] --> DW[DDS DataWriter]
+  S[ROS 2 Subscriber] --> DR[DDS DataReader]
+  T["Topic /cmd_vel (Twist)"] --> DT["DDS Topic (geometry_msgs::msg::dds_::Twist_)"]
+  SRV[ROS 2 Service] --> REQ[Request Topic]
+  SRV --> RESP[Response Topic]
+```
+
 ## The rmw abstraction layer
 ROS 2 does not call any DDS vendor's API directly from `rclcpp`/`rclpy`. Instead it defines `rmw` (ROS middleware interface), a C API that any DDS (or DDS-like) implementation can satisfy via a shim package. This is why you can switch middleware without touching application code:
 

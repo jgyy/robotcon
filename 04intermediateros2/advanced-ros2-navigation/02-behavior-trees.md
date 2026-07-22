@@ -2,6 +2,18 @@
 
 Nav2's high-level decision-making — "plan, then follow the path, and if that fails, try a recovery, and if that fails too, give up" — is not hardcoded C++. It's data: an XML file interpreted at runtime by the `bt_navigator` node using a behavior tree. This unit opens that file up and teaches you to read, extend, and debug it.
 
+The diagram below previews the shape of Nav2's default recovery tree (dissected later in this unit) as a tree of composite and leaf nodes rather than raw XML.
+
+```mermaid
+flowchart TD
+    RN["RecoveryNode (retries: 6)"] --> PS[PipelineSequence]
+    RN --> RF[ReactiveFallback]
+    PS --> CP[ComputePathToPose]
+    PS --> FP[FollowPath]
+    RF --> GU["GoalUpdated?"]
+    RF --> RR["RoundRobin: Spin / Wait / BackUp"]
+```
+
 ## What is the BT Navigator
 
 A **behavior tree (BT)** is a tree of nodes evaluated top-to-bottom, left-to-right, on every "tick." Each node returns `SUCCESS`, `FAILURE`, or `RUNNING`. The two workhorse composite node types you'll see constantly in Nav2's trees are:

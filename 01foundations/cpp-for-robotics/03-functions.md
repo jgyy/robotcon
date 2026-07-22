@@ -2,6 +2,22 @@
 
 Functions let you break a robot program into named, reusable, testable pieces instead of one long block of control logic. This unit covers how to declare, call, and pass data through C++ functions — including the pass-by-value vs. pass-by-reference distinction that trips up most newcomers to the language.
 
+The sequence below contrasts what happens at call time for pass-by-value versus pass-by-reference, showing why only the reference call can change the caller's own variable:
+
+```mermaid
+sequenceDiagram
+    participant Caller as main()
+    participant ByValue as average(readings)
+    participant ByRef as normalize_angle(angle_rad&)
+
+    Caller->>ByValue: pass a COPY of the vector
+    ByValue-->>Caller: return average (caller's vector untouched)
+
+    Caller->>ByRef: pass a REFERENCE to angle_rad
+    ByRef->>ByRef: adjust angle_rad in place
+    ByRef-->>Caller: caller's angle_rad is now changed
+```
+
 ## Declaring and calling functions
 A C++ function has an explicit return type, a name, and a typed parameter list — the compiler enforces all of it, unlike Python's duck typing.
 

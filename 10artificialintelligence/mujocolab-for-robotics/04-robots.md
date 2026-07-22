@@ -2,6 +2,18 @@
 
 Every previous unit trained MJLab's built-in humanoid. This unit removes that scaffolding: you take a robot MJLab has never seen — referred to here by the example name Atom01 — and wire it into the framework from a bare MJCF model to a policy that walks and responds to joystick commands. This is the unit where the pieces you only *used* in Units 1-3 (`robot_cfg`, `rl_cfg`, task registration) become things you write yourself.
 
+The diagram below shows how the bare MJCF model is progressively wrapped in config until it becomes a trained, joystick-controllable policy.
+
+```mermaid
+flowchart TD
+    A[Bare MJCF model<br/>Atom01] --> B[robot_cfg<br/>joints, actuators, initial pose]
+    B --> C[Minimal environment<br/>flat ground + gravity]
+    C --> D[rl_cfg<br/>algorithm, reward terms]
+    D --> E[Task definition<br/>registered under --task]
+    E --> F[Train walking policy]
+    F --> G[Joystick control<br/>drives velocity command]
+```
+
 ## From built-in robot to your own
 Integrating a new robot is fundamentally an exercise in describing, in config, everything MJLab previously assumed for you: which MJCF model to load, which joints are actuated and how they map to action-vector indices, what the observation vector contains, and what reward terms define "walking well" for *this* robot's morphology. None of that is physics work — the underlying MuJoCo Warp stepping and PPO training loop from Unit 2 are unchanged. What changes is entirely the configuration layer.
 

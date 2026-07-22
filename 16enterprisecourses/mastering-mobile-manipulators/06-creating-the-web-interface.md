@@ -2,6 +2,26 @@
 
 The FlexBe app is great for you as the developer, but it assumes ROS knowledge. This final unit builds a plain web page — camera feed, live map, a joystick, and start/stop buttons — that lets someone with zero ROS background operate the robot you've built over the previous five units.
 
+The diagram below shows every page element as a distinct data path through rosbridge, so it's clear no single connection type has to carry all of the traffic.
+
+```mermaid
+flowchart LR
+    subgraph Browser
+        Img[Camera img tag]
+        Canvas[Map Canvas]
+        Joystick[Joystick]
+        Buttons[Start/Stop Buttons]
+    end
+
+    WVS[web_video_server] -- MJPEG over HTTP --> Img
+    Bridge[rosbridge WebSocket]
+    Bridge -- /map topic --> Canvas
+    Joystick -- /cmd_vel topic --> Bridge
+    Buttons -- /start_pick_and_place service --> Bridge
+    Bridge --> ROSGraph[ROS 2 Graph:<br/>nav, MoveIt, FlexBe]
+    ROSGraph --> WVS
+```
+
 ## Why a web interface, and how it talks to ROS
 
 The standard bridge between a browser and a ROS 2 graph is **rosbridge** (`rosbridge_suite`), which exposes topics, services, and actions over a WebSocket using a JSON protocol. The browser side talks to it with the `roslibjs` JavaScript library, so your page never needs a native ROS install — it just opens a WebSocket connection.

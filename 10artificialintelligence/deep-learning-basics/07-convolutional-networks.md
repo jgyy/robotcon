@@ -2,6 +2,18 @@
 
 The feedforward networks from Units 2-6 treat every input as a flat vector, throwing away any notion of spatial structure. This closing unit introduces Convolutional Neural Networks (CNNs), the architecture family built specifically for grid-structured data like images — the dominant tool for robot vision.
 
+The diagram below traces the `SimpleCNN` architecture used later in the unit, showing how convolution and pooling blocks alternate before a final classifier turns the feature map into predictions.
+
+```mermaid
+flowchart LR
+    IMG[Input image 28x28x1] --> C1[Conv2d 1 to 16 + ReLU]
+    C1 --> P1[MaxPool2d: 28x28 -> 14x14]
+    P1 --> C2[Conv2d 16 to 32 + ReLU]
+    C2 --> P2[MaxPool2d: 14x14 -> 7x7]
+    P2 --> FL[Flatten]
+    FL --> FC[Linear -> num_classes]
+```
+
 ## Invariance and equivariance: why fully-connected networks struggle with images
 A fully-connected layer applied to a 224x224 RGB image needs a separate weight for every one of its ~150,000 input pixels per output neuron, which is both a huge number of parameters and blind to spatial relationships — shifting an object one pixel to the right presents the network with an entirely different input vector, and it has to relearn the same pattern at every possible location. CNNs fix this with two properties:
 - **Equivariance**: if the input shifts, the feature map shifts correspondingly — the same filter finds the same feature wherever it appears.

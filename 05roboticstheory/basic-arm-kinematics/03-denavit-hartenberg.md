@@ -2,6 +2,16 @@
 
 Unit 2 gave you homogeneous transforms; this unit gives you a *systematic recipe* for assigning them to a real robot arm. The Denavit-Hartenberg (DH) convention reduces "where is frame i relative to frame i-1?" to filling in four numbers per joint, instead of re-deriving a transform by hand for every new robot design.
 
+The diagram below shows the fixed four-step sequence the DH convention composes to build the per-link transform matrix:
+
+```mermaid
+flowchart TD
+    A[Rotate about z by theta] --> B[Translate along z by d]
+    B --> C[Translate along x by a]
+    C --> D[Rotate about x by alpha]
+    D --> E["DH transform T_i-1_i (4x4)"]
+```
+
 ## What will you learn in this unit?
 You'll learn to draw a kinematic diagram of a manipulator, assign a coordinate frame to each joint using the DH rules, read off the four DH parameters per link, and assemble the generic 4x4 homogeneous matrix that the DH convention produces. By the end you can take any open kinematic chain (a non-branching sequence of revolute/prismatic joints — which covers the overwhelming majority of robot arms) and mechanically produce its per-link transforms.
 

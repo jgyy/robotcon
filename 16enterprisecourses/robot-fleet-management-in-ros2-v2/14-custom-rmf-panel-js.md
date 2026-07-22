@@ -2,6 +2,25 @@
 
 Unit 12 introduced `rmf-panel-js` as the default human touchpoint for RMF. This unit covers customizing it — adding your own task types and views to the operator dashboard rather than relying on the stock UI.
 
+The sequence below shows the full loop this unit closes: a browser click travels over rosbridge to the ROS 2 task API and back to update the dashboard.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Panel as rmf-panel-js (React)
+    participant Bridge as rosbridge (WebSocket)
+    participant Core as /task_api_requests
+    participant FA as Fleet Adapter
+    User->>Panel: click "Inspect Shelf"
+    Panel->>Bridge: topic.publish(task JSON)
+    Bridge->>Core: ROS 2 message
+    Core->>FA: dispatch perform_action
+    FA-->>Core: execution.finished()
+    Core-->>Bridge: /task_summaries update
+    Bridge-->>Panel: subscribed fleet_states/task_summaries
+    Panel-->>User: dashboard updates
+```
+
 ## What rmf-panel-js actually is
 
 `rmf-panel-js` is a React web application that talks to RMF over `rosbridge` (a WebSocket-to-ROS-2 bridge), so a browser client can subscribe to topics like `/fleet_states` and publish to `/task_api_requests` without any native ROS 2 dependency in the browser itself. Understanding this bridge matters because it means customizing the panel is "ordinary React development plus a rosbridge client," not something requiring deep RMF internals knowledge.

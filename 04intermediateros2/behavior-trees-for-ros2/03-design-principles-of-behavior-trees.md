@@ -2,6 +2,20 @@
 
 Knowing the node types from Unit 2 is not the same as being able to design a tree that stays readable and debuggable once it has fifty nodes instead of five. This unit covers the structural idioms — blackboards, ports, reactive patterns — that separate a maintainable BT from a mess.
 
+The diagram below shows the two structural idioms this unit centers on: data flowing between nodes through the shared blackboard, and a large tree factored into named subtrees.
+
+```mermaid
+flowchart LR
+    subgraph Blackboard Data Flow
+    DO[DetectObject] -->|OutputPort: object_pose| BB[(Blackboard)]
+    BB -->|InputPort: object_pose| PU[PickUpObject]
+    end
+    subgraph Tree Composition
+    PP[PickAndPlace] --> GR[SubTree: Grasp]
+    PP --> DE[SubTree: Deliver]
+    end
+```
+
 ## The blackboard and data ports
 
 Nodes rarely work in total isolation; `DetectObject` needs to hand its result to `PickUpObject`. Rather than nodes calling each other directly (which would recreate tight coupling), BehaviorTree.CPP uses a shared key-value store called the **blackboard**. A node declares which blackboard entries it reads or writes via **ports**:

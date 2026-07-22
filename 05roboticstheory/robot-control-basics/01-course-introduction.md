@@ -2,6 +2,17 @@
 
 This unit sets the stage for the whole course: what "control" means for a robot, what hardware/software context you'll be reasoning about, and what you need in place before diving into PID, trajectory generation, multivariable control, and force control in later units.
 
+The diagram below previews the pipeline this course focuses on: turning a desired state from planning/kinematics into real robot motion, closed by sensor feedback.
+
+```mermaid
+flowchart LR
+    A[Planning / Kinematics<br/>desired q, qdot, or F] --> B[Controller<br/>this course]
+    B --> C[Actuation]
+    C --> D[Robot Dynamics<br/>gravity, friction, inertia]
+    D --> E[Sensors: q, qdot, F]
+    E --> B
+```
+
 ## What is this course about?
 Robot control is the layer that sits between "I know where I want the robot to go" (planning/kinematics) and "the motors actually move there correctly" (actuation/dynamics). This course is about the second half of that pipeline: given a desired joint position, velocity, or force, how do you compute the commands that make the real (or simulated) hardware track it despite gravity, friction, inertia, and sensor noise. You'll build up from single-joint feedback control (PID) to controlling several joints at once (multivariable control) to controlling contact forces instead of positions (force control).
 

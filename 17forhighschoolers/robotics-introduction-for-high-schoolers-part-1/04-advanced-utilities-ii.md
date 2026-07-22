@@ -2,6 +2,22 @@
 
 The final unit of this course covers two skills you'll use on almost every real robot: seeing and controlling the programs running on a machine, and reaching a robot's computer remotely over SSH instead of plugging in a keyboard and monitor.
 
+The sequence diagram below shows how these two skills combine in practice — you open an SSH session to the robot, then inspect and manage its processes over that same connection:
+
+```mermaid
+sequenceDiagram
+    participant You as You (laptop)
+    participant Robot as Robot (onboard Linux)
+    You->>Robot: ssh username@robot.local
+    Robot-->>You: remote shell prompt
+    You->>Robot: ps aux / top
+    Robot-->>You: list of running processes
+    You->>Robot: kill -9 <PID>
+    Robot-->>You: process terminated
+    You->>Robot: scp file.txt ~/
+    Robot-->>You: file copied
+```
+
 ## Managing processes
 A robot's software stack is usually dozens of processes running at once — one per sensor driver, one per control loop, one per logging tool. Linux gives you simple ways to see and manage all of them.
 

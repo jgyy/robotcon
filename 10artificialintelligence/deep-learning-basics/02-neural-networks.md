@@ -2,6 +2,18 @@
 
 This unit builds the fundamental unit of every deep learning model — the artificial neuron — and shows how connecting many of them into layers produces a function powerful enough to approximate essentially any input-output relationship.
 
+The diagram below shows how a single input flows through several hidden neurons that are then blended into one output — the shallow-network pattern this unit builds up to.
+
+```mermaid
+flowchart LR
+    x[Input x] --> h1[Hidden neuron 1]
+    x --> h2[Hidden neuron 2]
+    x --> h3[Hidden neuron 3]
+    h1 --> y[Output y = W2 . h + b2]
+    h2 --> y
+    h3 --> y
+```
+
 ## The perceptron
 The perceptron, introduced by Frank Rosenblatt in 1958, is a loose model of a biological neuron: dendrites receive inputs, the cell body combines them, and the axon fires an output. Mathematically, a perceptron takes an input vector `x`, computes a weighted sum plus a bias, and passes the result through an activation function:
 

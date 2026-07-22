@@ -2,6 +2,16 @@
 
 A robot that browns out mid-drive or catches fire on the shelf is worse than no robot at all. This unit covers sizing your power budget, picking a battery that meets it safely, and wiring it into the rest of the system.
 
+The diagram below shows the safe power distribution path from the raw battery to every powered subsystem, including the protective switch and fuse this unit recommends.
+
+```mermaid
+flowchart LR
+    Bat[Battery] --> Sw[Power Switch] --> Fuse[Fuse] --> Reg[Voltage Regulator]
+    Reg --> Drv[Motor Driver]
+    Reg --> Comp[Onboard Computer]
+    Reg --> Sen[Sensors]
+```
+
 ## Power consumption calculation
 Before you can choose a battery you need to know how much current your robot actually draws. Build a table of every powered component and its current draw at typical and peak load:
 

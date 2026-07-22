@@ -2,6 +2,17 @@
 
 With the platform basics out of the way, this unit builds Jackal's first real autonomous behavior: mapping an indoor space with its own laser scanner, localizing inside that map, and sending it goals it plans and drives to on its own.
 
+The diagram below traces the indoor navigation pipeline from mapping through to an executed navigation goal.
+
+```mermaid
+flowchart TD
+    A[Teleop robot while SLAM node runs] --> B[Save occupancy grid map]
+    B --> C[Launch localization-only mode with AMCL]
+    C --> D[Global and local costmaps built from map and /scan]
+    D --> E[Send PoseStamped goal via BasicNavigator]
+    E --> F[Nav2 planner drives to goal, costmap reacts to new obstacles]
+```
+
 ## Building a Map with SLAM
 
 Simultaneous Localization and Mapping (SLAM) lets Jackal build an occupancy grid of a room while simultaneously estimating its own pose within that grid, using nothing but the laser scan and odometry. Bring up a SLAM node against the live robot or simulation and drive it around the space you want mapped:

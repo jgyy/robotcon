@@ -2,6 +2,17 @@
 
 Unit 5 built CNNs that classify an entire image into one of several classes. Real robot perception usually needs more: *which* objects are in the scene, *where* they are, and sometimes *how* a person is posed. This unit covers YOLO, the family of CNN-based detectors that make this practical in real time on a moving robot.
 
+The diagram below shows how a camera frame flows through a YOLO-based ROS detection node to become a published list of detections for downstream nodes:
+
+```mermaid
+flowchart LR
+    CAM[/"camera/image_raw topic"/] --> NODE[Detection Node]
+    NODE --> INF[YOLO CNN Forward Pass]
+    INF --> NMS[Non-Max Suppression]
+    NMS --> DET["Detection2DArray<br/>(class, box, confidence)"]
+    DET --> DOWN["Downstream Nodes<br/>(planner, HMI, logging)"]
+```
+
 ## From classification to detection
 
 A classifier answers "what is the single dominant thing in this image?" — one label per image. **Object detection** answers "what objects are present, and where is each one?" — a variable number of (class, bounding box, confidence) tuples per image. Sliding a classifier over every possible window and scale in an image is one way to get there, but it's far too slow for anything real-time. **YOLO** ("You Only Look Once") instead runs a single CNN forward pass over the whole image and directly predicts, for a grid of cells overlaid on the image, whether an object's center falls in that cell, what its bounding box is, and how confident the model is — hence "you only look once," as opposed to scanning the image many times.

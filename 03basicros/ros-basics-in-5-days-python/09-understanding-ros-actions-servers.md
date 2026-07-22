@@ -2,6 +2,19 @@
 
 You've driven an action from the client side; now you'll build the server that actually executes the goal, streams feedback, and produces a result — the most involved node type in this course, because it has to manage state over time instead of responding instantly.
 
+The state diagram below shows the `execute_callback` loop as a state machine: it stays in "Executing" publishing feedback each pass, until either the target is reached or a cancel request is noticed.
+
+```mermaid
+stateDiagram-v2
+    [*] --> GoalAccepted
+    GoalAccepted --> Executing
+    Executing --> Executing: altitude += 0.1 / publish_feedback()
+    Executing --> Canceled: is_cancel_requested
+    Executing --> Succeeded: altitude >= target
+    Canceled --> [*]
+    Succeeded --> [*]
+```
+
 ## The action server
 
 An action server registers an **execute callback** that ROS invokes in its own thread whenever a new goal is accepted. Unlike a service callback (which runs once and returns), an execute callback typically contains a loop: do a bit of work, publish feedback, check whether cancellation was requested, repeat until done, then return a result.

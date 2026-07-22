@@ -2,6 +2,17 @@
 
 Motors are the robot's muscles, and getting them wrong (too weak, too fast, no feedback) makes every later unit harder. This unit walks through choosing a motor, driving it electrically, wiring it in, and talking to it over serial.
 
+The diagram below shows how power, control signals, and encoder feedback flow between the battery, driver, motor, microcontroller, and the ROS 2 host computer.
+
+```mermaid
+flowchart LR
+    Bat[Battery] --> Drv[Motor Driver]
+    MCU[Microcontroller] -->|PWM / DIR| Drv
+    Drv -->|power| Mot[DC Motor + Encoder]
+    Mot -->|encoder A/B ticks| MCU
+    MCU <-->|serial: L/R speeds| Host[ROS 2 Host Computer]
+```
+
 ## Motor specifications
 For a small differential-drive robot you're almost always choosing a brushed DC gearmotor with a built-in quadrature encoder. Three numbers matter most:
 - **Stall torque / rated torque** — must exceed what's needed to move the robot's total weight (chassis + battery + compute + payload) up the steepest slope or over the roughest surface you expect, with margin. A rough sizing check: required wheel torque ≈ (robot mass × g × wheel radius) / (number of driven wheels × safety factor of ~2).

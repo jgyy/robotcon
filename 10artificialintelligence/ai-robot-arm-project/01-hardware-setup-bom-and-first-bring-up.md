@@ -2,6 +2,20 @@
 
 Every VLA (vision-language-action) project lives or dies on the quality of the hardware it collects data from. This unit gets you from a box of parts to two working, calibrated robot arms that talk to your computer over a serial bus — the physical foundation for everything else in the course.
 
+The flowchart below walks through the bring-up sequence this unit follows, including the loop back into wiring/power when the final sanity check fails.
+
+```mermaid
+flowchart TD
+    A[Assemble frames,<br/>center every servo horn] --> B[Assign a unique motor ID<br/>to each servo, one at a time]
+    B --> C[Wire full bus +<br/>regulated power supply]
+    C --> D[Connect USB-to-serial adapter,<br/>find_port]
+    D --> E[bus.connect and read<br/>Present_Position on all joints]
+    E --> F{Six sane, non-zero<br/>values on both arms?}
+    F -->|No| G[Debug wiring, power,<br/>or motor IDs]
+    G --> C
+    F -->|Yes| H[Ready: proceed to<br/>teleoperation in Unit 2]
+```
+
 ## Why a leader/follower pair
 
 Low-cost imitation-learning arms like the SO-101 are almost always used in pairs: a **leader** arm that a human moves by hand, and a **follower** arm that mirrors it in real time. The leader has no motors doing active control — you backdrive it with your hand — while the follower's servos replay the leader's joint angles. This setup exists because it is the cheapest possible way to collect high-quality (observation, action) pairs: you literally demonstrate the task, and every joint-angle command you produce becomes a training label. Contrast this with scripted or hand-coded motion, which does not generalize the way a learned policy does. Understanding this asymmetry (leader = passive sensor, follower = actuator) will save you a lot of confusion later when you read training code that treats "action" as "the leader's joint positions."

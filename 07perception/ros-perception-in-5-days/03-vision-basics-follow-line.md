@@ -2,6 +2,20 @@
 
 Line following extends the centroid-tracking idea from Unit 2 to a shape rather than a color blob, and introduces a technique — cropping a region of interest before processing — that keeps every later vision pipeline in this course fast enough to run in real time.
 
+The diagram below shows the ROI-crop-threshold-centroid-steer pipeline, including the explicit branch for when the line disappears from frame.
+
+```mermaid
+flowchart TD
+    A[Camera frame] --> B[Crop bottom ROI]
+    B --> C[Grayscale + threshold]
+    C --> D[findContours]
+    D --> E{Contour found?}
+    E -->|Yes| F["Compute centroid cx"]
+    F --> G[error = cx - roi_center]
+    G --> H[Publish Twist: forward + steer]
+    E -->|No| I[Line lost: stop / search behavior]
+```
+
 ## Region of interest: only look where the line can be
 Processing an entire 640x480 frame to find a floor line wastes cycles on sky, walls, and clutter that will never contain the line. Crop a horizontal strip near the bottom of the frame, where the line is closest to the robot and steering decisions matter most:
 ```python

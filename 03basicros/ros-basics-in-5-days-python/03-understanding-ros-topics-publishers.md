@@ -2,6 +2,20 @@
 
 Topics are the workhorse of ROS communication — most of the data flowing through a robot (sensor readings, velocity commands, state estimates) moves over topics. This unit covers the *publishing* side: how a node broadcasts data for anyone to consume.
 
+The sequence below shows the fire-and-forget nature of publishing: the timer drives the callback, and the publisher sends into the topic without knowing who (if anyone) is listening.
+
+```mermaid
+sequenceDiagram
+    participant T as Timer (0.5s)
+    participant P as MinimalPublisher
+    participant Topic as /chatter topic
+    participant S as Any subscriber(s)
+    T->>P: timer_callback() fires
+    P->>Topic: publish(msg)
+    Topic-->>S: message delivered (0..N subscribers)
+    Note over P,Topic: Publisher doesn't know or care who's listening
+```
+
 ## What a topic publisher is
 
 A topic is a named, typed channel. A **publisher** is a node's declaration that it will periodically send data on that channel — it doesn't know or care who, if anyone, is listening. This is the defining trait of pub/sub communication: it's decoupled. You can add a second subscriber to `/cmd_vel` (say, a logger that records every velocity command for later analysis) without changing a single line of the publisher's code. Compare that to services, covered in Unit 5, where the caller and callee are directly coupled by a single request/response exchange.

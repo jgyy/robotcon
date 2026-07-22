@@ -2,6 +2,16 @@
 
 Before writing a single line of robot code, you need a mental model of what a robot actually is: a loop of sensing, computing, and acting, wired together by a communication layer. This unit builds that model using LIMO as the running example, and it sets the vocabulary the rest of the course leans on.
 
+The diagram below shows this loop and the middleware layer that connects its three stages.
+
+```mermaid
+flowchart LR
+    Sensors["Sense\n(lidar, encoders, camera, IMU)"] --> Compute["Think\n(onboard compute)"]
+    Compute --> Actuators["Act\n(motors, servos)"]
+    Actuators -->|changes the world| Sensors
+    Compute <-->|publish/subscribe| Middleware[("ROS/ROS 2 middleware")]
+```
+
 ## The sense-think-act loop
 
 Every robot, no matter how sophisticated, is an instance of the same loop:

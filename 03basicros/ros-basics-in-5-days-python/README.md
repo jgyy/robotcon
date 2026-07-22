@@ -2,6 +2,22 @@
 
 This course takes an experienced programmer with no robotics background from zero to writing real ROS 2 nodes in Python. It follows a "ROS Deconstruction" method: rather than covering ROS's sprawling ecosystem, it isolates the small set of ideas every ROS system is built from — nodes, packages, topics, services, and actions — and drills each one with working code against a simulated robot before moving to the next, finishing with the debugging tools (logging, `rqt`, `rosbag`, RViz) you'll need once things stop working as expected.
 
+The diagram below shows how each unit builds directly on the one before it, from orientation through to debugging a finished system.
+
+```mermaid
+flowchart LR
+    U0[Unit 0: Course Intro] --> U1[Unit 1: ROS Deconstruction]
+    U1 --> U2[Unit 2: Basic Concepts]
+    U2 --> U3[Unit 3: Topics - Publishers]
+    U3 --> U4[Unit 4: Topics - Subscribers]
+    U4 --> U5[Unit 5: Services - Clients]
+    U5 --> U6[Unit 6: Services - Server]
+    U6 --> U7[Unit 7: Python Classes]
+    U7 --> U8[Unit 8: Actions - Clients]
+    U8 --> U9[Unit 9: Actions - Servers]
+    U9 --> U10[Unit 10: Debugging]
+```
+
 1. [Course Introduction](00-course-introduction.md) — Orientation to the course: why robotics programming matters, how this course teaches ROS, and a first hands-on taste of controlling a simulated robot.
 2. [ROS Deconstruction](01-ros-deconstruction.md) — The roadmap of everything you need to learn (concepts, topics, services, actions, debugging) and the two-pronged theory-plus-practice teaching method used throughout.
 3. [ROS Basic Concepts](02-ros-basic-concepts.md) — Nodes, packages, workspaces, launch files, building with colcon, the parameter server, and environment variables, through your first working ROS program.

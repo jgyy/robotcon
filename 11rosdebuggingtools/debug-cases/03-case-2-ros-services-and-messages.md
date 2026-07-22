@@ -2,6 +2,22 @@
 
 Services are ROS's request/response mechanism, and they fail differently than topics: instead of silently not-publishing, a broken service call usually blocks, times out, or throws a clear error — which makes them easier to debug once you know where to look. This unit covers writing and inspecting a custom service definition and diagnosing common request/response bugs.
 
+The sequence below contrasts a healthy request/response with the "server never spins" bug that leaves a call hanging forever with no error.
+
+```mermaid
+sequenceDiagram
+    participant CLI as ros2 service call
+    participant Server as add_two_ints server
+    CLI->>Server: AddTwoInts.Request {a: 3, b: 4}
+    alt server is spinning
+        Server->>Server: process callback
+        Server-->>CLI: AddTwoInts.Response {sum: 7}
+    else server never calls spin()
+        Note over Server: service registered but<br/>callbacks never processed
+        Server--xCLI: no response — call hangs forever
+    end
+```
+
 ## Anatomy of a custom service definition
 
 A `.srv` file is split into request and response sections by a `---` line:

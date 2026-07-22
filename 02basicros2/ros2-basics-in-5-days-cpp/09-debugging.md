@@ -2,6 +2,20 @@
 
 You now know how to build most of a ROS 2 system; this closing unit covers how to figure out what's wrong when it doesn't behave — logging, visualizing sensor data and robot geometry, and a couple of built-in diagnostic tools.
 
+The flowchart below is a rough decision path for choosing which of this unit's tools to reach for first, depending on what kind of problem you're chasing.
+
+```mermaid
+flowchart TD
+    A[Something is wrong] --> B{Environment or graph-level issue?}
+    B -->|Yes| C[ros2 doctor --report]
+    B -->|No, node-level| D{Need to see values over time?}
+    D -->|Yes| E[RCLCPP_INFO / WARN / DEBUG logs]
+    D -->|No, sensor or geometry looks wrong| F[RViz2 + TF tree]
+    F --> G[ros2 run tf2_tools view_frames]
+    F --> H[ros2 run tf2_ros tf2_echo]
+    E --> I[ros2 topic echo /rosout]
+```
+
 ## ROS2 debugging messages
 
 You've been using `RCLCPP_INFO` since Unit 2, but `rclcpp` gives you a full severity ladder, and choosing the right level matters once a real system is producing thousands of log lines a minute:

@@ -2,6 +2,17 @@
 
 Robots frequently need to notice humans — for safety stops, social navigation, or hand-off tasks. This unit covers OpenCV's two classical, pre-deep-learning building blocks for that: Haar cascade face detection and HOG people detection.
 
+The diagram below shows how the same camera frame feeds two independent detector pipelines, each producing a different kind of bounding box.
+
+```mermaid
+flowchart LR
+    F[Camera Frame] --> G["cvtColor: to Grayscale"]
+    G --> H["CascadeClassifier.detectMultiScale()"]
+    H --> HF[Face bounding boxes]
+    F --> P["HOGDescriptor + SVM People Detector"]
+    P --> PF[Person bounding boxes]
+```
+
 ## Face detection with Haar cascades
 A Haar cascade is a fast object detector trained on simple rectangular features (differences of sums of pixel intensities in adjacent regions) organized into a cascade of increasingly strict stages — early stages quickly reject obviously-non-face regions so the detector spends most of its time on plausible candidates. OpenCV ships pretrained cascades (frontal face, eye, smile, and more) as XML files.
 

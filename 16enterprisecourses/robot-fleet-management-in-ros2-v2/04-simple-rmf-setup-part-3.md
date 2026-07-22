@@ -2,6 +2,23 @@
 
 This unit takes the two-robot, single-fleet setup from Unit 3 and splits it into two distinct fleets, sharing the same building. This is the configuration that most resembles a real deployment, where different robot models or vendors each get their own fleet.
 
+The diagram below shows why the navigation graph must be identical shared infrastructure across both independent fleet adapters for the scheduler to serialize their access correctly.
+
+```mermaid
+flowchart LR
+    Graph[("office_nav_graph.yaml")]
+    Graph --> AdapterA["Fleet Adapter A
+(fleet_a_config.yaml)"]
+    Graph --> AdapterB["Fleet Adapter B
+(fleet_b_config.yaml)"]
+    AdapterA --> FleetA["Fleet A Robots"]
+    AdapterB --> FleetB["Fleet B Robots"]
+    AdapterA <--> Scheduler["Traffic Scheduler"]
+    AdapterB <--> Scheduler
+    Scheduler --> Serialize["Serialized access
+to shared corridor"]
+```
+
 ## Fleet vs. robot: the distinction that matters now
 
 A "fleet" in RMF is a set of robots that share one fleet adapter, one navigation profile (speed limits, footprint), and are managed as a homogeneous group. Two robots of the same physical model but running different software stacks are usually still two separate fleets in RMF's eyes, because each fleet adapter can only cleanly speak one robot API. Splitting into fleets is therefore mostly about "which adapter process manages this robot," not about robot brand alone.

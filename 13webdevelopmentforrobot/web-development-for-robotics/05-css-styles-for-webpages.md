@@ -2,6 +2,16 @@
 
 Structure alone doesn't make an operator trust a dashboard — a cluttered, unstyled page is hard to scan quickly, and quick scanning matters when the content is "is the robot about to hit something." This unit introduces CSS selectors and the core styling model.
 
+The chain below shows increasing specificity — the order to check when two rules conflict, before reaching for `!important`.
+
+```mermaid
+flowchart LR
+    A["Element selector<br/>button"] -->|lower specificity| B["Class selector<br/>.warning"]
+    B -->|higher| C["ID selector<br/>#battery"]
+    C -->|higher| D["Inline style<br/>style=..."]
+    D -->|highest, avoid| E["!important<br/>last resort"]
+```
+
 ## Attaching CSS and selector basics
 Prefer an external stylesheet linked from `<head>` (as in Unit 1) over inline styles — it keeps presentation separate from structure and lets one stylesheet cover an entire dashboard. Selectors decide which elements a rule applies to:
 

@@ -2,6 +2,25 @@
 
 This is the unit where your page stops being static and starts controlling a real robot: connecting to rosbridge, reacting to user input, and publishing `Twist` messages onto `/cmd_vel`.
 
+The sequence below traces a press-and-hold "Forward" control end to end: connecting to rosbridge, then publishing a moving `Twist` on press and a stopping `Twist` on release.
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant P as Web Page (JS)
+    participant R as rosbridge (WebSocket)
+    participant T as /cmd_vel topic
+
+    P->>R: new ROSLIB.Ros connect
+    R-->>P: "connection" event
+    U->>P: mousedown on Forward button
+    P->>P: publishTwist(0.2, 0)
+    P->>R: cmdVel.publish(Twist)
+    R->>T: forward message to ROS graph
+    U->>P: mouseup releases button
+    P->>R: cmdVel.publish(Twist zero)
+```
+
 ## The page lifecycle and connecting to rosbridge
 A web page goes through a predictable sequence: the HTML parses, the DOM becomes available, linked scripts execute, and only then is it safe to touch elements or open connections. Opening your `ROSLIB.Ros` WebSocket connection too early (before the DOM exists) or too late (after the user has already tried to click a button) causes exactly the kind of bugs Unit 2's DevTools skills are for. The safe place to initialize the connection is once the DOM is ready:
 

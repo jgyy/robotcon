@@ -2,6 +2,17 @@
 
 This is where the course turns specifically to ROS: building images that contain a working ROS installation and your own packages, and running ROS nodes inside containers.
 
+The diagram below traces the entrypoint sourcing pattern: how a container goes from starting up to running your ROS launch command with the environment fully sourced.
+
+```mermaid
+flowchart TD
+    Start[Container starts] --> EP[entrypoint.sh runs]
+    EP --> S1[source /opt/ros/humble/setup.bash]
+    S1 --> S2[source /ros2_ws/install/setup.bash]
+    S2 --> Exec["exec $@"]
+    Exec --> CMD[ros2 launch my_robot_bringup bringup.launch.py]
+```
+
 ## Choosing a base image
 Official ROS images are published on Docker Hub (and mirrored by Open Robotics under `osrf/ros`), typically tagged as `<distro>-ros-core`, `<distro>-ros-base`, or `<distro>-desktop` — `ros-core` is minimal (just the middleware and client libraries), `ros-base` adds common build/dev tools, and `desktop` adds GUI tools like rviz. Pick the smallest variant that has what you need; a `desktop` image inside a headless deployment container is wasted space.
 

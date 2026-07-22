@@ -2,6 +2,27 @@
 
 Units 3 and 4 gave PEDRITO the ability to move; this unit gives it the ability to perceive. You'll wire a sensor to the MCU, publish its readings as a ROS 2 topic, and introduce services — the request/response counterpart to topics — in the micro-ROS context.
 
+The sequence below contrasts the two communication patterns this unit introduces: a timer firing fire-and-forget publishes, versus a host explicitly calling a service and waiting for a response.
+
+```mermaid
+sequenceDiagram
+    participant Timer as rclc timer
+    participant MCU as MCU (sensor_timer_callback)
+    participant Topic as /pedrito/range
+    participant Host as Host (ros2 service call)
+    participant Svc as MCU (calibrate_service_callback)
+
+    loop every timer period
+        Timer->>MCU: fire
+        MCU->>MCU: read_distance_cm()
+        MCU->>Topic: publish Range msg
+    end
+
+    Host->>Svc: /pedrito/calibrate request
+    Svc->>Svc: baseline_offset = read_distance_cm()
+    Svc-->>Host: response (success, "calibrated")
+```
+
 ## Reading a sensor on the MCU
 
 Sensor wiring depends heavily on the interface: a simple ultrasonic distance sensor (e.g. HC-SR04-style) uses two GPIO pins and a trigger/echo timing measurement, while an IMU or more capable distance sensor typically speaks I2C over two shared pins (SDA/SCL) and a library handles the protocol for you. Either way, the pattern from the MCU's perspective is the same: a function that returns a fresh reading, called from a timer.

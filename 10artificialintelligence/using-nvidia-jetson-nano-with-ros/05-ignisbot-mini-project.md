@@ -2,6 +2,19 @@
 
 This closing unit is integration work, not new material: you combine the driver (Unit 2), collision avoidance (Unit 3), and people follower (Unit 4) into one coherent Ignisbot that searches for a person, follows them, and won't run into things while doing it.
 
+The state diagram below captures the arbiter's priority logic, where AVOID always overrides FOLLOW or SEARCH regardless of the other inputs.
+
+```mermaid
+stateDiagram-v2
+    [*] --> SEARCH
+    SEARCH --> FOLLOW: person_detected
+    FOLLOW --> SEARCH: person lost
+    FOLLOW --> AVOID: blocked
+    SEARCH --> AVOID: blocked
+    AVOID --> FOLLOW: clear & person_detected
+    AVOID --> SEARCH: clear & no person
+```
+
 ## Defining the behavior as a small state machine
 
 Rather than one tangled node, think of Ignisbot's mission as a handful of states with clear transitions:

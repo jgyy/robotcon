@@ -2,6 +2,27 @@
 
 Viewing frames with the Unit 2 tools only works once something is publishing them. This unit covers the two halves of every TF relationship: **broadcasting** a transform onto `/tf` or `/tf_static`, and **listening** for it so a node can use it in its own logic — the pattern behind nearly every ROS 2 node that reasons about space.
 
+The sequence below shows the broadcast/listen round trip over time, including the case where a lookup happens before any transform has arrived:
+
+```mermaid
+sequenceDiagram
+    participant B as Broadcaster Node
+    participant T as /tf (or /tf_static)
+    participant Buf as TF2 Buffer (Listener)
+    participant L as Listener Node
+
+    loop every timer tick
+        B->>T: sendTransform(stamped transform)
+    end
+    T->>Buf: TransformListener buffers it
+    L->>Buf: lookup_transform(target, source, time)
+    alt transform already buffered
+        Buf-->>L: composed TransformStamped
+    else not received yet
+        Buf-->>L: raises exception (caught by try/except)
+    end
+```
+
 ## Dynamic TF broadcaster (Python)
 
 A frame whose pose changes over time (a moving robot, a rotating joint) is published on `/tf` by a **broadcaster** — typically inside a node that already knows the pose from odometry, joint encoders, or simulation. The core pattern with `tf2_ros`:

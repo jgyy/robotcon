@@ -2,6 +2,16 @@
 
 You've already met the controller server as "the thing that follows the path." This unit goes under the hood of `controller_server` itself: how it's configured, the three plugin roles it actually loads (not just "the controller"), and how to tune them so path-following looks smooth instead of jerky or overshoot-prone.
 
+The diagram below shows the three plugin roles `controller_server` loads simultaneously and what each one is actually responsible for.
+
+```mermaid
+flowchart LR
+    CS[controller_server] --> CP["Controller plugin<br/>path tracking -> Twist cmd"]
+    CS --> PC["Progress checker<br/>is the robot stuck?"]
+    CS --> GC["Goal checker<br/>have we arrived?"]
+    PC -->|failure_tolerance exceeded| BT[Behavior Tree recovery]
+```
+
 ## Controller server configuration
 
 `controller_server` is a lifecycle node configured almost entirely through one YAML block. Beyond naming which plugins to load, it owns a handful of parameters that apply regardless of which controller plugin you pick:

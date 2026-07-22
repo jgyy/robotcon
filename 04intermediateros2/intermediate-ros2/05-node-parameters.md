@@ -2,6 +2,26 @@
 
 Parameters are ROS 2's mechanism for configuring a node's behavior without hardcoding values or rebuilding — a publish rate, a topic name, a PID gain, a frame ID. This unit covers declaring, reading, setting, and reacting to parameters, plus the YAML files used to configure many nodes at once.
 
+The sequence diagram below shows what actually happens when `ros2 param set` is used against a running node with a registered parameter callback.
+
+```mermaid
+sequenceDiagram
+    participant CLI as ros2 param set
+    participant Node
+    participant Callback as on_param_change
+
+    CLI->>Node: set rate_hz = 5.0
+    Node->>Callback: invoke with new parameter value
+    alt value passes validation
+        Callback-->>Node: SetParametersResult(successful=True)
+        Node-->>CLI: stored value updated
+        Note over Node: your code must still act on it<br/>(e.g. reschedule timer)
+    else value fails validation
+        Callback-->>Node: SetParametersResult(successful=False, reason)
+        Node-->>CLI: set rejected
+    end
+```
+
 ## Declaring and reading parameters
 
 Parameters must be declared before use — an undeclared parameter access raises an exception. Declaration also lets you set a default and, optionally, a descriptor with constraints (a range, a read-only flag, a description string).

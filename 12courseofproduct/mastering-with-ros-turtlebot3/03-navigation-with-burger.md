@@ -2,6 +2,23 @@
 
 Manual driving doesn't scale — a robot that's actually useful needs to build a map of its environment and then plan its own way through it. This unit covers the two halves of that problem: SLAM (building the map) and navigation (using it to reach a goal autonomously), using the Burger as the reference platform since its 360° LiDAR and compact footprint make it forgiving to tune.
 
+The diagram below traces the full SLAM-then-navigate workflow, including the recovery loop that fires when the robot gets stuck.
+
+```mermaid
+flowchart TD
+    A[Drive robot with teleop, covering loops] --> B[SLAM: Cartographer / slam_toolbox]
+    B --> C[Save map: map_saver_cli]
+    C --> D[Launch Nav2 with AMCL]
+    D --> E[2D Pose Estimate: particle cloud converges]
+    E --> F[Send NavigateToPose goal]
+    F --> G[Global planner: path over global costmap]
+    G --> H[Local controller: DWB tracks path, dodges live obstacles]
+    H --> I{Robot stuck?}
+    I -->|Yes| J[Recovery: clear costmap, rotate, back up]
+    I -->|No| K[Goal reached]
+    J --> H
+```
+
 ## Building a map with SLAM
 
 SLAM (Simultaneous Localization And Mapping) fuses LiDAR scans and odometry to estimate both the robot's trajectory and a consistent map at the same time — "simultaneous" because each one depends on the other and you don't have ground truth for either. Bring up SLAM (Cartographer or slam_toolbox, depending on what your distro ships) alongside the robot:

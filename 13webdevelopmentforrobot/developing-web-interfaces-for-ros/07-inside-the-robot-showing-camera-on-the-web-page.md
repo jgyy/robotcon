@@ -2,6 +2,17 @@
 
 Camera feeds are the highest-bandwidth data you'll pipe to a browser in this course, so this unit is as much about picking the right transport as it is about the HTML. There are two genuinely different approaches, and knowing when to use each matters.
 
+The diagram below shows the decision between the two camera-streaming architectures and where each one diverges.
+
+```mermaid
+flowchart TD
+    Cam[Camera Image Topic] --> Q{Frame rate / bandwidth needs?}
+    Q -->|Modest, monitoring| A["Option A: CompressedImage<br/>over rosbridge WebSocket"]
+    A --> A1["base64 JSON --> img.src"]
+    Q -->|High, primary teleop view| B[Option B: web_video_server]
+    B --> B1["MJPEG over plain HTTP --> img src URL"]
+```
+
 ## Option A: compressed images over rosbridge
 The simplest path reuses everything from Unit 6: subscribe to a `sensor_msgs/CompressedImage` topic (most camera drivers publish one alongside the raw feed, typically at `<topic>/compressed`) and set the JPEG bytes directly as an `<img>` source.
 

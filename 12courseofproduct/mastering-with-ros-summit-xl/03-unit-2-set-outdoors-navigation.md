@@ -2,6 +2,20 @@
 
 The indoor stack from Unit 1 leans entirely on laser-matched features against a fixed map. Outdoors, that assumption breaks down — this unit swaps in GPS-based localization and a waypoint follower suited to open ground.
 
+The diagram below shows how GPS, odometry, and IMU data flow through `robot_localization` into the single filtered pose everything else consumes.
+
+```mermaid
+flowchart LR
+    GPS["gps/fix (NavSatFix)"] --> NT[navsat_transform_node]
+    ODOM["odom"] --> NT
+    NT --> GPSOdom[GPS-derived odometry]
+    GPSOdom --> EKF[ekf_node]
+    ODOM --> EKF
+    IMU["imu"] --> EKF
+    EKF --> Filtered["odometry/filtered"]
+    Filtered --> Steer[steer_command waypoint follower]
+```
+
 ## Why the indoor stack doesn't transfer outdoors
 
 Laser SLAM depends on the environment having stable, nearby geometric features to match scans against: walls, doorframes, furniture. A parking lot, a field, or a long straight fence line gives the laser almost nothing distinctive to lock onto, and outdoor spaces are typically far larger than any pre-built occupancy grid you'd want to maintain. What outdoor spaces *do* offer that indoor ones (usually) don't is a GPS signal, so the outdoor stack replaces "match the laser to a stored map" with "read your absolute position off satellites and fuse it with odometry."

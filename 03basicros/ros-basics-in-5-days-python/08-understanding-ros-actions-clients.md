@@ -2,6 +2,25 @@
 
 Topics stream data and services answer quick questions, but neither handles a task that takes real time and needs to be monitored or cancelled. That's what actions are for. This unit covers the client side, using a simulated quadrotor as the running example.
 
+The sequence below shows the full goal lifecycle from the client's perspective: send a goal, receive feedback while it runs, and either get a result or cancel partway through.
+
+```mermaid
+sequenceDiagram
+    participant C as TakeoffClient
+    participant S as Action Server (/takeoff)
+    C->>S: send_goal_async(target_altitude=2.0)
+    S-->>C: goal accepted
+    loop while climbing
+        S-->>C: feedback (current_altitude)
+    end
+    alt goal completes
+        S-->>C: result (reached, final_altitude)
+    else client cancels
+        C->>S: cancel_goal_async()
+        S-->>C: result (reached=false)
+    end
+```
+
 ## The quadrotor simulation
 
 For this unit, exercises run against a simulated quadrotor (drone) that exposes an action for taking off to and holding a target altitude — a good example precisely because it *isn't* instantaneous: the drone needs several seconds to climb, you'd like to know how high it currently is while it climbs, and you might want to abort the climb partway through. Keep this scenario in mind through the rest of the unit; every action concept below maps onto "tell the drone to climb to 2 meters and let me track/cancel that."

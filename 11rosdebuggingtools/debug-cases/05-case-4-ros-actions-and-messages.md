@@ -2,6 +2,27 @@
 
 Actions sit between topics and services: like services they're a request-driven interaction, but like topics they stream ongoing data (feedback) and support cancellation. That extra structure means there are more places for an action-based interaction to get stuck, and more diagnostic surface to check. This unit extends the topic/message debugging skills from earlier units to the action interface.
 
+The sequence below shows the full goal/feedback/result exchange, plus the cooperative-cancellation branch where the server must actively check for a cancel request.
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server as Fibonacci action server
+    Client->>Server: send_goal (order: 5)
+    activate Server
+    loop for each element
+        Server-->>Client: feedback (partial_sequence)
+    end
+    alt goal completes normally
+        Server->>Client: result (sequence) via succeed()
+    else client cancels goal
+        Client->>Server: cancel_goal
+        Note over Server: must check is_cancel_requested
+        Server->>Client: canceled()
+    end
+    deactivate Server
+```
+
 ## Anatomy of an action definition
 
 An `.action` file has three sections, separated by `---`: goal, result, and feedback.

@@ -2,6 +2,26 @@
 
 This unit sets the stage for the whole course: what micro-ROS actually is, why it exists alongside "regular" ROS 2, and what you'll be building — a small differential-drive robot (nicknamed PEDRITO in this course) that senses, moves, and talks to the ROS 2 graph from a microcontroller.
 
+The diagram below shows how the micro-ROS agent sits between the resource-constrained MCU and the full ROS 2 graph, translating between the two DDS protocols.
+
+```mermaid
+flowchart LR
+    subgraph MCU["Microcontroller (ESP32)"]
+        Node["micro-ROS node<br/>(rclc, C API)"]
+    end
+    subgraph Bridge["Host machine (PC / Raspberry Pi)"]
+        Agent["micro-ROS agent"]
+    end
+    subgraph Graph["ROS 2 graph"]
+        Others["Other ROS 2 nodes<br/>(rclcpp / rclpy)"]
+    end
+
+    Node -- "XRCE-DDS<br/>(serial or Wi-Fi/UDP)" --> Agent
+    Agent -- "full DDS" --> Others
+    Others -- "topics / services" --> Agent
+    Agent --> Node
+```
+
 ## Why embedded ROS at all
 
 ROS 2 nodes normally run on a full Linux (or Windows) machine with a real DDS middleware stack — plenty of RAM, a filesystem, and a POSIX scheduler underneath them. A microcontroller (MCU) like an ESP32 or an STM32 has none of that: kilobytes of RAM, no OS (or a tiny RTOS), and hard real-time deadlines for reading sensors and driving motors. micro-ROS is a project that ports a constrained subset of the ROS 2 client library (rclc, a C API) onto MCUs, so the same publish/subscribe/service concepts you already know from desktop ROS 2 work down at the metal — just with a lighter-weight middleware (typically eProsima's Micro XRCE-DDS) instead of full DDS.

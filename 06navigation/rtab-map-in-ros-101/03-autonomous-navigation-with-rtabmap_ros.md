@@ -2,6 +2,27 @@
 
 This is the capstone unit: you take everything from Units 1 and 2 and run the full cycle — build a map with RTAB-Map, localize the robot inside that saved map, and hand the resulting occupancy grid to a navigation stack so the robot can plan and drive autonomously.
 
+The sequence diagram below shows the full timeline across the three phases covered in this unit: build and save a map, switch to localization mode, and hand off to Nav2 to drive toward a goal:
+
+```mermaid
+sequenceDiagram
+    participant Op as Operator
+    participant RM as rtabmap_ros
+    participant DB as rtabmap.db
+    participant Nav as Navigation Stack (Nav2)
+
+    Op->>RM: launch mapping mode
+    RM->>RM: build map + detect loop closures
+    Op->>RM: save_map service call
+    RM->>DB: persist 3D map + bag-of-words data
+    Op->>RM: launch localization mode
+    DB-->>RM: load saved map
+    RM->>Nav: publish occupancy grid + tf (map->odom->base_link)
+    Op->>Nav: send navigate_to_pose goal
+    RM-->>Nav: correct localization drift via loop closures
+    Nav-->>Op: goal result (arrived)
+```
+
 ## Building the map (mapping mode)
 
 In mapping mode, RTAB-Map starts with an empty database and builds it up as the robot (or you, teleoperating it) explores. A typical launch looks like this (parameter names are representative — check `ros2 launch rtabmap_launch rtabmap.launch.py --show-args` for the exact set on your installed version):

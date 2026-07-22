@@ -2,6 +2,15 @@
 
 Before you connect to the real robot in the next unit, this unit builds a simulated twin you can drive, crash, and debug without consequences. Every controller and navigation script from Unit 5 onward should be exercised here first.
 
+The diagram below shows the link/joint tree that the URDF snippet describes: a base link with two rotating wheel joints and a fixed caster.
+
+```mermaid
+flowchart TD
+    base[base_link] -->|"left_wheel_joint (continuous)"| leftWheel[left_wheel]
+    base -->|"right_wheel_joint (continuous)"| rightWheel[right_wheel]
+    base -->|"caster_joint (fixed)"| caster[caster]
+```
+
 ## Why simulate before touching real hardware
 A simulator gives you three things the real robot can't: infinite retries (no motors to burn out), a perfect ground-truth pose (useful for checking whether your line-follower or SLAM output is actually correct), and the ability to develop on a laptop with no robot present at all. The tradeoff is fidelity — friction, sensor noise, and battery sag never match reality exactly — so treat simulation as where you find *logic* bugs, and reserve real-hardware time for *physical* bugs (traction, lighting, latency).
 

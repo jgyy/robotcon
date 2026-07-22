@@ -2,6 +2,17 @@
 
 This unit orients you to the course: what "Level 3" autonomy actually commits you to, what the simulated car looks like as a ROS stack, and how to move it around before any of the harder sensing or navigation work begins.
 
+The diagram below sketches the package layout you'll tour in this unit: bringup starts everything, sensor drivers feed perception/navigation, and that in turn commands the vehicle.
+
+```mermaid
+flowchart LR
+    B["Bringup / Description package<br/>URDF + launch files"] --> D["Driver / Sensor packages<br/>sensor_msgs publishers"]
+    B --> C["Control package<br/>Twist / AckermannDrive to vehicle"]
+    B --> P["Perception / Navigation packages<br/>built across this course"]
+    D --> P
+    P --> C
+```
+
 ## What "Level 3 conditional automation" means here
 The SAE autonomy scale runs from 0 (no automation) to 5 (full automation in all conditions). This course targets **Level 3**: the vehicle handles the driving task under defined conditions, but a human must be ready to take over when asked. Practically, that shapes the whole course:
 

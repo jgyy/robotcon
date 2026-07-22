@@ -2,6 +2,15 @@
 
 This capstone applies everything from Units 1–7 to a single robot that stresses all of it at once: a legged platform where you must configure multiple hardware interfaces, choose the right controllers per leg, and reason about a control loop where sloppy timing has an immediate, visible consequence — the robot falls over.
 
+The diagram below shows the incremental build order this capstone follows — each stage must be verified stable before moving to the next.
+
+```mermaid
+flowchart TD
+    A[Confirm all 8 joints in<br/>list_hardware_interfaces] --> B[Single leg holds<br/>fixed torque vs gravity]
+    B --> C[All four legs hold a<br/>stable standing pose]
+    C --> D[Layer in gait /<br/>trajectory logic]
+```
+
 ## Introducing the Solo quadruped and why legs are harder than wheels
 
 Solo (an open-source quadruped research platform, in this case the 8-degree-of-freedom variant) has two actuated joints per leg (hip and knee), each torque-controlled — meaning your `<ros2_control>` hardware interfaces expose `effort` command interfaces, not `position`. This is the crux of what makes this project harder than the diff-drive robot from Unit 2: standing and walking require continuously computing torques from a leg model (or a whole-body controller) rather than sending occasional position setpoints, and an unstable control loop doesn't just drift — it drops the robot.

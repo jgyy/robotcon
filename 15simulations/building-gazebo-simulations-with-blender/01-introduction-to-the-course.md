@@ -2,6 +2,15 @@
 
 This unit sets the stage for the whole course: why a 3D content-creation tool like Blender matters for robotics simulation, how Blender fits into the Gazebo workflow, and what you'll have built by the end.
 
+The diagram below shows the division of labor: Blender authors visual/geometric content, which flows into Gazebo where physics and behavior take over.
+
+```mermaid
+flowchart LR
+    A[Blender: model, texture, rig, animate] -->|.dae / .gltf mesh export| B[SDF / URDF link definitions]
+    B --> C[Gazebo: physics, sensors, joints, ROS 2 integration]
+    C -->|drives motion, applies forces| D[Simulated robot behavior]
+```
+
 ## Why Blender for robotics simulation
 
 Gazebo (both Classic and Sim/Ionic-Harmonic-era "Gz Sim") ships with a handful of primitive shapes and a small library of stock models, but real robotics work quickly demands custom geometry: a warehouse shelf with the exact dimensions of your client's racking, a sensor mount that matches your actual 3D-printed bracket, or an environment that visually resembles a target deployment site for photorealistic synthetic-data generation. Blender is a free, open-source, full-featured 3D content creation suite (modeling, texturing, rigging, animation, rendering) that exports to formats Gazebo can consume — primarily COLLADA (`.dae`) and glTF (`.gltf`/`.glb`), with OBJ/STL useful for simpler collision geometry.

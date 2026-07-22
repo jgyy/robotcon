@@ -2,6 +2,18 @@
 
 Manual velocity commands don't scale past a few meters of flight. This unit introduces RTABMap (Real-Time Appearance-Based Mapping) to build a map of the environment from the drone's camera, and then shows how to flatten that map into a 2D navigation problem the standard ROS navigation stack can solve.
 
+The diagram below traces data from the drone's camera through RTABMap's SLAM pipeline to the 2D occupancy grid and velocity commands that let the drone navigate itself:
+
+```mermaid
+flowchart LR
+    C[Camera + Odometry] --> F[Feature Extraction &<br/>Visual Odometry]
+    F --> L[Loop Closure Detection]
+    L --> G[3D Pose Graph / Map]
+    G --> O[2D Occupancy Grid]
+    O --> N[ROS Nav Stack<br/>nav2 / move_base]
+    N --> V[cmd_vel Velocity Commands]
+```
+
 ## What RTABMap actually does
 RTABMap is a graph-based SLAM (Simultaneous Localization and Mapping) library. As the drone flies, it:
 1. Extracts visual features from each incoming camera frame.

@@ -2,6 +2,14 @@
 
 This unit orients you before the math starts: what "kinematics" actually buys you as a robotics engineer, what you'll be able to do by the end of the course, and what background you need to bring with you. It also gives you a taste of the payoff — moving an end effector to a target pose — so the notation in later units has somewhere to land.
 
+The diagram below shows the two mirror-image questions this whole course answers, and how they invert each other:
+
+```mermaid
+flowchart LR
+    A[Joint angles θ1, θ2, θ3] -->|Forward Kinematics| B[End-effector pose x, y]
+    B -->|Inverse Kinematics| A
+```
+
 ## What is this course about?
 Kinematics is the study of motion without worrying about the forces that cause it — for a robot arm, that means answering two mirror-image questions: "given these joint angles, where is the end effector?" (forward kinematics) and "to reach this position and orientation, what should the joint angles be?" (inverse kinematics). Every pick-and-place task, every trajectory a manipulator follows, and every motion-planning stack (including MoveIt) sits on top of a kinematic model of the arm. Without it, you can command individual joints, but you have no way to reason about the arm in terms a task cares about — "put the gripper at this point in space" — which is how humans and higher-level planners actually want to talk to a robot.
 

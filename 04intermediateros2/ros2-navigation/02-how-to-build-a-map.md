@@ -2,6 +2,19 @@
 
 Nav2's global planner needs a model of the world to plan through, and its localizer needs one to localize against. That model is a **map**, and this unit covers what a map actually is, how to build one automatically with SLAM, and how to manage the nodes involved as they start up and shut down.
 
+The diagram below traces how live sensor data becomes a saved map and, later, a served one.
+
+```mermaid
+flowchart LR
+    Scan[/scan LaserScan/] --> SLAM[SLAM node cartographer_node]
+    Odom[odom + TF] --> SLAM
+    SLAM --> Grid[Occupancy Grid /map]
+    SLAM --> TF[map to odom TF]
+    Grid --> Saver[map_saver_cli]
+    Saver --> Files[my_map.pgm + my_map.yaml]
+    Files --> Server[map_server]
+```
+
 ## What is a map in ROS2?
 
 The standard ROS 2 map representation is an **occupancy grid** (`nav_msgs/msg/OccupancyGrid`): a 2D array of cells, each holding a probability (0–100) that the cell is occupied, or -1 if unknown. On disk, a saved map is a pair of files — a `.pgm` (or `.png`) grayscale image where pixel brightness encodes occupancy, and a `.yaml` metadata file recording resolution (meters/pixel), origin, and occupancy thresholds:

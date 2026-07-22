@@ -2,6 +2,23 @@
 
 With the platform bring-up and teleop loop from Unit 0 working, it's time to let the robot drive itself. This unit covers the indoor half of navigation — building or loading a map, localizing against it, and sending goals through the navigation stack — before Part 2 extends the same ideas to GPS-based outdoor navigation.
 
+The flowchart below traces the decision path from choosing a localization method through to a goal being reached, including the recovery loop when the robot gets stuck.
+
+```mermaid
+flowchart TD
+    A[Drive with teleop] --> B{Map already exists?}
+    B -- No --> C[SLAM: build and save map]
+    B -- Yes --> D[AMCL: localize against saved map]
+    C --> D
+    D --> E[Costmaps: static + obstacle + inflation layers]
+    E --> F[Send NavigateToPose goal]
+    F --> G[Nav2 planner/controller drives robot]
+    G --> H{Local planner stuck?}
+    H -- Yes --> I[Recovery: spin / back-up]
+    I --> G
+    H -- No --> J[Goal reached]
+```
+
 ## Localizing indoors: SLAM vs. a known map
 
 Indoor navigation stacks (ROS 2's Nav2, or `move_base`/AMCL on ROS 1) need to answer one question continuously: where is the robot on the map? There are two ways to get there:

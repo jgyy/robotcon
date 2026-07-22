@@ -2,6 +2,18 @@
 
 Part 1 got the robot to a search zone and confirmed a target detection, handing off into `APPROACH_OBJECT`. Part 2 finishes the project: closing the distance to the object, executing the manipulation (or substitute interaction), and returning home — plus the integration testing that turns "the parts work individually" into "the project actually works."
 
+The diagram below continues the state machine from Part 1, showing the manipulate-and-return sequence along with the fallback path when the target is lost mid-approach.
+
+```mermaid
+stateDiagram-v2
+    [*] --> APPROACH_OBJECT
+    APPROACH_OBJECT --> MANIPULATE: radius >= approach_radius_threshold
+    APPROACH_OBJECT --> SCAN_FOR_OBJECT: target lost 10+ consecutive frames
+    MANIPULATE --> RETURN_TO_DOCK: pick sequence complete
+    RETURN_TO_DOCK --> DONE: arrived back at dock
+    DONE --> [*]
+```
+
 ## Stage 3: approach the object
 
 This is blob/line-style visual servoing (Units 4-5) reused for a new purpose: instead of following a track, you're closing on a confirmed target until it's within manipulation range. Reuse the offset-and-size control law directly:

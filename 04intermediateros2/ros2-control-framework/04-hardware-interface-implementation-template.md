@@ -2,6 +2,17 @@
 
 Everything so far has used someone else's hardware interface plugin (a simulator's). This unit teaches you to write your own from scratch — the C++ plugin that sits between `ros2_control`'s generic controllers and your specific motor drivers, sensors, or actuators. Treat this unit as the reusable template; Unit 5 applies it to a real device.
 
+The diagram below shows the hardware interface's lifecycle callbacks and exactly when `read()`/`write()` get invoked.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Unconfigured: on_init()
+    Unconfigured --> Inactive: on_configure()
+    Inactive --> Active: on_activate()
+    Active --> Inactive: on_deactivate()
+    Active --> Active: read() / write() every cycle
+```
+
 ## The hardware interface lifecycle
 
 A hardware interface is a `hardware_interface::SystemInterface` (or `ActuatorInterface`/`SensorInterface` for narrower cases) — itself a ROS 2 lifecycle node under the hood. The controller manager drives it through the same states controllers go through: `on_init()` → `on_configure()` → `on_activate()` ↔ `on_deactivate()`, with `read()` and `write()` called every cycle only while active. Getting this state machine right matters because it's what lets you safely power actuators on and off without restarting the whole ROS graph.

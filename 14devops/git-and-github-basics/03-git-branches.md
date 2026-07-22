@@ -2,6 +2,22 @@
 
 With the single-line workflow from the last unit solid, this unit adds the feature that makes Git genuinely powerful for real projects: branching, so you can develop a risky change (a new navigation planner, a controller rewrite) in isolation and bring it back together only once it works.
 
+The diagram below traces the branch-then-merge decision logic: whether a merge fast-forwards cleanly or needs a conflict resolved by hand.
+
+```mermaid
+flowchart TD
+    A[On main] --> B["git switch -c feature/lidar-filter"]
+    B --> C[Commit changes on the feature branch]
+    C --> D["git switch main"]
+    D --> E["git merge feature/lidar-filter"]
+    E --> F{Did main change<br/>the same lines since branching?}
+    F -- No --> G[Fast-forward merge]
+    F -- Yes --> H[Merge conflict:<br/>edit file, remove markers]
+    H --> I["git add + git commit"]
+    G --> J[main now includes the feature]
+    I --> J
+```
+
 ## What branches are and why they matter
 
 A branch is simply a movable, named pointer to a commit. When you commit, the branch you're "on" moves forward to point at the new commit. `main` (or `master`) is just a branch with no special technical status — it's a convention for "the primary line of development." Because branches are cheap (a branch is a few dozen bytes, not a copy of the project), Git encourages you to create one for every feature, experiment, or bugfix rather than working directly on `main`.

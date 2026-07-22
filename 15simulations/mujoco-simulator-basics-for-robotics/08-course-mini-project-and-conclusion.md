@@ -2,6 +2,17 @@
 
 This closing unit ties every previous unit into a single project you build end-to-end, then points you toward where to take MuJoCo next once this course is done.
 
+The flowchart below lays out the six suggested milestones in order, the same incremental sequence described later in this unit for building and verifying the mini-project.
+
+```mermaid
+flowchart TD
+    M1[1: scene.xml loads cleanly] --> M2[2: add robot, no actuators/sensors]
+    M2 --> M3[3: add actuators, drive data.ctrl directly]
+    M3 --> M4[4: add sensors, verify data.sensordata]
+    M4 --> M5[5: write PD controller against sensor readings]
+    M5 --> M6[6: wrap loop in ROS2 bridge node]
+```
+
 ## Mini-Project Brief
 Build a small simulated robot arm, from scratch, that can be commanded to reach a target joint configuration and report when it gets there. Concretely, the deliverable is a small project directory containing:
 - `scene.xml` — a ground plane, lighting, and an `<include>` of your robot file (Unit 3)

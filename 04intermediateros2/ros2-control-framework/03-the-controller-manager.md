@@ -2,6 +2,18 @@
 
 Now that you can bring up a working pipeline, this unit goes under the hood of the component that makes it tick: the controller manager. You'll learn what it actually does each cycle and the three ways you can interact with it — CLI tools, direct service calls, and the spawner script — so you're not limited to whatever a launch file happened to do for you.
 
+The diagram below shows the lifecycle states the controller manager drives every controller through, and the calls (CLI, service, or spawner) that trigger each transition.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Unconfigured
+    Unconfigured --> Inactive: configure
+    Inactive --> Active: activate
+    Active --> Inactive: deactivate
+    Inactive --> Unconfigured: cleanup
+    Active --> Active: update() every cycle
+```
+
 ## The controller manager explained
 
 The controller manager is a real-time-aware ROS 2 node with one job: run a fixed-rate loop that (1) reads the current state from every claimed hardware interface, (2) calls `update()` on every *active* controller in order, letting each write into the command interfaces it has claimed, and (3) writes those commands out to hardware. It also owns a **resource manager** that tracks which state/command interfaces exist and which controller currently "owns" (has claimed) each one — this is how it prevents two controllers from fighting over the same joint's command interface simultaneously.

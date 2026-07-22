@@ -2,6 +2,17 @@
 
 This is where modeling meets robotics: taking Blender-authored meshes and turning them into an articulated robot that Gazebo can simulate with real joints, controllable in both a fixed arm and a mobile base configuration.
 
+The diagram below shows the robot as a tree of links connected by joints, combining the arm chain and mobile-base examples covered later in this unit.
+
+```mermaid
+flowchart TD
+    Base[base link] -->|shoulder_joint: revolute| UpperArm[upper_arm link]
+    UpperArm -->|elbow_joint: revolute| Forearm[forearm link]
+    Forearm -->|wrist_joint: revolute| Gripper[gripper link]
+    Base -->|left_wheel_joint: continuous| LeftWheel[left_wheel link]
+    Base -->|right_wheel_joint: continuous| RightWheel[right_wheel link]
+```
+
 ## Designing for articulation
 
 An articulated robot is a tree of rigid links connected by joints. The critical modeling discipline is: **model and export each link as a separate mesh**, with its origin placed exactly at the joint axis that connects it to its parent — not at the mesh's geometric center. Get this wrong and every joint will rotate around the wrong point.

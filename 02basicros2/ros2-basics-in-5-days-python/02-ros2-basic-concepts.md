@@ -2,6 +2,16 @@
 
 This unit covers the mechanical building blocks you'll use in every ROS 2 project: packages, workspaces, compilation, nodes, and launch files. Get comfortable with the create-build-run loop here, because you'll repeat it constantly for the rest of the course.
 
+The diagram below traces that create-build-run loop end to end, from source files to a running (or launch-started) node:
+
+```mermaid
+flowchart LR
+    A[src/ package.xml + setup.py] -->|colcon build| B[build/ + install/]
+    B -->|source install/setup.bash| C[Package on ROS 2 discovery path]
+    C -->|ros2 run| D[Node process running]
+    C -->|ros2 launch| E[Launch file starts multiple nodes]
+```
+
 ## What is a package?
 A ROS 2 package is the smallest unit of software organization — a directory with a manifest (`package.xml`) declaring its name, dependencies, and metadata, plus a build description (`setup.py`/`setup.cfg` for pure Python packages, or `CMakeLists.txt` for C++ or mixed packages). Packages live inside a **workspace**, a directory tree with `src/`, `build/`, `install/`, and `log/` subfolders, all managed by `colcon`. One workspace can hold many packages; you build the whole workspace at once.
 

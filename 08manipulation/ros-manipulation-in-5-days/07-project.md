@@ -2,6 +2,20 @@
 
 This closing unit has no new theory — it's where everything from Units 1–6 gets assembled into one working pick-and-place task that you design, build, and run end to end, the same shape of project you'd be handed on the job.
 
+The diagram below shows the six milestones in order and how a failed stage stops the run rather than silently continuing:
+
+```mermaid
+flowchart LR
+    A[1 Scene Setup] --> B[2 Pre-grasp Reach]
+    B --> C[3 Grasp + Attach]
+    C --> D[4 Transit to Place]
+    D --> E[5 Place + Detach]
+    E --> F[6 Return Home]
+    F --> G{All stages succeeded?}
+    G -->|No| H[Log failing stage & stop]
+    G -->|Yes| I[Pick-and-place complete]
+```
+
 ## The brief
 
 Build a node that, given a manipulator with a working MoveIt configuration, performs a complete pick-and-place cycle: start from a known pose, move to and grasp an object at a known (or perceived) location, carry it to a second location without collision, place it down, and return to the start pose. Treat "known location" as an acceptable simplification for this project — the goal is to prove out the manipulation pipeline, not to also build an object detector from scratch.

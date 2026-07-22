@@ -2,6 +2,16 @@
 
 This unit orients you to the course: what "dynamics" adds on top of the kinematics you may already know, the mathematical notation used throughout, and the tools you'll use to model and simulate the systems in later units.
 
+The flowchart below shows where dynamics sits between pure motion planning and actually commanding a robot's motors.
+
+```mermaid
+flowchart LR
+    P["Planned motion<br/>q, q_dot, q_ddot"] --> KIN["Kinematics<br/>geometry only: where does it go?"]
+    P --> DYN["Dynamics<br/>M(q)q_ddot + C(q,q_dot)q_dot + G(q) = tau"]
+    DYN --> TAU["Required joint torques tau"]
+    TAU --> CTRL["Control law<br/>commands the motors"]
+```
+
 ## Kinematics vs. dynamics: why "why" matters
 Kinematics answers "where does the robot go if joint 1 rotates 30 degrees" — pure geometry, no forces involved. Dynamics answers "how much torque do I need at joint 1 to make that happen in 0.5 seconds, given the arm's mass and the load it's carrying, and given that gravity is trying to pull it down the whole time." Kinematics is necessary for planning; dynamics is necessary for actually executing the plan on real hardware. A trajectory that's perfectly valid kinematically (positions, velocities within joint limits) can still be physically unrealistic if it demands torques the motors can't deliver, or it can produce nasty vibration if it excites the arm's structural resonance. This course is about building the models (dynamics) and the control laws that use those models (control) to move a robot the way you intend, not just describe how it could move.
 

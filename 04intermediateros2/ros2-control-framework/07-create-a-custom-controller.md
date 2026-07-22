@@ -2,6 +2,15 @@
 
 Unit 6 showed you what `ros2_controllers` already provides; this unit shows you how to write your own when none of those fit — for instance, a controller implementing a custom gait for a legged robot, a nonstandard control law, or logic that needs to read multiple sensor interfaces at once and compute something no stock controller does.
 
+The diagram below shows the core data flow a custom controller implements inside `update()`: reading claimed state interfaces, and writing the result to claimed command interfaces.
+
+```mermaid
+flowchart LR
+    SI[State Interfaces<br/>position, velocity ...] --> UPD[update]
+    PARAMS[Declared config<br/>joints, gains] --> UPD
+    UPD -->|control law, every cycle| CI[Command Interfaces<br/>effort, position ...]
+```
+
 ## Your custom controller in 5 steps
 
 Structurally this mirrors Unit 4's hardware interface recipe, because controllers are also `pluginlib`-loaded lifecycle classes: (1) create a package, (2) write a header/source pair implementing `controller_interface::ControllerInterface`, (3) declare which state/command interfaces you need, (4) implement `update()` with your control logic, (5) export as a plugin, build, and configure it via YAML.

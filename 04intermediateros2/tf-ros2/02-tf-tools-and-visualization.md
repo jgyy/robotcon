@@ -2,6 +2,20 @@
 
 Knowing the theory of frames and transforms is only half the job — in practice you spend most of your TF time debugging: is this frame even being published? Is it connected to the tree I expect? Is the data fresh? This unit walks through the standard toolbox for inspecting a running TF tree.
 
+The diagram below shows which tool to reach for depending on what you need to know about the tree:
+
+```mermaid
+flowchart TD
+    Need{What do you need?} --> Snapshot[One-shot overview of\nthe whole tree]
+    Need --> Live[Continuously updating\ntree view]
+    Need --> Numeric[Numeric transform between\ntwo specific frames]
+    Need --> Spatial[3D spatial view overlaid\non robot/sensors]
+    Snapshot --> ViewFrames[view_frames -> PDF]
+    Live --> RqtTfTree[rqt_tf_tree]
+    Numeric --> Tf2Echo[tf2_echo]
+    Spatial --> Rviz[RViz2 TF display]
+```
+
 ## view_frames: a snapshot in PDF form
 
 `view_frames` (part of `tf2_tools`) listens to `/tf` and `/tf_static` for a few seconds and generates a static diagram of the entire frame tree as a PDF — parent/child relationships, publishing rate, and how long ago each transform was last received:

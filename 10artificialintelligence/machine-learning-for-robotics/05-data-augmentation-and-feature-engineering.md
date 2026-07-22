@@ -2,6 +2,19 @@
 
 Unit 4 focused on model architecture; this unit turns back to the dataset itself. Even a well-tuned model can't compensate for a dataset that's noisy, unbalanced, or missing whole categories of situation — so here you'll systematically audit dataset quality, generate synthetic samples to fill the gaps, and derive clustering-based features from LiDAR geometry.
 
+The diagram below outlines this unit's workflow: auditing the dataset drives which augmentation or synthetic-data technique to apply, while clustering separately derives new obstacle features — both feeding back into retraining.
+
+```mermaid
+flowchart TD
+    Audit[Dataset Quality Audit] --> Gap{Noise, Coverage,<br/>or Temporal Gaps?}
+    Gap --> AugTech[Augmentation: Noise Injection,<br/>Speed Randomization, Dynamic Obstacles]
+    Gap --> Synth[Synthetic Data for Rare Cases]
+    AugTech --> Retrain[Retrain & Compare MAE]
+    Synth --> Retrain
+    Cluster[Cluster LiDAR Points] --> Feat[Cluster-based Obstacle Features]
+    Feat --> Retrain
+```
+
 ## Revisiting dataset quality
 Go back to the dataset from Unit 3/4 with a specific checklist rather than a general "does it look okay":
 - **Noise** — are LiDAR readings jittery frame-to-frame in ways that don't correspond to real motion? Plot a short time window of a single LiDAR beam's range over consecutive frames and look for physically implausible jumps.

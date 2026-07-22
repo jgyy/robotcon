@@ -2,6 +2,17 @@
 
 This unit sets expectations before you touch a single XML tag: why robots need a machine-readable body description at all, what this course will build up toward, and what you should already have installed and know.
 
+The diagram below shows why a URDF matters: it is the single source of truth that every one of these separate ROS2 tools reads from.
+
+```mermaid
+flowchart LR
+    URDF[URDF: robot description] --> RViz2[RViz2 visualization]
+    URDF --> TF2[tf2 transform tree]
+    URDF --> MoveIt[MoveIt motion planning]
+    URDF --> ROS2Control[ros2_control]
+    URDF --> Gazebo[Gazebo / simulator]
+```
+
 ## Why do you need URDFs?
 
 Every piece of ROS2 tooling that reasons about a robot's physical shape — RViz2 for visualization, `tf2` for tracking coordinate frames, MoveIt for motion planning, `ros2_control` for driving joints, and Gazebo (or any other simulator) for physics — needs a common, structured answer to the question "what does this robot actually look like, and how are its parts connected?" URDF (Unified Robot Description Format) is that common answer: an XML dialect that describes a robot as a tree of rigid **links** connected by **joints**, each with a size, shape, mass, and range of motion.

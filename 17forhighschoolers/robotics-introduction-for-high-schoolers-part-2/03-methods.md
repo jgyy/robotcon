@@ -2,6 +2,18 @@
 
 The maze-solver so far has been one long block of code. This unit breaks that logic into functions — Python's term for methods that aren't attached to an object yet — so each piece (sensing, deciding, moving) can be written, tested, and reused on its own.
 
+The diagram below traces how data flows through the two functions from this unit's first example, from raw inputs to a movement decision.
+
+```mermaid
+flowchart TD
+    A["row, col, direction"] --> B["next_position(row, col, direction)"]
+    B --> C["new_row, new_col"]
+    C --> D["is_in_bounds(new_row, new_col, grid_size)"]
+    D --> E{True or False?}
+    E -->|True| F[safe to move there]
+    E -->|False| G[reject — try another direction]
+```
+
 ## Defining and calling functions
 
 `def` introduces a function; the return value comes back explicitly via `return` (a function with no `return` statement returns `None`):

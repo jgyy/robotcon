@@ -2,6 +2,20 @@
 
 Unit 2 gave you a model trained on a static, grid-sampled dataset. Here you push it further: the target now moves continuously in the XY plane while you collect data, and instead of training from scratch you retrain — fine-tune — the model you already have.
 
+The diagram below shows the fine-tune-vs-scratch decision and the catastrophic-forgetting check this unit teaches you to run.
+
+```mermaid
+flowchart TD
+    A[New XY-motion data collected] --> B{Train from scratch<br/>or fine-tune?}
+    B -->|from scratch| C["Discard old weights<br/>slow, data-hungry"]
+    B -->|fine-tune| D[Load spam_locator_v1.h5]
+    D --> E["Freeze lower backbone layers,<br/>unfreeze top ~30"]
+    E --> F["Train at low LR (1e-5),<br/>mix new + old data"]
+    F --> G{Val MAE improved on<br/>OLD static set too?}
+    G -->|no| H[Catastrophic forgetting -<br/>rebalance data mix]
+    G -->|yes| I[Save spam_locator_v2.h5]
+```
+
 ## Why retrain rather than train from scratch
 Throwing away a working model every time you get new data is wasteful and, worse, throws away everything the network already learned about what the object looks like. Fine-tuning starts from your saved weights and adjusts them with new data, which is both faster to converge and more data-efficient — exactly the property you want as your dataset grows incrementally across this course's units. The tradeoff to manage is catastrophic forgetting: train too aggressively on the new data alone and the model can regress on cases it used to handle well, so new data should usually be mixed with a sample of the old.
 

@@ -2,6 +2,21 @@
 
 Before LIMO can navigate autonomously it needs to know the shape of the space it's in. This unit covers SLAM (Simultaneous Localization and Mapping) conceptually and walks through actually driving LIMO around to produce a 2D occupancy grid map you'll reuse in the next several units.
 
+The flowchart below walks through the SLAM loop LIMO runs on every scan, from raw odometry to a saved map file.
+
+```mermaid
+flowchart TD
+    ODOM["Wheel + IMU odometry"] --> PREDICT["Rough pose estimate"]
+    SCAN["New lidar scan"] --> MATCH["Scan-match against accumulated map"]
+    PREDICT --> MATCH
+    MATCH --> CORRECT["Corrected pose - wheel-slip drift fixed"]
+    CORRECT --> STAMP["Stamp scan points onto occupancy grid"]
+    STAMP --> LOOP{"Revisiting a known place?"}
+    LOOP -->|Yes| CLOSE["Loop closure corrects trajectory drift"]
+    LOOP -->|No| SCAN
+    CLOSE --> SAVE["Save map: .pgm + .yaml"]
+```
+
 ## Why mapping comes before navigation
 
 Path planning needs to know which cells are free space, which are walls, and which are unknown. A map is that knowledge captured once, offline, so that later the robot doesn't have to build the world model from scratch every time it drives — it just has to figure out where *within* the known map it currently is (that's localization, next unit). Building the map and using the map are deliberately separate phases in this course, even though the underlying algorithms (both estimate the robot's pose from sensor data) overlap.

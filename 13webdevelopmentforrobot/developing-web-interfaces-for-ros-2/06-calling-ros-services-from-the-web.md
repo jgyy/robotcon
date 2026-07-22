@@ -2,6 +2,29 @@
 
 Topics are fire-and-forget; this unit covers the request/response pattern — calling a ROS service from the page and doing something with the answer once it comes back.
 
+The sequence below shows the battery-check example: a button click triggers a service call that resolves into either a success or an error callback, unlike the fire-and-forget flow of topics.
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant P as Web Page (JS)
+    participant R as rosbridge
+    participant S as /get_battery_level service
+
+    U->>P: click "Check Battery"
+    P->>P: label = "Checking..."
+    P->>R: getBattery.callService(request)
+    R->>S: forward request
+    alt service responds
+        S-->>R: response (battery_level)
+        R-->>P: success callback(result)
+        P->>P: label = "Battery: X%"
+    else service unavailable/error
+        R-->>P: error callback(error)
+        P->>P: label = "Error reading battery"
+    end
+```
+
 ## Services vs. topics, from the browser's side
 A topic publish or subscribe is a one-way stream with no reply. A service call is a single request that expects exactly one response, which makes it the right tool for "ask a question, get an answer right now" interactions — reading a battery percentage on demand, triggering a one-shot recalibration, toggling a mode. Because a service call is asynchronous over the WebSocket (the response arrives as a separate message some time after the request), you handle it with a callback or a Promise, never as a synchronous return value.
 

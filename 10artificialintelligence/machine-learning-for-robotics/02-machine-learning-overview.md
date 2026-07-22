@@ -2,6 +2,19 @@
 
 This unit is the classical-ML toolbox you'll draw on for the rest of the course: the supervised/unsupervised split, the standard classifiers, how models are actually trained and evaluated, dimensionality reduction, clustering, and a first build-up of neural networks. Nothing here touches a robot yet — the goal is to make later units (where you fit these techniques to LiDAR and camera data) feel like application, not derivation.
 
+The diagram below maps this unit's toolbox: how supervised and unsupervised learning branch into the specific algorithms covered here.
+
+```mermaid
+flowchart TD
+    ML[Machine Learning] --> Sup[Supervised Learning]
+    ML --> Unsup[Unsupervised Learning]
+    Sup --> Class["Classification: Logistic Regression, k-NN, SVM, Decision Trees"]
+    Class --> NN[Neural Networks / MLP]
+    Unsup --> Clust[Clustering: K-Means]
+    Unsup --> DimRed["Dimensionality Reduction: PCA, t-SNE"]
+    DimRed --> Clust
+```
+
 ## Traditional programming vs. machine learning
 In traditional programming you write the rules and the computer produces outputs from inputs: `output = f(input)` where you author `f`. Machine learning inverts this — you supply (input, output) pairs and the algorithm learns an approximation of `f` from data. For robotics this reframing matters because many robot behaviors (e.g., "what steering command given this LiDAR scan") are far easier to demonstrate or record than to derive analytically.
 

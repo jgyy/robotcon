@@ -2,6 +2,24 @@
 
 Every previous unit exercised one capability in isolation — teleop, indoor navigation, outdoor GPS navigation, and grasping. This closing unit asks you to string them into a single mission, which is where the integration bugs (frame mismatches, timing assumptions, state-machine edge cases) that individual units hide tend to surface.
 
+The state diagram below mirrors the `MissionState` enum, showing the mission's happy path alongside the failure transitions each stage must handle.
+
+```mermaid
+stateDiagram-v2
+    [*] --> NAV_TO_DOOR
+    NAV_TO_DOOR --> NAV_OUTDOOR_WAYPOINTS
+    NAV_OUTDOOR_WAYPOINTS --> NAV_TO_OBJECT_SITE
+    NAV_TO_OBJECT_SITE --> DETECT_OBJECT
+    DETECT_OBJECT --> GRASP_OBJECT
+    GRASP_OBJECT --> NAV_HOME
+    NAV_HOME --> DONE
+    DONE --> [*]
+    NAV_TO_DOOR --> FAILED : nav error
+    DETECT_OBJECT --> FAILED : nothing found
+    GRASP_OBJECT --> FAILED : grasp fails
+    FAILED --> [*]
+```
+
 ## The brief
 
 Build a "fetch" mission end to end: RB-Vogui+ starts indoors, navigates out through a door to an outdoor waypoint, then to a second location where an object is placed on a surface within reach of its camera and arm, picks the object up, and returns to its start pose. Each leg reuses a unit you've already built — nothing here should require new navigation or perception techniques, only wiring what exists together and handling the handoffs between stages.

@@ -2,6 +2,17 @@
 
 This unit lays the conceptual groundwork for the whole course: how a web browser — which has no notion of nodes, topics, or DDS/TCPROS — can talk to a running ROS graph in real time, and what the pieces of that bridge look like before you write a single line of HTML.
 
+The diagram below shows how the browser reaches the ROS graph only through the rosbridge WebSocket translation layer.
+
+```mermaid
+flowchart LR
+    Browser["Web Browser<br/>HTML/JS + roslibjs"] <-->|WebSocket JSON<br/>ws://host:9090| Bridge["rosbridge_suite<br/>ROS Node"]
+    Bridge <-->|DDS / TCPROS| Topics[ROS Topics]
+    Bridge <-->|DDS / TCPROS| Services[ROS Services]
+    Bridge <-->|DDS / TCPROS| Params[ROS Parameters]
+    Topics --> Robot[Robot Hardware]
+```
+
 ## Why a browser needs a bridge
 A ROS node communicates over the ROS transport (DDS in ROS 2, the custom TCPROS/UDPROS protocol in ROS 1). A browser, by design, cannot open arbitrary sockets or speak either of those protocols — its only network primitives are HTTP requests and WebSockets. So every web-to-ROS story starts with something that translates ROS graph events into a browser-friendly protocol and back again. That "something" is a bridge server, and the WebSocket is the transport it exposes to the page.
 

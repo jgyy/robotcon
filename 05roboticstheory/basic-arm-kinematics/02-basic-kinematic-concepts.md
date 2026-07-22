@@ -2,6 +2,16 @@
 
 Before you can describe how a robot arm moves, you need a precise language for describing *where things are*. This unit builds that language — rigid bodies, position and orientation, and the homogeneous matrix that packages both into a single object you can chain and invert.
 
+The diagram below shows how a position vector and a rotation matrix combine into one homogeneous transform, and what that transform is then used for:
+
+```mermaid
+flowchart TD
+    P[Position vector p: x, y, z] --> T[Homogeneous transform T 4x4]
+    R[Rotation matrix R 3x3] --> T
+    T --> Chain[Chain transforms: T_total = T1 @ T2]
+    T --> Apply[Transform a point: T @ point]
+```
+
 ## What will you learn in this unit?
 You'll learn to represent the pose (position + orientation) of a rigid body relative to a reference frame, and to combine rotation and translation into one 4x4 homogeneous transformation matrix. This is the single most reused building block in the rest of the course: forward kinematics in Unit 4 is nothing more than multiplying a chain of these matrices together.
 

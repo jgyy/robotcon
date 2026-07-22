@@ -2,6 +2,19 @@
 
 Before you can navigate, follow lines, or plan arm motion, you need fluency with the robot's basic control surface: how to bring it up, drive it, and read back what it's telling you about itself. This unit covers that groundwork.
 
+The diagram below shows how velocity commands and sensor data flow between teleop, your own nodes, the robot, and the tf tree this unit introduces.
+
+```mermaid
+flowchart LR
+    TK[teleop_keyboard] -->|/cmd_vel Twist| Base[Robot Base / Simulation]
+    YN[Your velocity publisher node] -->|/cmd_vel Twist| Base
+    Base -->|/odom| Odom[Odometry]
+    Base -->|/scan| Lidar[LiDAR]
+    Base -->|/imu| IMU[IMU]
+    Base -->|/joint_states| Joints[Joint States]
+    Odom --> TF["tf2 tree: odom -> base_link -> base_scan"]
+```
+
 ## Bringing the robot up
 
 On a real Turtlebot3, bringup means launching the OpenCR firmware bridge and the base drivers so the robot starts publishing sensor data and accepting velocity commands:

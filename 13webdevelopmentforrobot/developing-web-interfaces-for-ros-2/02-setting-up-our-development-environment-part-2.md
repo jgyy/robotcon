@@ -2,6 +2,19 @@
 
 With a styled static page in place, this unit adds the piece that makes a web page dynamic — JavaScript — and introduces Vue.js, the framework you'll use to keep ROS data and page content in sync without hand-writing DOM updates everywhere.
 
+The diagram below shows how a script gets loaded and how Vue's reactivity then keeps the DOM in sync with state automatically, instead of manual `textContent` updates.
+
+```mermaid
+flowchart LR
+    JS[External JS file loaded before /body] --> DOM[DOMContentLoaded fires]
+    DOM --> Mount[Vue app mounted]
+    Mount --> Ref[ref creates reactive state]
+    Data[State changes, e.g. message.value = ...] --> Ref
+    Ref --> Bind[Template binding message]
+    Bind --> Render[DOM re-renders automatically]
+    DOM -.debug with.-> Debug[DevTools: Console / Sources / Network]
+```
+
 ## Embedding JavaScript in your page
 JavaScript reaches a page in three ways: inline in an attribute (avoid this — hard to maintain), inside a `<script>` block, or as a linked external file. For anything beyond a one-liner, use an external file loaded near the end of `<body>` so the DOM exists before your script runs:
 

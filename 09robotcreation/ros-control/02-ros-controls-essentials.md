@@ -2,6 +2,21 @@
 
 Before configuring or writing anything, you need a solid picture of the moving parts inside `ros_control`/`ros2_control` and how they talk to each other. This unit walks through each actor in the pipeline in isolation.
 
+The sequence diagram below shows one iteration of the fixed-rate read/update/write loop the controller manager drives between hardware and controllers.
+
+```mermaid
+sequenceDiagram
+    participant HW as Hardware Interface
+    participant CM as Controller Manager
+    participant C as Controller
+    loop Fixed-rate update cycle
+        CM->>HW: read() state interfaces
+        CM->>C: update(time, period)
+        C-->>CM: writes command interfaces
+        CM->>HW: write() command interfaces
+    end
+```
+
 ## The controller manager
 The controller manager is the central coordinator. On startup it:
 

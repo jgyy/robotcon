@@ -2,6 +2,22 @@
 
 With the base able to drive itself around, this unit turns to the arm: getting a MoveIt configuration package built for your specific manipulator so that motion planning — computing collision-free joint trajectories — becomes available as a service other nodes can call. Part 2 will drive this from Python; this unit is about getting the config right first.
 
+The diagram below shows how the Setup Assistant wizard turns your robot's URDF into the generated config files, which you then verify interactively before any code calls into them.
+
+```mermaid
+flowchart TD
+    URDF[Robot URDF / Xacro] --> Wizard[MoveIt Setup Assistant]
+    Wizard --> SRDF[SRDF: planning groups,<br/>named poses, collision matrix]
+    Wizard --> Kinematics[kinematics.yaml]
+    Wizard --> JointLimits[joint_limits.yaml]
+    Wizard --> Controllers[controllers.yaml]
+    SRDF --> Demo[RViz Demo Launch]
+    Kinematics --> Demo
+    JointLimits --> Demo
+    Controllers --> Demo
+    Demo --> Verify{Plan succeeds<br/>and looks sensible?}
+```
+
 ## What MoveIt actually does
 
 MoveIt is a motion-planning framework, not a planner itself — it wraps pluggable planning libraries (commonly OMPL) behind a consistent interface, and adds the surrounding machinery a real arm needs:

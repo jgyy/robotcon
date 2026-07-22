@@ -2,6 +2,17 @@
 
 Dynamic programming (DP) is what you use when you have a complete, known model of the environment — the transition probabilities `P(s'|s,a)` and reward function `R(s,a,s')` from Unit 2 are fully known in advance. That's rarely true for a real robot, but DP is still worth mastering first: it computes the *exact* solution to an MDP, giving you a ground truth to check the approximate, model-free methods of Units 4 and 5 against.
 
+The diagram below shows the policy iteration loop: evaluate the current policy, improve it greedily, and repeat until it stops changing.
+
+```mermaid
+flowchart TD
+    Start["Initialize arbitrary policy π"] --> Eval["Policy Evaluation: compute V^π via Bellman update"]
+    Eval --> Improve["Policy Improvement: make π greedy w.r.t. V^π"]
+    Improve --> Changed{"Policy changed?"}
+    Changed -->|Yes| Eval
+    Changed -->|No| Optimal["π* and V* found"]
+```
+
 ## Why DP applies to MDPs
 DP solves problems by breaking them into overlapping subproblems and reusing solutions — and the Bellman equation from Unit 2 is exactly that kind of recursive decomposition: the value of a state is defined in terms of the values of its successor states. Because the state space of a robot's MDP is typically finite (a grid, a discretized configuration space, a set of task modes), you can represent `V(s)` or `Q(s,a)` as a table and update every entry using the values already sitting in the rest of the table.
 

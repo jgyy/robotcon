@@ -2,6 +2,20 @@
 
 This unit sets expectations for the course: what ROS 2 is, how it differs from ROS 1 if you're coming from there, what you need installed, and the running example (a simulated planetary rover) that later units build on.
 
+The diagram below contrasts ROS 1's centralized-master discovery with ROS 2's masterless, DDS-based discovery — the single biggest architectural difference driving everything else in this course.
+
+```mermaid
+flowchart LR
+    subgraph ROS1["ROS 1"]
+        M1[roscore master] --- N1a[Node A]
+        M1 --- N1b[Node B]
+        N1a -.blocked without master.- N1b
+    end
+    subgraph ROS2["ROS 2"]
+        N2a[Node A] <-->|DDS discovery, no master| N2b[Node B]
+    end
+```
+
 ## Why ROS 2, and why C++
 
 ROS (Robot Operating System) is not an operating system — it's a middleware and a set of conventions for building robot software out of communicating processes ("nodes"). ROS 2 is a from-scratch redesign of ROS 1 built on top of DDS (Data Distribution Service), an industrial pub/sub standard. The practical consequences you'll feel throughout this course:

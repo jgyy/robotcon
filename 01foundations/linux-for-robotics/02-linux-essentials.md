@@ -2,6 +2,18 @@
 
 This is where you start actually typing commands. You'll learn to navigate and manipulate the filesystem, and you'll kick off the course's running final project: a directory tree that stands in for a real robot software workspace.
 
+The diagram below shows the workspace directory tree you'll build up over this unit's exercises, mirroring the layout of a real robot software package.
+
+```mermaid
+flowchart TD
+    WS["~/robot_ws"] --> SRC[src/]
+    SRC --> BRINGUP[my_robot_bringup/]
+    SRC --> DESC[my_robot_description/]
+    BRINGUP --> LAUNCH[launch/]
+    BRINGUP --> CONFIG[config/]
+    BRINGUP --> README[README.md]
+```
+
 ## Setting up your workspace
 Robot software projects almost always live in a "workspace" — a top-level directory holding source packages, build artifacts, and configuration. You don't need ROS installed to practice the shape of this; create it by hand:
 

@@ -2,6 +2,17 @@
 
 This course builds real-world autonomy on Clearpath Robotics' Jackal UGV: understanding the platform and its sensors, navigating indoors with a self-built map, navigating outdoors with GPS, detecting and localizing people with both the laser and the stereo camera, and finally combining all of it into a reactive patrol robot. Work through the units in order — each one leans on interfaces and code introduced in the units before it.
 
+The diagram below shows how each unit's skills build directly on the one before it, culminating in the capstone patrol project and the wrap-up unit.
+
+```mermaid
+flowchart TD
+    U0[Unit 0: Introducing Jackal] --> U1[Unit 1: Navigation Indoor]
+    U1 --> U2[Unit 2: Outdoor Navigation]
+    U2 --> U3[Unit 3: Detect and Localise a Person]
+    U3 --> U4[Patrol Micro Project]
+    U4 --> U5[I Have Finished, Now What?]
+```
+
 1. [Unit 0: Introducing ClearPath Jackal Robot](01-unit-0-introducing-clearpath-jackal-robot.md) — Jackal's hardware, sensors, ROS topics/TFs, and safe simulation-first operating basics.
 2. [Unit 1: Navigation Indoor](02-unit-1-navigation-indoor.md) — Build a map with SLAM, configure costmaps, localize with AMCL, and send navigation goals.
 3. [Unit 2: Set Outdoors Navigation](03-unit-2-set-outdoors-navigation.md) — Fuse GPS, IMU, and odometry to navigate outdoors from raw GPS waypoints.

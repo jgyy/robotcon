@@ -2,6 +2,27 @@
 
 Before you can build anything with Docker, you need fluency with its core objects — images and containers — and the everyday commands for pulling, running, and inspecting them.
 
+The diagram below traces the everyday `pull`/`run`/`exec`/`logs` workflow as a sequence of commands between you, the Docker CLI, and a running container.
+
+```mermaid
+sequenceDiagram
+    participant U as You
+    participant D as Docker CLI
+    participant Reg as Docker Hub
+    participant C as Container
+    U->>D: docker pull osrf/ros:humble-desktop
+    D->>Reg: fetch image layers
+    Reg-->>D: image stored locally
+    U->>D: docker run -d --name webserver ...
+    D->>C: create + start container
+    U->>C: docker exec -it webserver bash
+    C-->>U: interactive shell
+    U->>D: docker logs webserver
+    D-->>U: stdout/stderr
+    U->>D: docker stop / docker rm
+    D->>C: stop and remove
+```
+
 ## Images vs. containers
 An **image** is a read-only template: a snapshot of a filesystem plus metadata (default command, exposed ports, environment variables). A **container** is a running (or stopped) instance of an image, with its own writable layer on top. This is the same relationship as a class and an object — you can start many containers from one image, and each one is isolated from the others.
 

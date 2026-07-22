@@ -2,6 +2,15 @@
 
 Robot kinematics is what lets you translate between "these joint angles" and "the end effector is here, facing this way" — the foundation every manipulation task, trajectory, and motion planner (including tools like MoveIt) is built on. This course develops that translation from first principles: starting with how to represent a rigid body's position and orientation, moving through the Denavit-Hartenberg convention for systematically framing an arbitrary robot arm, and finishing by deriving both forward kinematics (joint angles to pose) and inverse kinematics (pose to joint angles) for a simple planar arm, complete with a working Python solver driving a simulated trajectory.
 
+The units build in strict dependency order, each one supplying the tools the next unit needs:
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Course Introduction] --> U2[Unit 2: Basic Kinematic Concepts]
+    U2 --> U3[Unit 3: Denavit-Hartenberg]
+    U3 --> U4[Unit 4: Forward and Inverse Kinematics]
+```
+
 1. [Course Introduction](01-course-introduction.md) — A brief introduction to the course contents, with a practical FK demo and the course's requirements.
 2. [Basic Kinematic Concepts](02-basic-kinematic-concepts.md) — Rigid bodies, position and orientation, and rotation/translation via homogeneous matrices.
 3. [Denavit Hartenberg](03-denavit-hartenberg.md) — The DH convention for systematically framing and parameterizing a robot's joints and links.

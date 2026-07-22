@@ -2,6 +2,18 @@
 
 So far Docker has been mostly about running finished software. This unit flips that around: using Docker as your everyday development environment, so your editor, debugger, and shell all run against the exact same environment your code will eventually ship in.
 
+The diagram below walks through the dev container workflow, highlighting how the bind-mounted source lets you loop back to editing without rebuilding the image.
+
+```mermaid
+flowchart TD
+    A[Open project in editor] --> B[Editor detects devcontainer.json]
+    B --> C[Build or pull image]
+    C --> D[Start container + bind-mount source]
+    D --> E[Install extensions inside container]
+    E --> F[Edit, colcon build, debug via editor UI]
+    F -->|instant, no rebuild| D
+```
+
 ## Why develop inside a container
 Without dev containers, you either install ROS and every dependency directly on your host (which can conflict with other projects or your OS's own packages), or you build inside a container but edit code outside it and constantly rebuild the image to test a one-line change — slow and disruptive to a normal edit-debug loop. A dev container solves this by mounting your live source tree into a running container and pointing your editor at that container's toolchain, so edits are instant and the build/runtime environment is still fully containerized and reproducible.
 

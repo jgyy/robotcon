@@ -2,6 +2,23 @@
 
 Topics are the wrong tool when you need a direct answer to a specific question — "what's the current map resolution," "please recalculate this transform." That's what services are for. This unit covers calling one; the next covers building one.
 
+The sequence below shows a client waiting for the service to appear, sending a request, and blocking on the future until the response resolves.
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Service (add_two_ints)
+    loop until available
+        C->>S: wait_for_service
+    end
+    C->>S: async_send_request(a, b)
+    activate S
+    S-->>C: future (pending)
+    S->>C: response (sum)
+    deactivate S
+    Note over C: spin_until_future_complete blocks<br/>until future resolves or fails
+```
+
 ## Request/response versus publish/subscribe
 A service is a synchronous(-feeling) remote procedure call: a client sends a **request** message and receives exactly one **response** message back, addressed specifically to that client — nothing like a topic's many-to-many broadcast. Use a service when the interaction is "ask once, get one answer" and the work is short (milliseconds, not seconds); for anything long-running, cancellable, or that needs progress updates, use an action (Units 9-10) instead. A common beginner mistake is using a service for something that takes tens of seconds — the calling code blocks or has to manage timeouts awkwardly, which is exactly the problem actions solve.
 

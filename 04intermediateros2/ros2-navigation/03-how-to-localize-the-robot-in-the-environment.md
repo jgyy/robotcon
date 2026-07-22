@@ -2,6 +2,19 @@
 
 A saved map is only useful once the robot can figure out where it sits inside it. This unit covers AMCL, the probabilistic localizer Nav2 uses by default, how to launch and tune it, and the three ways to tell it where the robot starts.
 
+The diagram below shows AMCL's continuous particle-filter cycle that turns odometry and laser scans into a converged pose estimate.
+
+```mermaid
+flowchart TD
+    Init[Seed initial pose] --> Particles[Particle cloud x, y, theta]
+    Particles --> Motion[Odometry update: move each particle]
+    Motion --> Scan[Laser scan: score each particle against map]
+    Scan --> Resample[Resample by weight]
+    Resample --> Converge{Cloud converged?}
+    Converge -->|No| Motion
+    Converge -->|Yes| Pose[amcl_pose + map to odom TF]
+```
+
 ## AMCL: adaptive Monte Carlo localization
 
 AMCL is a **particle filter** localizer. It represents "where the robot might be" as a cloud of thousands of weighted pose hypotheses (particles), each a guess at `(x, y, θ)`. On every odometry update, every particle is moved by the same estimated motion (plus injected noise, since odometry drifts). On every laser scan, each particle's hypothesis is scored by how well the scan would match the map *if the robot were really there* — particles that predict the scan well get higher weight. Particles are then resampled proportional to weight, so the cloud converges around the poses that best explain both the motion history and the sensor data. "Adaptive" refers to AMCL dynamically shrinking or growing the number of particles based on how confident (converged) the estimate currently is, trading accuracy for compute.

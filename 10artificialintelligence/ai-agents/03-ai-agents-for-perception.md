@@ -2,6 +2,19 @@
 
 Before an agent can reason about the world, it needs the world turned into something reason-able: structured facts rather than raw pixels or point clouds. This unit covers how perception feeds an agent's decision loop, using vision and lidar as the two running examples.
 
+The diagram below shows how the two sensor pipelines are fused into the single state dict the agent reasons over.
+
+```mermaid
+flowchart LR
+    Cam[Camera frame] --> Det[Object detector / VLM]
+    Det --> VFacts[Vision facts: objects, num_people]
+    Lidar[Lidar point cloud] --> Clust[Cluster into occupancy grid]
+    Clust --> LFacts[Lidar facts: occupied_cells, nearest_obstacle_m]
+    VFacts --> State[Merged state dict]
+    LFacts --> State
+    State --> Agent[Agent reasoning / LLM]
+```
+
 ## From raw sensor data to structured facts
 A camera frame is a few million numbers; an LLM-driven agent can't (and shouldn't) reason directly over raw pixels in every decision cycle. The standard pattern is a **perception pipeline** that compresses raw sensor data into a small set of labeled facts, which then become the "state" the agent reasons over — the same `state` dict from Unit 2, just populated by real sensors instead of hard-coded values.
 

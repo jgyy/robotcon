@@ -2,6 +2,16 @@
 
 A* is the algorithm most people reach for first in real path-planning code, because it keeps Dijkstra's optimality guarantee while cutting the wasted exploration you measured in Unit 2. This unit builds up to it via heuristics and Greedy Best-First Search, so you understand exactly what A* is trading off.
 
+The diagram below contrasts the three priority functions this unit builds up through, and what each one costs or buys you.
+```mermaid
+flowchart TD
+    Dijkstra["Dijkstra: priority = g(n) cost-so-far only"] --> Slow[Explores in all directions: optimal but slow]
+    Greedy["Greedy Best-First: priority = h(n) heuristic only"] --> Fast[Beelines toward goal: fast but not optimal]
+    AStar["A*: priority = f(n) = g(n) + h(n)"] --> Adm{Heuristic admissible?}
+    Adm -->|Yes| Optimal[Optimal path, far fewer nodes expanded than Dijkstra]
+    Adm -->|No| Sub[Fast but suboptimal path]
+```
+
 ## Informed search and heuristics
 Dijkstra is "uninformed" — it only knows the cost accumulated so far, `g(n)`. An *informed* search additionally uses a heuristic function `h(n)` that estimates the remaining cost from node `n` to the goal, letting the search prioritize nodes that seem to be heading in the right direction. The two most common grid heuristics are:
 - **Euclidean distance**: `h(n) = sqrt((nx-gx)^2 + (ny-gy)^2)` — straight-line distance, appropriate when the robot can move in any direction.

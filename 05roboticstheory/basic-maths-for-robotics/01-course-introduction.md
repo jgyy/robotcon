@@ -2,6 +2,18 @@
 
 This unit is the map before the journey: it explains why a robotics developer needs linear algebra, calculus, and probability, what you'll build hands-on, and what to have installed before Unit 2 starts.
 
+The diagram below shows how each of the course's three math pillars feeds a different capability in the robotics stack.
+
+```mermaid
+flowchart LR
+    LA[Linear Algebra] --> POS[Positions, Orientations & Transforms]
+    CALC[Calculus] --> MOT[Motion & Optimization]
+    PROB[Probability] --> UNC[Noisy Sensors & State Estimates]
+    POS --> ROBOT[Robotics Stack: Kinematics, Control, Perception, Planning]
+    MOT --> ROBOT
+    UNC --> ROBOT
+```
+
 ## What is this course about?
 A robot is, mathematically, a system that turns numbers (sensor readings) into other numbers (motor commands) while respecting the geometry of the physical world it lives in. Every layer of the stack you'll eventually touch — kinematics, control, perception, path planning, SLAM — is built on the same three mathematical pillars: **linear algebra** (representing positions, orientations, and transformations as vectors and matrices), **calculus** (relating position, velocity, and acceleration, and finding optimal parameters via derivatives), and **probability** (reasoning about noisy sensors and uncertain state estimates). This course does not aim to make you a mathematician; it aims to make each of these tools feel like something you reach for on purpose, because you recognize the shape of the problem.
 

@@ -2,6 +2,17 @@
 
 A build that only compiles code is a weak safety net. This unit covers running your test suite as part of a Jenkins build and, critically, getting Jenkins to understand and surface the results rather than just the raw exit code.
 
+The diagram below shows how Jenkins arrives at Success, Unstable, or Failed depending on where in the pipeline something goes wrong.
+
+```mermaid
+flowchart TD
+    A["Test step (e.g. pytest --junitxml)"] --> B[junit post step<br/>parses JUnit XML]
+    B --> C{Any tests failed?}
+    C -->|No| D[Build: Success]
+    C -->|Yes| E[Build: Unstable]
+    F[Uncaught non-zero exit code<br/>before junit step runs] --> G[Build: Failed]
+```
+
 ## Running tests as a build step
 The simplest form is just invoking your test runner from a shell step, same as any local run:
 

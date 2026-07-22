@@ -2,6 +2,24 @@
 
 Unit 5 built a fleet adapter skeleton with stubbed-out movement. This unit fills in real navigation by connecting the adapter to the ROS 2 Navigation stack (Nav2), which is the most common target for robots that already run ROS 2 natively.
 
+The sequence below shows the timing between the adapter, the Nav2 action server, and the AMCL pose feed that together implement `navigate()`, feedback, and cancellation.
+
+```mermaid
+sequenceDiagram
+    participant FA as Fleet Adapter (RobotAPI)
+    participant Nav2 as Nav2 Action Server
+    participant AMCL as /amcl_pose
+    FA->>Nav2: send_goal_async(NavigateToPose)
+    Nav2-->>FA: goal accepted
+    loop while navigating
+        Nav2--)FA: feedback_callback
+        AMCL--)FA: pose updates
+    end
+    Nav2-->>FA: result (goal reached)
+    FA->>FA: _nav_done = True
+    Note over FA,Nav2: stop() cancels via cancel_goal_async() if preempted
+```
+
 ## Why Nav2 integration is different from a generic robot API
 
 If your robot already runs Nav2, you don't need to invent a custom motion protocol — you can have your `RobotAPI` implementation call Nav2's own action interface directly. This is the more "ROS 2-native" version of the pattern from Unit 5, where instead of wrapping a vendor SDK, you're wrapping `NavigateToPose`.

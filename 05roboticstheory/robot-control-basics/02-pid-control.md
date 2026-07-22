@@ -2,6 +2,23 @@
 
 Proportional-Integral-Derivative (PID) control is the workhorse feedback law behind most single-joint robot controllers, from hobby servos to industrial arm joint controllers. This unit builds PID up term by term against the dynamics of a 2DOF robotic arm so you understand not just the formula but why each term exists.
 
+The diagram below shows how the P, I, and D terms each read the same error signal and sum together into the torque command that closes the loop around the robot.
+
+```mermaid
+flowchart LR
+    SP[Desired q] --> ERR((Error e))
+    ACT[Actual q] --> ERR
+    ERR --> P[P: Kp * e]
+    ERR --> I["I: Ki * integral(e) dt"]
+    ERR --> D[D: Kd * de/dt]
+    P --> SUM((sum))
+    I --> SUM
+    D --> SUM
+    SUM --> TAU[tau command]
+    TAU --> ROBOT[Robot / Arm Dynamics]
+    ROBOT --> ACT
+```
+
 ## Robot dynamics review
 Any rigid-link manipulator obeys an equation of motion of the general form:
 

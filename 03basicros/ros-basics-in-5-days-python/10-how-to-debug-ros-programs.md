@@ -2,6 +2,19 @@
 
 Everything so far assumed your nodes behave. They won't always. This closing unit covers the tools ROS gives you for figuring out *why* — reading logs, inspecting live topic data, visualizing the node graph, recording data for offline analysis, and viewing 3D robot state in RViz.
 
+The flowchart below shows a typical order for reaching into this unit's toolbox when something's wrong, from a first log check through to a recorded, replayable trace of the failure.
+
+```mermaid
+flowchart TD
+    Problem[Something's wrong] --> Console[rqt_console: filter logs by node/severity]
+    Console --> Wiring{Wiring or data issue?}
+    Wiring -->|Wiring| Graph[rqt_graph: inspect node connections]
+    Wiring -->|Data| Plot[rqt_plot: graph a numeric field live]
+    Graph --> Bag[ros2 bag record: capture traffic for replay]
+    Plot --> Bag
+    Bag --> RViz[RViz: visualize 3D robot state]
+```
+
 ## ROS debugging messages
 
 `self.get_logger()` (used throughout this course) isn't just a `print()` replacement — it supports severity levels, which matters once a node is producing dozens of log lines per second:

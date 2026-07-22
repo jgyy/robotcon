@@ -2,6 +2,15 @@
 
 Theory becomes concrete when you look at a real, widely-deployed robot's network topology — this unit walks through the TurtleBot 4 as a worked example of DDS decisions that matter in practice.
 
+The diagram below shows the two network hops a TurtleBot 4's discovery traffic must cross, with the failure mode most associated with each hop.
+
+```mermaid
+flowchart LR
+  Base[Create 3 Base] <-->|"Ethernet-over-USB / WiFi (ROS_DOMAIN_ID must match)"| Pi[Raspberry Pi Payload]
+  Pi <-->|"Lab WiFi (multicast may be filtered)"| AP[WiFi Access Point]
+  AP <-->|"AP client isolation can block peer traffic"| Laptop[Operator Laptop]
+```
+
 ## Why TurtleBot 4 is a useful case study
 The TurtleBot 4 (built on the iRobot Create 3 base with a Raspberry Pi compute module, running ROS 2) is a common reference platform precisely because its network setup exposes the same problems you'll hit on any real robot: it has multiple compute nodes talking over both an internal link and WiFi to an operator's laptop, it's expected to be discoverable on a shared lab network with other robots, and it ships with an opinionated default DDS configuration (Cyclone DDS) that you'll want to understand rather than fight.
 

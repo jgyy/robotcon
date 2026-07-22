@@ -2,6 +2,18 @@
 
 Raw `sensor_msgs/Image` data is uncompressed and far too large to push through rosbridge's JSON WebSocket at a usable frame rate, so this unit covers the actual architecture used to get a live camera feed into a browser efficiently.
 
+The diagram below contrasts the two video paths this unit covers: MJPEG over plain HTTP via `web_video_server`, versus compressed images relayed through rosbridge as base64 JSON.
+
+```mermaid
+flowchart LR
+    Cam[/camera/image_raw] --> WVS[web_video_server]
+    WVS -->|MJPEG over HTTP :8080| ImgTag[img tag: src = stream URL]
+
+    Cam --> Comp[/camera/image_raw/compressed]
+    Comp -->|CompressedImage over rosbridge| RJS[roslibjs Topic.subscribe]
+    RJS -->|base64 JPEG in JSON| DataURI[img.src = data:image/jpeg;base64,...]
+```
+
 ## Video streaming architecture
 There are two common paths, and it's important to know which one you're using because they have very different performance characteristics.
 

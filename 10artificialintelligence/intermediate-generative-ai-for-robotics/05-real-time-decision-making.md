@@ -2,6 +2,19 @@
 
 Where Unit 4 used a transformer for offline-style object detection, this unit puts a transformer directly in the rover's real-time control loop. Vision Transformers (ViT) let the rover reason globally about a scene fast enough to reactively steer around obstacles, and combining that with Lidar gives the system a sensor-fusion safety net.
 
+The diagram below shows the "ViT proposes, Lidar can veto" decision logic that fuses the learned policy with a hard safety constraint:
+
+```mermaid
+flowchart TD
+    IMG["Camera image"] --> PATCH["Split into 16x16 patches"] --> VIT["ViT encoder + CLS token"]
+    VIT --> PRED["Predicted linear_x, angular_z"]
+    LIDAR["Lidar scan"] --> CHECK{"min range <<br/>SAFETY_THRESHOLD?"}
+    PRED --> CHECK
+    CHECK -->|No| PUBLISH["Publish ViT-predicted /cmd_vel"]
+    CHECK -->|Yes| OVERRIDE["Lidar overrides:<br/>steer away, slow down"]
+    OVERRIDE --> PUBLISH
+```
+
 ## What are Vision Transformers
 A Vision Transformer applies the same self-attention machinery from Unit 4 directly to images, with one key adaptation: instead of feeding individual pixels (which would make the sequence length enormous), the image is split into fixed-size **patches** — typically 16x16 pixels — each of which is flattened and linearly projected into an embedding, exactly like a "token" in a text transformer:
 ```python

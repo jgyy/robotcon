@@ -2,6 +2,19 @@
 
 Robots that share space with people need to notice them specifically, not just as generic obstacles. This unit applies the image-processing skills from Unit 3 to three progressively richer people-perception tasks: detecting faces, recognizing whose face it is, and tracking a person as they move.
 
+The flow below traces a frame through detection, recognition, and tracking — the three composing capabilities this unit builds.
+
+```mermaid
+flowchart LR
+    A["Camera frame"] --> B["Haar cascade face detection"]
+    B --> C["Crop + embedding extraction"]
+    C --> D{"Match in known-faces DB?"}
+    D -->|Yes, within threshold| E["Identity assigned"]
+    D -->|No| F["Labeled 'unknown'"]
+    E --> G["Tracker (CSRT/KCF) acquires target"]
+    G --> H["Proportional steering toward target"]
+```
+
 ## Face and eye detection with Haar cascades
 Haar cascade classifiers are a fast, classical (pre-deep-learning) object detector: they slide a window across the image at multiple scales and test each window against a cascade of simple rectangular-contrast features, rejecting non-matches early so most of the image is discarded cheaply. OpenCV ships pretrained cascades for frontal faces and eyes, which is why this remains a good starting point even in a deep-learning-heavy course — it's lightweight enough to run in real time on modest hardware with no GPU and no training step.
 

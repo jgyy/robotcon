@@ -2,6 +2,20 @@
 
 A job (also called a "project" in the UI) is the fundamental unit of work in Jenkins — a named, configured task that Jenkins can run on demand, on a schedule, or in response to a trigger. This unit gets your first job running end to end.
 
+The diagram below shows how a Freestyle job goes from configuration to a Success/Failed result, since the build's status is decided entirely by the exit code of its last step.
+
+```mermaid
+flowchart TD
+    A[New Item → Freestyle project] --> B[Configure: SCM, Triggers,<br/>Build Steps, Post-build Actions]
+    B --> C[Click Build Now]
+    C --> D[Executor runs<br/>Execute shell step]
+    D --> E{Shell exit code}
+    E -->|0| F[Build: Success]
+    E -->|non-zero| G[Build: Failed]
+    F --> H[Console Output shows<br/>full stdout/stderr]
+    G --> H
+```
+
 ## Job types
 Jenkins ships with several job types under "New Item":
 

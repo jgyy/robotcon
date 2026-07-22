@@ -2,6 +2,18 @@
 
 Before writing a single line of navigation or manipulation code you need a mental model of what the RB-Vogui+ actually is: what hardware it carries, how that hardware shows up in ROS, and how to safely get it moving. This unit is the platform tour and first teleop demo that every later unit builds on.
 
+The diagram below sketches how the platform's hardware subsystems map onto the ROS interface you'll actually program against.
+
+```mermaid
+flowchart LR
+    LOCO[Locomotion: 4 wheels] -->|cmd_vel Twist| ROS[ROS 2 Interface]
+    SENSE[Sensing: lidar, IMU, camera, GPS] -->|sensor topics| ROS
+    COMPUTE[Onboard PC] --- ROS
+    DECK[Payload deck] -.mounts.-> ARM[Manipulator - Unit 2]
+    ROS --> ODOMTF[odom + TF tree]
+    ROS --> TELEOP[teleop_twist_keyboard]
+```
+
 ## What the RB-Vogui+ is
 
 RB-Vogui+ is Robotnik's mid-size mobile platform designed to work both indoors and outdoors, which is the defining trait that shapes the whole course: it needs a localization and navigation strategy that works without walls to bounce a lidar off of, and it needs enough payload and a flat mounting deck to carry a manipulator arm and perception sensors. Key things worth knowing before you touch the robot:

@@ -2,6 +2,20 @@
 
 HTML is the structural language every browser reads — the skeleton that CSS later styles and JavaScript later animates. This unit covers the elements you'll actually use to lay out a robot control panel, and gets your very first Rosbridge connection working.
 
+The diagram below shows how a page's HTML is really a tree of nested elements — the structure CSS and JavaScript will later target by id.
+
+```mermaid
+flowchart TD
+    HTML[html] --> HEAD[head]
+    HTML --> BODY[body]
+    HEAD --> META[meta charset]
+    HEAD --> TITLE[title]
+    BODY --> H1[h1: Robot Panel]
+    BODY --> P[p: status]
+    BODY --> BTN[button: Stop]
+    BODY --> TABLE[table: sensor readings]
+```
+
 ## What is HTML?
 HTML (HyperText Markup Language) describes a document as a tree of nested elements, each tagged with what it *is* — a heading, a paragraph, a button, a list — rather than how it should look. That separation of concerns (structure in HTML, appearance in CSS, behavior in JavaScript) is deliberate and worth internalizing now: it's what lets you restyle an entire robot panel in Unit 5 without touching a single tag here.
 

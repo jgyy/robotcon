@@ -2,6 +2,26 @@
 
 CartPole is the "hello world" of `openai_ros`: a cart that slides on a rail with a pole hinged on top, simulated in Gazebo. This unit walks the full workflow end to end — simulation, `RobotEnv`, `TaskEnv`, registration, and a minimal training loop — so that by the end you can trace any call in `env.step()` back to the ROS message it produces.
 
+The sequence below traces a single `env.step()` call down through `TaskEnv` and `RobotEnv` to the ROS/Gazebo message exchange and back.
+
+```mermaid
+sequenceDiagram
+    participant Agent as RL Algorithm
+    participant Task as CartPoleStayUpEnv (TaskEnv)
+    participant Robot as CartPoleEnv (RobotEnv)
+    participant ROS as ROS Topic
+    participant Gazebo
+
+    Agent->>Task: env.step(action)
+    Task->>Robot: move_joints(effort)
+    Robot->>ROS: publish Float64 to controller topic
+    ROS->>Gazebo: apply effort
+    Gazebo->>ROS: /joint_states updated
+    ROS->>Robot: _joints_callback(msg)
+    Task->>Robot: read self.joints
+    Task-->>Agent: obs, reward, done, info
+```
+
 ## The CartPole simulation and its ROS interfaces
 
 The Gazebo world spawns a cart-and-pole model with two joints: a prismatic (sliding) joint for the cart on its rail, and a revolute joint for the pole. Like any Gazebo robot, its state is published on `/joint_states` (position and velocity of both joints) and it's driven by publishing effort or velocity commands to a controller topic — typically something like `/cartpole_v0/foot_joint_velocity_controller/command`. Everything above this — Gym, the algorithm — never sees these topic names directly; they're encapsulated one layer down.

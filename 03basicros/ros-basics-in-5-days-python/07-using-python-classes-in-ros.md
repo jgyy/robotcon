@@ -2,6 +2,17 @@
 
 Every example so far has already used a class without dwelling on why. This unit makes that choice explicit: how object-oriented structure maps onto ROS nodes, and what you gain (and could lose) by using it well.
 
+The diagram below shows the `PatrolNode` example: three separate ROS interfaces (a subscription, a publisher, a service) all reading and writing the same shared instance state instead of talking to each other directly.
+
+```mermaid
+flowchart TD
+    OdomTopic[/odom topic/] --> OdomCb[odom_callback]
+    StopSrv[/stop_patrol service/] --> StopCb[stop_callback]
+    OdomCb <--> State[self.patrolling / self.last_position]
+    StopCb <--> State
+    OdomCb --> CmdPub[cmd_vel publisher]
+```
+
 ## Object-oriented programming in the context of ROS
 
 You already know OOP — this isn't a Python tutorial. The relevant point is *why* ROS's client libraries (`rclpy`) are built around subclassing `Node`. A ROS node typically needs to hold onto state across many independent callback invocations: a publisher handle, a subscription handle, counters, cached sensor readings, configuration values. A plain function has no natural place to keep that state between calls; a class instance does, via `self`. So the idiomatic ROS pattern is: one class per node, `__init__` sets up publishers/subscribers/services/timers and initializes state, and instance methods serve as the callbacks that mutate that state over the node's lifetime.

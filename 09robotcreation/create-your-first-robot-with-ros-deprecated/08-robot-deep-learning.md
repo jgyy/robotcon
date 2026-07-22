@@ -2,6 +2,19 @@
 
 The final unit replaces the hand-tuned line-follower from Unit 6 with a learned one: a neural network trained on your robot's own camera images to predict steering commands directly, following lanes without any explicit threshold-and-contour logic.
 
+The flowchart below traces the behavior-cloning pipeline from manual demonstration driving to the trained model steering the robot through the same `/cmd_vel` interface as Units 6 and 7.
+
+```mermaid
+flowchart TD
+    A[Teleop Driving] --> B["Record (image, steering) pairs"]
+    B --> C[Training Dataset]
+    C --> D[Train CNN - LaneFollower]
+    D --> E[Trained Model]
+    E --> F[ROS Node: Camera In]
+    F --> G["Model predicts angular.z"]
+    G --> H[Publish /cmd_vel]
+```
+
 ## Why learn the controller instead of hand-coding it
 The Unit 6 line follower worked because the environment was simple enough (a single high-contrast line) that a hand-written threshold pipeline could reliably extract the signal you needed. Real lanes — road-like markings, varying widths, curves, forks — are harder to describe with fixed rules but easy for a human to *demonstrate*. Behavior cloning exploits this: instead of writing the perception logic yourself, you drive the robot manually while recording (image, steering command) pairs, then train a model to imitate that mapping. The model becomes your new controller.
 

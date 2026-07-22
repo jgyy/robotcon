@@ -2,6 +2,19 @@
 
 This is the core workflow of the whole course, built once end to end at its simplest: capture labeled images from simulation, turn them into a Keras-ready dataset, fine-tune a pretrained network to regress 3D position, and check that it actually learned something. Every later unit is a variation on this same loop.
 
+The diagram below lays out this core loop — every later unit repeats this same shape with a twist.
+
+```mermaid
+flowchart TD
+    A[Collect labeled frames from Gazebo] --> B["Build tf.data dataset<br/>224x224 images + XYZ labels"]
+    B --> C["Load MobileNetV2<br/>frozen backbone"]
+    C --> D["Add regression head<br/>Dense -> XYZ"]
+    D --> E[Train & validate]
+    E --> F{val_mae low and<br/>plateaued?}
+    F -->|yes| G[Save spam_locator_v1.h5]
+    F -->|no, keep training| E
+```
+
 ## Generating training data from simulation
 You cannot hand-label thousands of images with 3D coordinates — instead, you let the simulator tell you the ground truth. Gazebo (or any simulator that exposes model poses, e.g. via a `/gazebo/get_entity_state`-style service or topic) knows the exact XYZ of every object in the world, so a data-collection node just needs to pair each camera frame with the object's simulated pose at that instant:
 

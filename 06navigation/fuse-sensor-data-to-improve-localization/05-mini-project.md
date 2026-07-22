@@ -2,6 +2,25 @@
 
 This closing unit asks you to assemble everything from Units 2-4 into one working localization stack and to actually validate that it performs better than any single sensor alone — proving the fusion, not just wiring it up.
 
+The diagram below shows the full pipeline you are assembling: continuous sensors feeding the local EKF, and the local EKF's output plus AMCL and/or GPS feeding the global EKF.
+
+```mermaid
+flowchart LR
+    OD[Wheel Odometry] --> LEKF[Local EKF]
+    IMU[IMU] --> LEKF
+    LEKF --> ODOMF["/odometry/filtered"]
+
+    ODOMF --> NST[navsat_transform_node]
+    FIX["/fix (GPS)"] --> NST
+    NST --> GPSODOM["/odometry/gps"]
+
+    OD --> GEKF[Global EKF]
+    IMU --> GEKF
+    AMCL["/amcl_pose"] --> GEKF
+    GPSODOM --> GEKF
+    GEKF --> TFM["TF: map → odom"]
+```
+
 ## Project brief and success criteria
 
 Build a localization pipeline for a simulated (or real) robot with at minimum: wheel odometry, an IMU, and one global reference (AMCL, GPS, or both). Success means:

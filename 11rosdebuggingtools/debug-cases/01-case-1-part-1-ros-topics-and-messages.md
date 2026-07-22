@@ -2,6 +2,21 @@
 
 This unit is the first of a two-part case study built around the most common ROS debugging scenario you will face: a topic that is publishing "something," but you don't yet know what, whether it's correct, or why a downstream node isn't reacting to it. You'll build the habit of interrogating topics and messages directly from the command line before ever touching source code.
 
+The flowchart below traces the decision path this unit builds toward: each command rules out a category of cause before you move to the next.
+
+```mermaid
+flowchart TD
+    A[ros2 topic list] --> B{Topic appears?}
+    B -- No --> C[Typo in topic name,<br/>or publisher not running]
+    B -- Yes --> D[ros2 topic info /scan]
+    D --> E{Publishers > 0?}
+    E -- No --> F[Wrong node — debugging<br/>the wrong thing entirely]
+    E -- Yes --> G[ros2 interface show<br/>sensor_msgs/msg/LaserScan]
+    G --> H[ros2 topic echo /scan --once]
+    H --> I[Cross-check fields against<br/>the interface definition]
+    I --> J[ros2 topic hz /scan<br/>confirm the publish rate]
+```
+
 ## Reading topic data without touching code
 
 Before opening an editor, always ask the running system what it's actually doing. The `ros2 topic` (or `rostopic` on ROS 1) family of commands is your first diagnostic layer:

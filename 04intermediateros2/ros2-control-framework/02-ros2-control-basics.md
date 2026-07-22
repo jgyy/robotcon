@@ -2,6 +2,16 @@
 
 Here you build your first complete `ros2_control` pipeline end to end: declaring hardware in your robot's description, configuring controllers in YAML, launching everything, and confirming it actually moves the robot. Every later unit assumes you can reproduce this pipeline from memory.
 
+The diagram below shows the order the four pipeline pieces depend on each other, matching the build sequence this unit walks through.
+
+```mermaid
+flowchart TD
+    A[URDF/XACRO<br/>ros2_control block] --> B[Controller YAML<br/>controllers + params]
+    B --> C[Launch File<br/>starts controller_manager + spawners]
+    C --> D[Package files<br/>package.xml, CMakeLists.txt]
+    D --> E[Test:<br/>list_controllers, list_hardware_interfaces, cmd_vel]
+```
+
 ## Anatomy of a ros2_control pipeline
 
 A working pipeline touches four files in a robot package:

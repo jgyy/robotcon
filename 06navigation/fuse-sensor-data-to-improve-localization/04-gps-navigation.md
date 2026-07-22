@@ -2,6 +2,17 @@
 
 This unit extends the fusion pipeline outdoors, replacing (or complementing) AMCL's map-based global correction with GPS. GPS cannot be fed into `ekf_node` directly — it needs a translation step first, which is what this unit is about.
 
+The diagram below shows how `navsat_transform_node` sits between the raw GPS fix and the global EKF, converting geographic coordinates into a Cartesian odometry topic the filter can consume.
+
+```mermaid
+flowchart LR
+    FIX["/fix<br/>(NavSatFix, lat/lon)"] --> NST[navsat_transform_node]
+    ODOMF["/odometry/filtered"] --> NST
+    IMU["IMU orientation"] --> NST
+    NST --> GPSOUT["/odometry/gps"]
+    GPSOUT --> GEKF["Global EKF<br/>(odom1 input)"]
+```
+
 ## Why GPS needs a transform node first
 
 GPS reports latitude, longitude, and altitude in geographic coordinates, while everything else in your stack works in a local Cartesian frame (`map`/`odom`, in meters). You also don't automatically know how your `map` frame's origin and axis orientation relate to true north. `robot_localization` solves both problems with `navsat_transform_node`, which converts geographic GPS fixes into a local ENU (East-North-Up) Cartesian frame anchored at a reference point (the "datum"), aligned using your filtered odometry's heading.

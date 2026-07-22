@@ -2,6 +2,26 @@
 
 Clicking targets in RViz is great for building intuition, but a real application needs to plan from code — reacting to perception output, looping over a list of goals, or responding to a service call. This unit moves the same plan/execute cycle from Units 3–4 into Python using MoveIt's programmatic interface.
 
+The sequence below shows the calls your Python node makes and how a failed plan short-circuits execution:
+
+```mermaid
+sequenceDiagram
+    participant Node as Python Node
+    participant PC as PlanningComponent (arm)
+    participant Ctrl as Controller
+
+    Node->>PC: set_start_state_to_current_state()
+    Node->>PC: set_goal_state(pose/joint/named)
+    Node->>PC: plan()
+    PC-->>Node: plan_result
+    alt plan succeeded
+        Node->>Ctrl: execute(trajectory)
+        Ctrl-->>Node: execution complete
+    else plan failed
+        Node->>Node: log failure, skip execute
+    end
+```
+
 ## The MoveGroup interface
 
 MoveIt exposes a high-level Python API for exactly this: `moveit_commander` in ROS 1 and the `moveit_py` bindings (or the `MoveGroupInterface`/`moveit2_py` wrapper packages, depending on distro) in ROS 2. Regardless of the exact package name, the shape is the same: you construct an object bound to a planning group name, set a goal, and call plan/execute.

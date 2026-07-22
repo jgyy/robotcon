@@ -2,6 +2,16 @@
 
 This unit sets the stage: what "control" means for a robot, how the pieces of `ros2_control` fit together at a high level, and what you need in place before you start wiring up real controllers in later units.
 
+The diagram below shows the three core `ros2_control` components and how state and commands flow between them on every control cycle.
+
+```mermaid
+flowchart LR
+    HW[Hardware Interface<br/>reads sensors, drives actuators] -->|state| CM[Controller Manager<br/>real-time loop]
+    CM -->|feeds state to| CTRL[Controllers<br/>position / effort / velocity / trajectory]
+    CTRL -->|writes command| CM
+    CM -->|write| HW
+```
+
 ## What "control" means in robotics
 
 In everyday programming, "control" often just means program flow. In robotics it has a narrower, more specific meaning: **making a physical actuator track a desired reference value despite disturbances and imperfect models.** If you tell a motor "go to 90 degrees," something has to repeatedly compare the actual joint position against 90 degrees and adjust the commanded effort until the error shrinks to zero — that comparison-and-correction loop is control.

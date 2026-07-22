@@ -2,6 +2,20 @@
 
 Now that you know the underlying concepts, it's time to build the artifact that ties them together: a **MoveIt configuration package**. This unit walks through generating one with the MoveIt Setup Assistant and using it to plan motions interactively in RViz, entirely through graphical tools — no planning code yet.
 
+The diagram below shows the Setup Assistant's wizard steps in order, from loading a URDF to planning in RViz:
+
+```mermaid
+flowchart TD
+    A[Load URDF/Xacro] --> B[Generate self-collision matrix]
+    B --> C[Define virtual joints]
+    C --> D[Define planning groups]
+    D --> E[Define end effectors]
+    E --> F[Save named poses]
+    F --> G[Generate MoveIt package]
+    G --> H[Launch demo.launch.py]
+    H --> I[Plan and Execute in RViz]
+```
+
 ## The MoveIt Setup Assistant
 
 The Setup Assistant is a GUI wizard that turns a URDF into a working MoveIt package. Launch it and point it at your robot's URDF (or Xacro):

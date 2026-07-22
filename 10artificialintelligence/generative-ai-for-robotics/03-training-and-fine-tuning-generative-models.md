@@ -2,6 +2,18 @@
 
 With tokenization understood, this unit turns tokenized data into an actual trained model. You'll preprocess real data into training-ready batches, fine-tune a pretrained model efficiently, validate it against real predictions, and — to fully demystify the process — train a small generative model from scratch.
 
+The diagram below lays out the two paths to a trained model this unit covers side by side — fine-tuning a pretrained checkpoint versus training from randomly initialized weights — since both share the same preprocessing and training loop.
+```mermaid
+flowchart TD
+    Data[Raw data] --> Prep[Preprocess: pad, truncate, batch]
+    Prep --> Choice{Starting weights?}
+    Choice -->|Pretrained checkpoint| FT[Fine-tune\ncheap, less data needed]
+    Choice -->|Random init| Scratch[Train from scratch\nslow, needs lots of data]
+    FT --> Trained[Trained model]
+    Scratch --> Trained
+    Trained --> Validate[Validate on unseen inputs]
+```
+
 ## From tokenized text to a trained model
 There are two very different paths to a working model, and knowing when to use which is a core practical skill:
 - **Fine-tuning** takes a model already pretrained on a huge general corpus and continues training it on your smaller, task-specific dataset. This is dramatically cheaper and is almost always the right default.

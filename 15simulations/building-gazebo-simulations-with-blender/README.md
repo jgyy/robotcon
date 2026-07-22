@@ -2,6 +2,17 @@
 
 This course teaches you to build custom, visually convincing 3D content for robot simulation using Blender 4.1+, and to bring that content into both Gazebo Classic and Gazebo Sim (Harmonic LTS) as real, physics-and-ROS2-integrated worlds and robots. You'll go from basic Blender navigation through modeling, texturing/UV mapping, articulated robot assembly with correctly placed joints, and Gazebo Sim's actor-based animation system, finishing with a capstone project that combines a custom world, a working robot, and animation into one simulation.
 
+The diagram below shows how each unit's skills build directly on the one before it, ending in the capstone project:
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Introduction] --> U2[Unit 2: 3D Modeling Basics]
+    U2 --> U3[Unit 3: Textures & Materials]
+    U3 --> U4[Unit 4: Custom Robot Build]
+    U4 --> U5[Unit 5: Animations in Gazebo Sim]
+    U5 --> U6[Unit 6: Final Project]
+```
+
 1. [Introduction to the course](01-introduction-to-the-course.md) — Why Blender matters for robotics simulation, how it fits alongside Gazebo, and getting your toolchain installed.
 2. [Basics of 3D Modeling in Blender](02-basics-of-3d-modeling-in-blender.md) — Interface navigation, primitive-based modeling, units/scale, and exporting meshes Gazebo can load.
 3. [Mastering 3D Textures and Materials](03-mastering-3d-textures-and-materials.md) — PBR materials, UV mapping, texturing workflow, and fixing common export/texture problems.

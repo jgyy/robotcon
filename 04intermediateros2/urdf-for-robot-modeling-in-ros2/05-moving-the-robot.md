@@ -2,6 +2,14 @@
 
 A robot that only falls under gravity isn't very interesting. This unit covers the different mechanisms available for actually driving joints in simulation, from the simplest (fake it in RViz2) to the most production-realistic (`ros2_control`).
 
+The diagram below orders the three ways to drive a joint from least to most realistic, matching the comparison this unit walks through.
+
+```mermaid
+flowchart LR
+    T1["Joint State Publisher<br/>fake angles, no physics"] --> T2["Simulator plugin<br/>e.g. Differential Drive"]
+    T2 --> T3["ros2_control<br/>same controllers: sim or real hardware"]
+```
+
 ## Possible approaches, compared
 
 There are three broad tiers of "make a joint move," in increasing order of realism and complexity:

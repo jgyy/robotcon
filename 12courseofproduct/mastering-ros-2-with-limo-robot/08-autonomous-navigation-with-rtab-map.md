@@ -2,6 +2,21 @@
 
 This closing unit takes the point cloud map from Unit 7 and puts it to work: switching RTAB-Map from building a map to localizing against a saved one, and feeding that localization into Nav2 so LIMO can navigate autonomously using camera-based perception instead of (or alongside) a 2D lidar.
 
+The state diagram below shows RTAB-Map's two run modes, how it hands off to Nav2, and how tracking loss is recovered from.
+
+```mermaid
+stateDiagram-v2
+    [*] --> MappingMode
+    MappingMode: Mapping Mode - adds nodes, searches loop closures
+    LocalizationMode: Localization Mode - map frozen, matches live pose
+    MappingMode --> LocalizationMode: save .db, relaunch with localization:=true
+    LocalizationMode --> Nav2Stack: publish /map + odom transform
+    Nav2Stack: Nav2 Stack (Planner + Controller + BT)
+    Nav2Stack --> TrackingLoss: fast motion or low-feature wall
+    TrackingLoss --> LocalizationMode: slow down / fuse wheel odometry
+    Nav2Stack --> [*]: goal reached
+```
+
 ## Mapping mode vs localization mode
 
 RTAB-Map runs the same node in two distinct modes. In **mapping mode** (what you used in Unit 7) it keeps adding new nodes to the map graph and actively searches for loop closures against everything it has seen so far. In **localization mode** it freezes the map — no new nodes are added — and only estimates the camera's live pose by matching incoming frames against the fixed map, which is both cheaper to run and safer (you don't want the map silently drifting or growing every time you redeploy LIMO in a space you've already mapped).

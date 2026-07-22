@@ -2,6 +2,19 @@
 
 With a working motor driver from Unit 5, this unit gives the robot its first real autonomous behavior: a Python vision node that finds a line on the ground and steers the robot to follow it, closing the loop from camera to `/cmd_vel` entirely in software.
 
+The flowchart below traces the perceive-compute-act loop end to end, from a raw camera frame to a steering command and back to the next frame.
+
+```mermaid
+flowchart TD
+    A[Camera Image] --> B[Crop bottom strip]
+    B --> C[Threshold to binary mask]
+    C --> D[Find largest contour]
+    D --> E[Compute centroid offset]
+    E --> F["Proportional controller (k_p)"]
+    F --> G[Publish /cmd_vel]
+    G --> A
+```
+
 ## The perception-to-action loop
 Line following is a small, complete example of the pattern every autonomous behavior in this course (and in robotics generally) follows: **perceive** the world through a sensor, **compute** an error signal, and **act** by publishing a control command. Here perception is a camera image, the error signal is "how far is the line from the image center," and the action is a `/cmd_vel` message that steers toward zero error. Getting comfortable with this loop now makes the SLAM and deep-learning units feel like variations on a theme rather than unrelated new techniques.
 

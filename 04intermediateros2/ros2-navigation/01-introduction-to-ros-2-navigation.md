@@ -2,6 +2,19 @@
 
 This unit orients you to the Nav2 stack before you touch any code: what problem it solves, which pieces cooperate to solve it, and what the rest of the course will build on top of it. Everything that follows — mapping, localization, planning, obstacle avoidance, multi-robot fleets — is really just "how do these Nav2 pieces get configured and combined."
 
+The diagram below shows how Nav2's core servers cooperate: `bt_navigator` orchestrates localization, planning, control, and recovery to turn a goal into motor commands.
+
+```mermaid
+flowchart LR
+    Map[map_server] --> AMCL[amcl]
+    AMCL --> BT[bt_navigator]
+    BT --> Planner[planner_server]
+    BT --> Controller[controller_server]
+    BT --> Behavior[behavior_server]
+    Planner --> Controller
+    Controller --> CmdVel[/cmd_vel/]
+```
+
 ## How robots navigate autonomously
 
 Autonomous navigation is the loop of answering three questions continuously, at different rates: *Where am I?* (localization), *Where do I want to go, and how do I get there?* (planning), and *What do I do right now to make progress without hitting anything?* (control/obstacle avoidance). A robot needs a model of its environment (a map), a way to place itself inside that model (localization), a way to compute a route through it (a global planner), and a way to turn that route into safe, continuous velocity commands (a local controller). Nav2 — the navigation stack for ROS 2, successor to the ROS 1 `move_base`/`navigation` stack — is a collection of ROS 2 nodes that implement exactly this loop, each as a swappable, pluginized component talking over standard ROS 2 topics, services, and actions.

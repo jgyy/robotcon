@@ -2,6 +2,18 @@
 
 Every advanced visualization in this course — bounding boxes, footsteps, overlays, pictograms — is built out of the same fundamental building block: the `visualization_msgs/Marker` message. This unit teaches you to publish that message correctly before you move on to anything fancier.
 
+The diagram below shows the lifecycle a marker goes through in RViz, keyed entirely off its `ns`/`id` pair, `lifetime`, and `action` field.
+
+```mermaid
+stateDiagram-v2
+    [*] --> NoMarker
+    NoMarker --> Displayed: publish ADD (ns, id)
+    Displayed --> Displayed: publish same ns/id (in-place update)
+    Displayed --> NoMarker: lifetime expires without a new message
+    Displayed --> NoMarker: publish DELETE (ns, id)
+    NoMarker --> [*]: publish DELETEALL
+```
+
 ## The `Marker` and `MarkerArray` messages
 A `Marker` describes one drawable shape: its type, pose, scale, color, and lifetime. Key fields you'll set on nearly every marker:
 

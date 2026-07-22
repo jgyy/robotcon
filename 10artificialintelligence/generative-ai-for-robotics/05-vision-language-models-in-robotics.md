@@ -2,6 +2,20 @@
 
 Language alone gets a robot part of the way — it still needs to connect words to what its camera actually sees. This unit introduces vision-language models (VLMs) that reason jointly about images and text, and applies them to a concrete robotics task: detecting and tracking a person using nothing but a natural-language description.
 
+The diagram below shows how the same camera frame and text prompt feed the two complementary VLMs this unit covers, and how CLIPSeg's output specifically becomes a tracked pixel location.
+```mermaid
+flowchart LR
+    Cam["/camera/image_raw"] --> ViLT[ViLT: visual question answering]
+    Q[Text question] --> ViLT
+    ViLT --> Ans[Text answer\ne.g. 'yes']
+
+    Cam --> CLIPSeg[CLIPSeg: zero-shot segmentation]
+    Prompt["Text prompt, e.g. 'a person'"] --> CLIPSeg
+    CLIPSeg --> Mask[Per-pixel heatmap/mask]
+    Mask --> Centroid[Largest blob centroid]
+    Centroid --> Pub["/tracked_person_pixel topic"]
+```
+
 ## Visual question answering and zero-shot segmentation
 Two complementary capabilities matter here. **Visual question answering (VQA)** takes an image and a text question and produces a text answer — "is there a person in this room?" → "yes, near the couch." **Zero-shot segmentation** takes an image and a text *prompt* and produces a pixel mask, without ever having been trained on your specific object categories — you can ask it to segment "person" or "red mug" and it generalizes from what it learned about language and images jointly, not from a fixed label set. Together, these replace a huge amount of what used to require training a bespoke object detector per object class.
 

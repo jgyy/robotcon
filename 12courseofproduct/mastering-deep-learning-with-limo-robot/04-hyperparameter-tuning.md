@@ -2,6 +2,22 @@
 
 A network that compiles and runs `.fit()` without errors is not the same as a network that has actually learned something useful. This unit covers the hyperparameters that control training, how to organize your data so you can honestly measure performance, and the techniques that turn a mediocre model into a good one.
 
+The diagram below shows the iterative tuning loop this unit teaches: train, diagnose the loss curve, adjust hyperparameters accordingly, and repeat until the fit is good:
+
+```mermaid
+flowchart TD
+    A[Choose Hyperparameters] --> B[Train on Training Set]
+    B --> C[Evaluate on Validation Set]
+    C --> D{Loss Curve Pattern?}
+    D -->|Both curves still falling| E[Underfitting:<br/>bigger model / more training]
+    D -->|Val loss rises, train falls| F[Overfitting:<br/>dropout, L2, early stopping]
+    D -->|Both flat and high| G[Investigate model,<br/>learning rate, or data]
+    E --> A
+    F --> A
+    G --> A
+    D -->|Good fit| H[Evaluate once on Test Set]
+```
+
 ## Hyperparameters versus parameters
 
 **Parameters** (weights, biases) are learned automatically by gradient descent. **Hyperparameters** are everything you choose before training starts and that gradient descent cannot optimize for you: the learning rate, batch size, number of epochs, number and width of layers, choice of activation function, choice of optimizer, and regularization strength. Getting these right is mostly empirical — you train, measure, and adjust.

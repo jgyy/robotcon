@@ -2,6 +2,17 @@
 
 Sensors are how your code finds out anything about the world at all — everything downstream (mapping, navigation, manipulation) is only as good as the sensor data feeding it. This unit walks through the sensor types LIMO carries and, critically, the message types that carry their data on the ROS graph.
 
+The diagram below maps each sensor type covered in this unit to the ROS message(s) it publishes.
+
+```mermaid
+flowchart LR
+    A[2D Lidar] --> B[sensor_msgs/LaserScan]
+    C[3D Lidar / Depth Camera] --> D[sensor_msgs/PointCloud2]
+    E[Wheel Encoders] --> F[nav_msgs/Odometry]
+    G[RGB Camera] --> H["sensor_msgs/Image +\nsensor_msgs/CameraInfo"]
+    I[IMU] --> J[sensor_msgs/Imu]
+```
+
 ## Lidar and point clouds
 
 A 2D lidar spins (physically or via solid-state scanning) and measures distance to the nearest obstacle at each angle, producing a `sensor_msgs/msg/LaserScan`: an array of ranges, an angle range, and an angle increment. To get the actual (x, y) obstacle positions you convert polar to Cartesian:

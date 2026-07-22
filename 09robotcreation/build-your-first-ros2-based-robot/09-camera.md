@@ -2,6 +2,19 @@
 
 LiDAR tells your robot *where* things are; a camera tells it *what* they are. This unit adds visual perception, from picking a camera module to getting standard ROS 2 image messages flowing.
 
+The diagram below shows how the raspicam's CSI feed reaches standard ROS 2 image topics, and where the `v4l2_camera` vs. `libcamera`-aware driver choice fits into that path.
+
+```mermaid
+flowchart LR
+    Cam["Raspicam (CSI)"] --> Drv{ROS 2 camera driver}
+    Drv -->|works| V4L2[v4l2_camera]
+    Drv -->|needs libcamera| Lib[libcamera-aware driver]
+    V4L2 --> Img["/image_raw"]
+    Lib --> Img
+    V4L2 --> Info["/camera_info"]
+    Lib --> Info
+```
+
 ## Raspicam
 The Raspberry Pi Camera Module (raspicam) is a natural pairing for a Raspberry Pi-based robot: it connects over the dedicated CSI (Camera Serial Interface) ribbon connector rather than USB, which frees up a USB port and generally gives lower CPU overhead than a USB webcam for the same resolution. Reasons it's a common first choice for a small robot:
 - **Low latency, dedicated interface** — CSI bypasses the USB stack entirely, which matters once you're doing anything reactive with vision.

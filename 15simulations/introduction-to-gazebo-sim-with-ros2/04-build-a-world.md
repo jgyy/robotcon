@@ -2,6 +2,18 @@
 
 Having built and connected a robot, this final unit turns to the environment you drop it into — SDF world syntax, physics and environmental settings, populating a scene with models and actors, and extending it all with plugins.
 
+The diagram below shows the sibling elements that all live directly inside a single `<world>` tag, matching how this unit is organized.
+
+```mermaid
+flowchart TD
+    World["&lt;world name=...&gt;"] --> Physics["physics: step size, real_time_factor"]
+    World --> EnvTags["gravity, magnetic_field, atmosphere, light"]
+    World --> Models["include: ground plane & models"]
+    World --> Actors["actor: animated, scripted entities"]
+    World --> WorldPlugins["world plugins: system-level behavior"]
+    World --> GuiBlock["gui block: GUI-only plugins"]
+```
+
 ## SDF and the Anatomy of a <world> Element
 SDFormat is the XML schema underneath everything Gazebo Sim loads — recall from Unit 2 that even a URDF robot gets silently converted to SDF before it's spawned. A world file's top level is `<sdf version="1.9"><world name="my_world">...</world></sdf>`, and every other concept in this unit — models, lights, physics, plugins, gravity — is a sibling element inside that `<world>` tag.
 

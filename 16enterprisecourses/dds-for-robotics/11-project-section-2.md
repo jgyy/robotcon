@@ -2,6 +2,20 @@
 
 With a baseline captured in Section 1, this section has you deliberately diagnose and fix whatever discovery/QoS problems your two-host setup showed, using the XML configuration and QoS tuning skills from Units 4, 6, and 7.
 
+The flowchart below walks the diagnostic decision tree this section uses to pick the right targeted fix for each failure category.
+
+```mermaid
+flowchart TD
+  Start[Section 1 capture] --> Q1{"DATA(p) packets cross hosts?"}
+  Q1 -->|No| F1[No discovery at all]
+  Q1 -->|Yes| Q2{ros2 topic echo receives data?}
+  Q2 -->|No| F2[Discovery OK, data doesn't flow]
+  Q2 -->|"Yes, but flaky"| F3[Data flows but unreliable]
+  F1 --> Fix1[Add unicast peer list via XML config]
+  F2 --> Fix2[Align reliability/durability QoS explicitly]
+  F3 --> Fix3[Pin correct network interface in XML]
+```
+
 ## Diagnose before you fix
 Resist the urge to change settings speculatively. Using your Section 1 capture and report, identify the *specific* failure category:
 - **No discovery at all** — no `DATA(p)` packets cross between hosts (common on Docker bridge networks or multicast-filtered WiFi).

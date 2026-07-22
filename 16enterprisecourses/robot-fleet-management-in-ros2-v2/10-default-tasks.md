@@ -2,6 +2,23 @@
 
 Before reaching for custom tasks (Unit 8), it's worth knowing what RMF gives you out of the box. This unit surveys the built-in task types and when each is the right tool.
 
+The flowchart below captures the decision: pick a built-in task type when its semantics already match your need, and fall back to a custom task only when none of the four do.
+
+```mermaid
+flowchart TD
+    Start["Need a robot behavior"] --> Q{"Matches a built-in pattern?"}
+    Q -- "go to / deliver" --> Delivery["Delivery task"]
+    Q -- "repeat between 2 waypoints" --> Loop["Loop task"]
+    Q -- "follow recorded path" --> Clean["Clean task"]
+    Q -- "needs charging" --> Charge["Charge task"]
+    Q -- "no built-in fits" --> Custom["Custom task (Unit 8)"]
+    Delivery --> Planner["Task planner: auto duration
+& resource cost estimate"]
+    Loop --> Planner
+    Clean --> Planner
+    Charge --> Planner
+```
+
 ## The built-in task categories
 
 RMF ships four common task patterns as first-class, pre-built task types, each expressible through the same JSON task-request format you saw in Unit 8:

@@ -2,6 +2,32 @@
 
 Services (Unit 8) are for quick request/response calls. Actions are for anything long-running and cancelable — navigating to a goal, executing a manipulation trajectory — and they add two things services don't have: ongoing feedback while the task runs, and the ability to cancel mid-execution. This unit covers `ROSLIB.ActionClient` and `ROSLIB.Goal`.
 
+The diagram below shows the full action lifecycle: goal, streaming feedback, and either a result or a mid-flight cancellation.
+
+```mermaid
+sequenceDiagram
+    participant U as Operator
+    participant P as Web Page
+    participant B as rosbridge
+    participant A as Action Server
+    P->>B: send Goal
+    B->>A: goal request
+    loop while executing
+        A-->>B: feedback
+        B-->>P: 'feedback' event (update UI)
+    end
+    alt completed
+        A-->>B: result
+        B-->>P: 'result' event
+    else cancelled
+        U->>P: click Cancel
+        P->>B: goal.cancel()
+        B->>A: cancel request
+        A-->>B: cancellation ack
+        B-->>P: status update
+    end
+```
+
 ## The three-phase action lifecycle
 Every action interaction has the same shape: send a goal, receive periodic feedback while it executes, and eventually receive a result (or a cancellation acknowledgment). roslibjs models this with two cooperating classes — a client tied to the action's name/type, and a goal object you send and attach listeners to.
 

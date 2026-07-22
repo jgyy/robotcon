@@ -2,6 +2,23 @@
 
 The premise: a dangerous person is somewhere in the crowd near your robot, and several other people are also present as decoys. Your job is to detect every person in the scene and pick out the one that matches a known reference image of the suspect. This unit ties together people detection (Unit 3) and feature matching (Unit 4) into a single pipeline.
 
+The flowchart below shows the full three-stage pipeline this unit builds, from raw frame to a highlighted suspect.
+
+```mermaid
+flowchart TD
+    A[Camera Frame] --> B["Stage 1: HOG people detection"]
+    B --> C["Person bounding boxes"]
+    C --> D["Crop each box"]
+    D --> E["Stage 2: ORB detect + describe crop"]
+    F[Suspect reference photo] --> G["ORB detect + describe reference"]
+    E --> H["BFMatcher vs. reference"]
+    G --> H
+    H --> I["Count good matches per box"]
+    I --> J{"Highest match count?"}
+    J -->|Yes| K["Stage 3: highlight in red"]
+    J -->|No| L["Draw in neutral blue"]
+```
+
 ## Framing the problem
 Break it into two clearly separable stages so you can test each independently:
 1. **Who is in the scene?** Use HOG people detection (Unit 3) to get a bounding box for every person visible to the robot's camera.

@@ -2,6 +2,18 @@
 
 This unit sets the stage for the rest of the course: why a robotics middleware needs a security layer at all, what problem ROS 2 security actually solves, and how the pieces you're about to learn (authentication, access control, cryptography, keystores, enclaves) fit together before you touch a single command.
 
+The diagram below maps each concrete threat from an open-by-default system to the SROS2 pillar that neutralizes it.
+
+```mermaid
+flowchart LR
+    T1[Spoof sensor data] --> P1[Authentication]
+    T2["Hijack actuators (/cmd_vel)"] --> P2[Access Control]
+    T3[Eavesdrop on camera/telemetry] --> P3[Encryption]
+    P1 --> S[SROS2 Security Layer]
+    P2 --> S
+    P3 --> S
+```
+
 ## Why security is not optional for a robot
 
 Out of the box, ROS 2's default middleware (DDS, typically via an implementation like Fast DDS or Cyclone DDS) is designed for zero-configuration discovery on a local network. Any node on the same network segment can discover, subscribe to, publish on, or call services on any other node — there is no built-in authentication, no encryption, and no access control unless you turn it on. That's great for a lab bench with one robot and one laptop, and genuinely dangerous for anything that leaves the lab: a robot on a shared building network, a fleet on a warehouse Wi-Fi, or a machine reachable from the public internet.

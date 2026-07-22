@@ -2,6 +2,16 @@
 
 FlexBE is a high-level behavior engine, built on top of ROS's SMACH state-machine library, that lets you compose complex robot behaviors from small, reusable states instead of hand-coding tangled control flow. This course walks through the FlexBE mental model, building your own states and behaviors, wiring in Actionlib-based states with tunable autonomy levels for human supervision, unit testing state logic in isolation, and finishing with a small drone take-off-and-land project that ties every piece together.
 
+The diagram below shows how each unit builds on the one before it, from the FlexBE mental model through to the final drone project.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Introduction to the Course] --> U2[Unit 2: Creating a basic Behavior]
+    U2 --> U3[Unit 3: Actionlib States and Autonomy Levels]
+    U3 --> U4[Unit 4: Unit Testing]
+    U4 --> U5[Unit 5: Project - Drone Takeoff and Land]
+```
+
 1. [Introduction to the Course](01-introduction-to-the-course.md) — Unit for previewing the contents of the Course.
 2. [Creating a basic Behavior](02-creating-a-basic-behavior.md) — Learn the basic concepts of FlexBe, and review, step by step, how to create a basic behavior and a basic state.
 3. [Actionlib States and Autonomy Levels](03-actionlib-states-and-autonomy-levels.md) — Learn how to create a new state based on an Action Client, and how to use Autonomy Levels in FlexBe.

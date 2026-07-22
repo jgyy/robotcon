@@ -2,6 +2,17 @@
 
 This course covers the fundamentals of modern robot control: how to turn a desired joint position, trajectory, or contact force into the actual torque commands that make a manipulator behave correctly despite gravity, inertia, and coupling between joints. Starting from single-joint PID feedback, the course builds up through trajectory generation, coupled multivariable (inverse dynamics) control, and end-effector force control, before combining inverse dynamics with inverse kinematics in a guided final project on a 2DOF planar arm.
 
+The diagram below shows how each unit builds directly on the concepts introduced in the one before it.
+
+```mermaid
+flowchart TD
+    U1[Unit 1: Course Introduction] --> U2[Unit 2: PID Control]
+    U2 --> U3[Unit 3: Independent Joint Control]
+    U3 --> U4[Unit 4: Multivariable Control]
+    U4 --> U5[Unit 5: Force Control]
+    U5 --> U6[Unit 6: Final Project]
+```
+
 1. [Course Introduction](01-course-introduction.md) — An introduction to the contents of this course.
 2. [PID Control](02-pid-control.md) — Get familiar with Proportional-Integral-Derivative PID control basics.
 3. [Independent Joint Control](03-independent-joint-control.md) — Focus on controlling only one joint at a time, independent of the rest.

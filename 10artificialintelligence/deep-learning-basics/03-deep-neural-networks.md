@@ -2,6 +2,16 @@
 
 Unit 2 showed that one hidden layer is theoretically enough to approximate any function. This unit shows why that's rarely how it's done in practice, and builds up the stacked-layer architecture that gives deep learning its name.
 
+The diagram below traces the sauce-quality example's `11 -> 32 -> 16 -> 1` layer stack, showing depth as several narrower layers chained together instead of one wide layer.
+
+```mermaid
+flowchart LR
+    x[Input: 11 sensor readings] --> L1[Layer 1: 11 -> 32, ReLU]
+    L1 --> L2[Layer 2: 32 -> 16, ReLU]
+    L2 --> L3[Layer 3: 16 -> 1]
+    L3 --> y[Predicted quality]
+```
+
 ## From shallow to deep: applying a shallow network to a harder problem
 Take the Gatekeeper robot's next challenge: predicting a pasta sauce's quality rating from an 11-dimensional sensor reading (acidity, viscosity, salt content, and so on). In principle, Unit 2's Universal Approximation Theorem says a shallow network can learn this — but to carve up an 11-dimensional input space finely enough with a single layer of "kinks," you need a combinatorial explosion of hidden neurons. The shallow network becomes wide, slow to train, and prone to overfitting long before it fits the data well. That practical wall is the motivation for going deep instead of wide.
 

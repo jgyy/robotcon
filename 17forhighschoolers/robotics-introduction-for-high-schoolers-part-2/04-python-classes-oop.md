@@ -2,6 +2,18 @@
 
 Passing the maze grid, robot position, and heading around as separate arguments to every function gets unwieldy fast. This unit wraps that state and the functions that act on it into a single `Robot` object — the same organizing idea behind every ROS 2 node you'll eventually write.
 
+The diagram below shows how `TurtleBot` inherits from `Robot` and overrides one method while reusing the rest via `super()`.
+
+```mermaid
+flowchart TD
+    A[Robot class] -->|state| B["row, col, heading, steps_taken"]
+    A -->|methods| C["turn(), step_forward(), position()"]
+    A -->|"inherited by"| D[TurtleBot class]
+    D -->|adds state| E[bumped]
+    D -->|overrides| F["step_forward(wall_ahead)"]
+    F -->|"calls super().step_forward()"| C
+```
+
 ## Defining a class
 
 A class is a blueprint; `__init__` is the constructor that runs when you create an instance, and `self` is the instance itself — every method takes it as the first parameter, and Python passes it automatically:

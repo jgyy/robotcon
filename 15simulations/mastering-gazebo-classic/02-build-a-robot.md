@@ -2,6 +2,16 @@
 
 With the Gazebo mental model in place, it's time to describe an actual robot. This unit builds a simple differential-drive mobile robot piece by piece — links, joints, wheels, meshes — and gets it standing in a Gazebo world.
 
+The diagram below shows the kinematic tree this unit builds: a chassis link connected to two driven wheels and a caster through their respective joints.
+
+```mermaid
+flowchart TD
+    BL["base_link
+    chassis"] -->|continuous joint| LW[left_wheel]
+    BL -->|continuous joint| RW[right_wheel]
+    BL -->|fixed joint| CW[caster wheel]
+```
+
 ## URDF vs SDF
 
 Gazebo natively speaks SDF, but almost every ROS robot is described in **URDF** (Unified Robot Description Format), a simpler XML dialect focused on kinematic trees rather than full simulation detail. Gazebo doesn't force a choice: it ships a URDF-to-SDF converter, so you can write your robot once in URDF (which the rest of the ROS ecosystem — `robot_state_publisher`, `tf2`, MoveIt — also consumes) and let Gazebo translate it internally when it's spawned. The practical rule of thumb: use URDF for the robot itself so it stays portable across tools, and reach for raw SDF only for simulation-only content (worlds, static props, sensors with physics quirks that URDF can't express cleanly) — you'll do exactly that in Unit 4.

@@ -2,6 +2,22 @@
 
 This course walks you through building a complete ROS 2-powered mobile robot from scratch — the "FastBot" — as one continuous project rather than a set of disconnected exercises. Starting from motor and battery selection, you'll bring up a single-board computer, install ROS 2, write the ROS 2 packages that actually drive the robot, design and fabricate a physical chassis, model that chassis in URDF, add LiDAR and camera perception, get it all running in simulation, and finally extend it with your own 3D-printed enclosure — so that by the end you have both a working physical robot and every skill needed to design your next one from a blank sheet.
 
+The diagram below shows how each unit builds directly on the one before it, from first hardware choices through to the finished, simulated, and enclosed robot.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Introduction] --> U2[Unit 2: Motors]
+    U2 --> U3[Unit 3: Battery]
+    U3 --> U4[Unit 4: Computer]
+    U4 --> U5[Unit 5: ROS Framework]
+    U5 --> U6[Unit 6: Physical Structure]
+    U6 --> U7[Unit 7: URDF]
+    U7 --> U8[Unit 8: LiDAR]
+    U8 --> U9[Unit 9: Camera]
+    U9 --> U10[Unit 10: Simulation]
+    U10 --> U11[Unit 11: 3D Printed Mods]
+```
+
 1. [Introduction](01-introduction.md) — What you'll build, how the units connect, and what hardware and skills you need before starting.
 2. [Motors](02-motors.md) — Choosing motor specs, driving them with motor control hardware, wiring, and talking to them over serial.
 3. [Battery](03-battery.md) — Calculating power consumption, selecting a battery, and safely connecting it to the robot.

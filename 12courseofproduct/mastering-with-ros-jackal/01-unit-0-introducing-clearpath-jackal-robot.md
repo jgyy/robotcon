@@ -2,6 +2,23 @@
 
 This opening unit gets you oriented on the Jackal itself before you write a single line of navigation or perception code — the sensor suite, the coordinate frames, and the safe way to drive it are the foundation everything later in the course builds on.
 
+The diagram below shows how each onboard sensor feeds its own ROS topic, together forming the interface surface that every later unit in this course reads from.
+
+```mermaid
+flowchart LR
+    Laser[Laser Scanner] --> Scan["/scan"]
+    IMU[IMU] --> ImuTopic["/imu/data"]
+    GPS[GPS Receiver] --> Fix["/navsat/fix"]
+    Camera[Stereo Camera] --> Images[Image Topics]
+    Encoders[Wheel Encoders] --> Odom["/odom"]
+    Scan --> TF["tf tree: map -> odom -> base_link -> sensors"]
+    ImuTopic --> TF
+    Fix --> TF
+    Images --> TF
+    Odom --> TF
+    CmdVel["/cmd_vel"] --> Robot[Jackal Base Controller]
+```
+
 ## The Jackal Platform: Chassis and Sensors
 
 Jackal is a compact, skid-steer, four-wheel-drive unmanned ground vehicle (UGV) built by Clearpath Robotics for outdoor and indoor research use. Under the hood it's a differential-drive robot even though it has four wheels — the left pair and right pair are mechanically coupled, so from a control standpoint it behaves exactly like a two-wheeled diff-drive base: you command it with a linear x velocity and an angular z velocity, and the onboard motor controller handles wheel-level details.

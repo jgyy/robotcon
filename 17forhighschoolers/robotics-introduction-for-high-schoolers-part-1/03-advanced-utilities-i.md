@@ -2,6 +2,15 @@
 
 Now that you can move around and edit files, this unit covers three tools that turn you from "someone who can type Linux commands" into "someone who can build things with them": permissions, bash scripts, and environment variables.
 
+The diagram below shows how permissions and environment variables both feed into a single runnable robot startup script, rather than being three unrelated topics:
+
+```mermaid
+flowchart TD
+    A["File Permissions<br/>chmod +x"] -->|makes the file executable| D["Bash Script<br/>startup.bash"]
+    B["Environment Variables<br/>export ROBOT_NAME=..."] -->|configures behavior at runtime| D
+    D --> E[Reusable robot startup routine]
+```
+
 ## File permissions
 Every file and directory on Linux has an owner, a group, and a set of read/write/execute permissions for owner, group, and everyone else. This matters in robotics constantly — a sensor device file under `/dev` might only be readable by a particular group, and a script won't run at all until it's marked executable.
 

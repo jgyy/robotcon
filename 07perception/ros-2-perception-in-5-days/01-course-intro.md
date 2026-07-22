@@ -2,6 +2,16 @@
 
 This unit is the map before the journey: it lays out what "perception" means in a ROS 2 context, previews the six units that follow, and makes sure your environment can actually run the exercises before you invest time in them.
 
+The scenario below traces the warehouse-robot demo described later in this unit through the specific units that supply each capability.
+
+```mermaid
+flowchart TD
+    A[Robot enters warehouse aisle] --> B["Follows painted line (Unit 3 image processing)"]
+    B --> C["Detects shelf via point cloud (Unit 4)"]
+    C --> D["Recognizes and counts boxes with YOLO (Unit 6)"]
+    D --> E["Capstone: Inventory Management Robot (Unit 7)"]
+```
+
 ## What you'll learn in this course
 Perception is the pipeline that turns raw sensor readings — laser scans, camera frames, 3D point clouds — into information a robot can act on: "there is an obstacle 1.2 m ahead," "that pixel blob is a red ball," "this is Alice's face," "there is a person standing in the doorway." Over the next six units you will move from raw `sensor_msgs` data all the way up to deep-learning-based detection:
 

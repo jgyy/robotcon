@@ -2,6 +2,21 @@
 
 Fleets don't operate in isolation from the rest of a facility's automation. This unit covers integrating RMF with non-robot systems — the doors and lifts you'll configure in Units 15-17, plus arms and other fixed automation.
 
+The diagram below shows how the same adapter pattern generalizes from mobile robots to doors, lifts, arms, and arbitrary building systems like a conveyor.
+
+```mermaid
+flowchart LR
+    Core["RMF Core / Traffic Scheduler"] <--> DoorAdapter["Door Adapter"]
+    Core <--> LiftAdapter["Lift Adapter"]
+    Core --> ArmAction["perform_action: arm_pick"]
+    DoorAdapter --> PLC["Door Hardware / PLC"]
+    LiftAdapter --> BMS["Lift Controller"]
+    ArmAction --> MoveIt["Arm Controller
+(e.g. MoveIt)"]
+    Core <--> ConveyorAdapter["Custom Conveyor Adapter"]
+    ConveyorAdapter --> Conveyor["Conveyor Hardware"]
+```
+
 ## The general pattern: adapters for everything, not just robots
 
 RMF applies the same adapter pattern used for mobile robots (Units 5-6) to fixed infrastructure. A door or lift gets a lightweight adapter node that translates between RMF's request/state interface and that system's actual control protocol (a PLC, a building management system API, a vendor SDK). The mobile-robot fleet adapter and a door adapter are structurally the same idea: RMF sends an abstract command, the adapter executes it on real hardware, and reports state back.

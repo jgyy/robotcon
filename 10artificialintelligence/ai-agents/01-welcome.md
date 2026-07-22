@@ -12,6 +12,17 @@ In classic robotics, a program reads sensors, runs a fixed control loop, and wri
 
 This loop — **sense, think, act, repeat** — is the mental model you should carry into every later unit. The difference between units is mostly *what "think" is made of*: a state machine, a retrieval-augmented LLM, a planner coordinating a team.
 
+The state diagram below shows this repeating cycle, which every agent design in this course is a variation of.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Sense
+    Sense --> Think: sensor reading / structured input
+    Think --> Act: chosen action
+    Act --> Sense: observe result, repeat
+    Act --> [*]: task complete
+```
+
 ## Course roadmap
 - **Unit 2 — Introduction to AI Agents**: rule-based agents versus LLM-driven agents, and where RAG fits.
 - **Unit 3 — AI Agents for Perception**: turning raw sensor streams (camera, lidar) into structured facts an agent can reason over.

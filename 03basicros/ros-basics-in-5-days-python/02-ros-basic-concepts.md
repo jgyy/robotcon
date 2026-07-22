@@ -2,6 +2,17 @@
 
 This is where you stop reading about ROS and start running it. By the end of this unit you'll have moved a simulated robot from the command line, created your own ROS package, and written and built your first ROS program.
 
+The diagram below shows how the pieces this unit introduces fit together, from a workspace on disk to a running, configurable node.
+
+```mermaid
+flowchart TD
+    WS[Workspace: ros2_ws/src] --> PKG[Package: my_first_pkg]
+    PKG --> SRC[Node source: hello_node.py]
+    SRC -->|colcon build| BIN[install/setup.bash]
+    BIN -->|source + ros2 run| NODE[Running node process]
+    NODE --> PARAM[Per-node parameter server]
+```
+
 ## Move a robot with ROS
 
 The fastest way to build intuition is to control something before you understand all the machinery underneath it. With a simulated mobile robot running, you can drive it entirely from the terminal:

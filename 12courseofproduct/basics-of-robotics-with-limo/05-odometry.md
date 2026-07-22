@@ -2,6 +2,18 @@
 
 Odometry answers the question every autonomous robot needs answered continuously: "where am I, relative to where I started?" This closing unit ties together sensors (Unit 2), frames (Unit 3), and kinematics (Unit 4) into the estimate that makes navigation possible, and is also the subject of this course's final project.
 
+The diagram below shows how wheel, IMU, and visual measurements are integrated and, in production systems, fused into a single pose estimate.
+
+```mermaid
+flowchart LR
+    Wheels[Wheel Encoders] --> Integrate["Integrate\n(dead reckoning)"]
+    Integrate --> RawOdom["Odometry estimate\nlocally accurate, drifts globally"]
+    IMU[IMU] --> Fusion["Sensor Fusion\ne.g. EKF / robot_localization"]
+    Visual[Visual Odometry] --> Fusion
+    RawOdom --> Fusion
+    Fusion --> Fused["Fused pose estimate"]
+```
+
 ## What odometry is and why it drifts
 
 Odometry is the estimated pose (position + orientation) of the robot over time, computed by integrating motion measurements rather than by any absolute external reference. Because it's an integral, small measurement errors accumulate — a slightly worn wheel, a moment of slip on a smooth floor, sensor noise — and the estimate's error grows without bound the further and longer the robot travels. This is the single most important fact about odometry: it is *locally* accurate (good over the next second) and *globally* unreliable (bad over the next ten minutes), which is precisely why localization systems later in a robotics curriculum fuse it with absolute references like a lidar-matched map or GPS.

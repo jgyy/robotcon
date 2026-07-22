@@ -2,6 +2,16 @@
 
 With filesystem basics down, this unit covers the tools that make Linux *programmable*: permissions, bash scripts, `.bashrc`, and environment variables. These are the mechanisms every ROS installation and every robot startup sequence relies on under the hood.
 
+The diagram below shows how this unit's four topics chain together into the kind of startup sequence a real robot relies on.
+
+```mermaid
+flowchart LR
+    P["Permissions<br/>chmod +x startup.bash"] --> S["Bash script<br/>startup.bash runs"]
+    S --> B["~/.bashrc<br/>sourced on every new shell"]
+    B --> ENV["Environment variables<br/>ROS_DISTRO, PATH, ROS_DOMAIN_ID"]
+    ENV --> R[Robot startup sequence]
+```
+
 ## Permissions
 Every file has an owner, a group, and permission bits for read/write/execute, shown by `ls -l`:
 

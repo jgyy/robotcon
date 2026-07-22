@@ -2,6 +2,19 @@
 
 Wireshark is the tool that turns "the topic just isn't showing up" into "here is the exact RTPS packet where discovery failed" — this unit teaches you to capture and read the wire protocol DDS actually speaks.
 
+The sequence below shows the RTPS submessage exchange between a reliable DataWriter and DataReader that you'll see decoded in a Wireshark capture.
+
+```mermaid
+sequenceDiagram
+  participant W as DataWriter
+  participant R as DataReader
+  W->>R: DATA (sample payload)
+  W->>R: HEARTBEAT (available sequence numbers)
+  R->>W: ACKNACK (request missing samples)
+  W->>R: DATA (retransmitted sample)
+  R->>W: ACKNACK (all samples received)
+```
+
 ## Capturing the right traffic
 DDS implementations speak RTPS (Real-Time Publish-Subscribe protocol) over UDP by default. Start a capture scoped to the interface and ports your robot uses, rather than capturing everything:
 

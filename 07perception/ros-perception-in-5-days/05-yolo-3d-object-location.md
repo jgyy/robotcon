@@ -2,6 +2,20 @@
 
 Where Unit 4 found objects purely from 3D geometry, this unit adds category recognition: YOLO tells you *what* an object is from a single RGB frame, and this unit shows how to fuse that 2D detection with depth data so the robot also knows *where* the object is in 3D.
 
+The diagram below shows how a 2D YOLO detection is fused with depth and camera intrinsics to produce a 3D pose in the robot's frame.
+
+```mermaid
+flowchart LR
+    RGB[RGB frame] --> YOLO[YOLO detector]
+    YOLO --> BOX["2D bbox + class + (cx, cy)"]
+    DEPTH[Depth image] --> LOOKUP["Depth at (cx, cy)"]
+    INFO["CameraInfo intrinsics"] --> LOOKUP
+    BOX --> LOOKUP
+    LOOKUP --> XYZ["3D point (x, y, z) in camera frame"]
+    XYZ --> TF[tf2 transform to base_link]
+    TF --> POSE[PoseStamped published]
+```
+
 ## Why a detector instead of thresholding
 Color/shape thresholding (Units 2-3) breaks down the moment you need to recognize dozens of object categories under varying lighting and backgrounds. YOLO ("You Only Look Once") is a single-pass convolutional network that predicts bounding boxes and class labels for an entire image at once, fast enough to run per-frame on a robot. You don't need to train YOLO from scratch for this course — pretrained weights on common object datasets (e.g. COCO) already recognize dozens of everyday categories, which is enough to practice the ROS integration pattern.
 

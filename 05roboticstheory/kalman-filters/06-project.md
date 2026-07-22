@@ -2,6 +2,22 @@
 
 This unit is deliberately hands-on: you'll build a small but complete localization pipeline that exercises everything from Units 1-5, on a simulated robot where you control the ground truth and can verify correctness directly.
 
+The diagram below shows how ground truth, noisy odometry, and noisy range readings flow into the two competing estimators — dead reckoning and the EKF — that Step 4 compares.
+
+```mermaid
+flowchart LR
+    T["True state (x, y, theta)"] --> NO["Noisy odometry"]
+    T --> NR["Noisy landmark ranges"]
+    NO --> DR["Dead reckoning accumulator"]
+    NO --> EKFp["EKF predict"]
+    NR --> EKFu["EKF update"]
+    EKFp --> EKFu
+    EKFu --> EKFp
+    DR --> Cmp["Compare final position error"]
+    EKFu --> Cmp
+    T --> Cmp
+```
+
 ## What you're building
 
 A 2D differential-drive robot moving through an environment with a few known landmarks. You will:

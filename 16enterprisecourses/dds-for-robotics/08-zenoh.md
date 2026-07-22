@@ -2,6 +2,22 @@
 
 Having seen DDS discovery's scaling and multicast problems firsthand (Unit 6), this unit introduces Zenoh — a pub/sub/query protocol that ROS 2 can use as a drop-in alternative middleware specifically to sidestep those problems.
 
+The diagram below contrasts DDS's every-participant-to-every-participant multicast mesh with Zenoh's router-funneled discovery model.
+
+```mermaid
+flowchart LR
+  subgraph DDS["DDS: O(N^2) multicast mesh"]
+    D1[Participant 1] <--> D2[Participant 2]
+    D2 <--> D3[Participant 3]
+    D1 <--> D3
+  end
+  subgraph Zenoh["Zenoh: router-funneled"]
+    Z1[Participant 1] --> R[zenohd Router]
+    Z2[Participant 2] --> R
+    Z3[Participant 3] --> R
+  end
+```
+
 ## What Zenoh is, and isn't
 Zenoh ("Zero Overhead Network Protocol") is not a DDS implementation — it's a separate protocol designed from the start for constrained, wireless, and WAN networks, built around explicit routing and brokered discovery rather than DDS's default multicast-everywhere approach. ROS 2 supports it via `rmw_zenoh_cpp`, an `rmw` implementation just like `rmw_cyclonedds_cpp`, meaning you switch to it the same way you switch DDS vendors:
 

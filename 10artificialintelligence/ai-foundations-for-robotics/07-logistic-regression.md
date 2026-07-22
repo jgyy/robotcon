@@ -2,6 +2,23 @@
 
 Every idea from Units 2–6 — probability, MLE, decision theory, cross-entropy — converges here into the first genuinely trainable model in the course. Logistic regression is small enough to derive by hand but structurally identical to the output layer of every deep classifier you'll meet in later courses, which makes it the ideal bridge from theory to practice.
 
+The sequence diagram below shows the repeating forward/backward/update cycle that trains the logistic regression model.
+
+```mermaid
+sequenceDiagram
+    participant Data as Training Data
+    participant Model as LogisticRegression
+    participant Loss as BCELoss
+    participant Opt as Optimizer
+
+    loop each epoch
+        Data->>Model: forward(x)
+        Model-->>Loss: predicted probability
+        Loss-->>Opt: loss value
+        Opt->>Model: backward + step (update w, b)
+    end
+```
+
 ## From linear scores to probabilities: the sigmoid
 A linear model `w·x + b` produces an unbounded real number — not a valid probability. The **sigmoid function** squashes it into (0, 1):
 

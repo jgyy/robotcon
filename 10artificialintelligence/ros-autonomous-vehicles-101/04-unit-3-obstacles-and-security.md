@@ -2,6 +2,21 @@
 
 Knowing where you are (Unit 2) is useless if you drive into something along the way. This unit covers detecting obstacles from laser data, reacting to them, and building the safety systems a Level 3 car needs to hand control back cleanly.
 
+The diagram below shows the reactive decision logic this unit builds: how a laser scan becomes a stop/slow/cruise command, with the watchdog able to force an emergency stop at any point.
+
+```mermaid
+flowchart TD
+    Scan["/scan LaserScan"] --> Closest["min_range_in_forward_cone()"]
+    Closest --> D1{"closest < stop_distance?"}
+    D1 -->|yes| Stop["Stop + turn to find clear path"]
+    D1 -->|no| D2{"closest < slow_distance?"}
+    D2 -->|yes| Slow["Slow proportionally"]
+    D2 -->|no| Cruise["Cruise at full speed"]
+    WD["Watchdog: topic gone silent?"] -->|yes| EStop["Emergency stop /estop"]
+    Stop --> Arb["Overrides waypoint follower"]
+    Slow --> Arb
+```
+
 ## Reading obstacles from LaserScan
 A `sensor_msgs/msg/LaserScan` message is an array of range readings swept across an angle. The key fields:
 

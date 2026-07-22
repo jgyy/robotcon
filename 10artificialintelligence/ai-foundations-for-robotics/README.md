@@ -2,6 +2,19 @@
 
 This course is the mathematical substrate underneath every other AI-for-robotics course in this repo: probability (single and multiple random variables), statistics (turning observed data into model parameters), decision theory (turning probabilities into optimal robot actions), information theory (measuring and comparing uncertainty), and logistic regression (the first real trainable model built from all of the above). Each unit is strictly cumulative and worked through a single running example — a mobile robot searching a building, sensing its surroundings, and sorting what it finds — culminating in a final project that trains an image classifier and wraps it in a genuine decision policy.
 
+The diagram below shows how each unit's material builds directly on the one before it.
+
+```mermaid
+flowchart LR
+    U1["Unit 1: Introduction"] --> U2["Unit 2: Univariate Probability"]
+    U2 --> U3["Unit 3: Multivariate Probability"]
+    U3 --> U4["Unit 4: Statistics"]
+    U4 --> U5["Unit 5: Decision Theory"]
+    U5 --> U6["Unit 6: Information Theory"]
+    U6 --> U7["Unit 7: Logistic Regression"]
+    U7 --> U8["Unit 8: Final Project"]
+```
+
 1. [Introduction to AI for Robotics](01-introduction-to-ai-for-robotics.md) — What this course covers, a preview of classification-with-reject-option, and the prerequisites you need before Unit 2.
 2. [Probability Through Univariate Models](02-probability-through-univariate-models.md) — Sample spaces and events, the algebra of probability, Bayes' rule, random variables, and the common discrete/continuous distributions.
 3. [Probability Through Multivariate Models](03-probability-through-multivariate-models.md) — Joint/marginal/conditional distributions, covariance and correlation, the multivariate Gaussian, and a worked Bayesian position-estimation example.

@@ -2,6 +2,16 @@
 
 Not every frame relationship changes over time. This unit covers the tool built specifically for the frames that never move, and the two common ways to publish them.
 
+The flowchart below captures the decision this unit is really about: which topic a given frame relationship belongs on.
+
+```mermaid
+flowchart TD
+    Q{"Does this frame relationship ever change?"}
+    Q -->|Yes: wheel, pan-tilt joint| Dynamic["Publish on /tf via TransformBroadcaster\n(repeated, e.g. 50 Hz)"]
+    Q -->|No: lidar bolted to chassis| Static["Publish on /tf_static via static_transform_publisher\n(sent once, transient-local QoS)"]
+    Static --> Late["Late-joining subscribers still receive it"]
+```
+
 ## Why static transforms are their own thing
 A lidar bolted to a chassis, a camera mounted on a fixed bracket, or the offset between a robot's `base_link` and `base_footprint` never changes for the lifetime of the run. Publishing that relationship over and over on `/tf` at, say, 50 Hz wastes bandwidth and CPU for no benefit. `/tf_static` exists for exactly this: the publisher sends the transform once, using "transient local" QoS, and any listener that subscribes later — even long after the message was sent — still receives it, because the middleware retains the last sample for late joiners. Everything else about a static transform (translation, rotation, parent/child naming) is identical to a normal one; only the publishing pattern differs.
 

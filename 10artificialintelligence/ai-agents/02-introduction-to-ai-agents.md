@@ -2,6 +2,19 @@
 
 This unit covers the spectrum of agent designs used in robotics, from simple rule-based reactive agents to LLM-driven agents that plan with natural language, and introduces Retrieval-Augmented Generation (RAG) as a way to ground those agents in facts they weren't trained on.
 
+The flow below traces how RAG grounds an LLM-driven agent's decision in retrieved facts rather than the model's own memory, the most process-heavy idea in this unit.
+
+```mermaid
+flowchart LR
+    Docs[Facility documents] --> Index[Index: embed and store chunks]
+    Query[Agent query / current state] --> Embed[Embed query]
+    Embed --> Retrieve[Retrieve top-k similar chunks]
+    Index --> Retrieve
+    Retrieve --> Augment[Augment prompt with retrieved text]
+    Augment --> LLM[LLM call]
+    LLM --> Decision[Structured decision, JSON]
+```
+
 ## Rule-based agents
 The simplest agent is a lookup table or a chain of `if`/`elif` statements mapping sensed state to an action. These are fast, fully predictable, and easy to verify — which is exactly why safety-critical low-level behaviors (e.g. "stop if obstacle_distance < 0.3m") are almost always implemented this way, even in agents that use an LLM for higher-level reasoning.
 

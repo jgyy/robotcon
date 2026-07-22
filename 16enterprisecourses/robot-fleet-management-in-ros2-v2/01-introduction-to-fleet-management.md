@@ -2,6 +2,21 @@
 
 Before touching any code, it helps to understand the problem Open-RMF (Robotics Middleware Framework) exists to solve: coordinating many robots, from many vendors, sharing the same physical space and infrastructure. This unit sets the vocabulary and mental model you'll use for the rest of the course.
 
+The diagram below maps how RMF's core actors relate: a task request flows through the dispatcher and traffic scheduler, which reasons against the shared navigation graph and building infrastructure before reaching each fleet's adapter and robots.
+
+```mermaid
+flowchart LR
+    Requester["Task Requester"] --> Dispatcher["Task Dispatcher"]
+    Dispatcher --> Scheduler["Traffic Scheduler / Negotiator"]
+    Scheduler --> Graph[("Navigation Graph")]
+    Scheduler --> AdapterA["Fleet Adapter - Fleet A"]
+    Scheduler --> AdapterB["Fleet Adapter - Fleet B"]
+    AdapterA --> RobotA["Robot A"]
+    AdapterB --> RobotB["Robot B"]
+    Infra["Building Infra Adapters
+(Doors / Lifts)"] --> Scheduler
+```
+
 ## Why fleet management is a distinct problem
 
 Controlling one robot is a navigation and task-execution problem. Controlling twenty robots from three vendors sharing a corridor, an elevator, and a set of automatic doors is a *coordination* problem, and the two are not the same skillset. A single-robot stack cares about localization, planning, and control. A fleet layer sits above that and cares about:

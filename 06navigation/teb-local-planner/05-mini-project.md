@@ -2,6 +2,16 @@
 
 Time to put Units 1 through 4 together into a single working, tuned setup rather than isolated exercises. This project asks you to configure TEB end to end on a robot of your choice and prove, with evidence, that it's actually performing well.
 
+The diagram below shows the five-step workflow this project follows, from initial bring-up to a stress test under a moving obstacle.
+
+```mermaid
+flowchart TD
+    A[Bring-up: robot, map, localization, TEB] --> B[Baseline run on default parameters]
+    B --> C[Tune using RViz and Unit 3/4 parameter groups]
+    C --> D[Re-run and capture evidence of improvement]
+    D --> E[Stress test: reposition dynamic obstacle mid-run]
+```
+
 ## Project brief
 
 Set up a simulated robot — differential-drive or car-like, your choice — with the full Navigation Stack, TEB as the active local planner, and a cluttered test environment containing at least:

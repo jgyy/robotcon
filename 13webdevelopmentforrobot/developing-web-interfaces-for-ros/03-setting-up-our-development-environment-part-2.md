@@ -2,6 +2,19 @@
 
 With rosbridge running (Unit 2), the second half of environment setup happens entirely on the web side: getting `roslibjs` into a page, standing up a local dev server, and establishing the project layout you'll reuse for the rest of the course.
 
+The diagram below shows the ROS connection's lifecycle states as the three event handlers transition between them.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Disconnected
+    Disconnected --> Connecting: new ROSLIB.Ros(url)
+    Connecting --> Connected: 'connection' event
+    Connecting --> Disconnected: 'error' event
+    Connected --> Disconnected: 'close' event
+    Connected --> Disconnected: 'error' event
+    Disconnected --> [*]
+```
+
 ## Getting roslibjs into your project
 `roslibjs` can be included two ways. For quick experiments, load it directly in an HTML `<script>` tag from a CDN:
 

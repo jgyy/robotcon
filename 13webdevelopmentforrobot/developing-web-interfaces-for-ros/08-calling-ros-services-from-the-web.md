@@ -2,6 +2,28 @@
 
 Topics are fire-and-forget streams; services are request/response calls with a defined answer. This unit covers `ROSLIB.Service`, the pattern for anything a web UI needs to ask ROS and wait for a result — resetting odometry, toggling a mode, querying a lookup.
 
+The diagram below shows the request/response exchange for a service call, including the separate success and failure paths.
+
+```mermaid
+sequenceDiagram
+    participant U as Operator
+    participant P as Web Page
+    participant B as rosbridge
+    participant S as ROS Service
+    U->>P: click button (disable it)
+    P->>B: callService(request)
+    B->>S: service call
+    alt success
+        S-->>B: response
+        B-->>P: success callback
+        P->>P: re-enable button, show result
+    else failure
+        S-->>B: error / no server
+        B-->>P: failure callback
+        P->>P: re-enable button, show error
+    end
+```
+
 ## The ROSLIB.Service call pattern
 Like topics, you declare the service by name and type, then call it with a request object and a callback for the response.
 

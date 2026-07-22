@@ -2,6 +2,16 @@
 
 By now your URDF files are getting long and repetitive — two wheels defined almost identically, inertia formulas typed out by hand, sensor blocks duplicated with only a name changed. Xacro (XML Macros) is the templating layer that fixes this, and it's what real-world robot descriptions are almost always written in rather than raw URDF.
 
+The diagram below shows how a Xacro source file is expanded into plain URDF before any downstream ROS2 tool ever sees it.
+
+```mermaid
+flowchart LR
+    Source["`.urdf.xacro`<br/>properties + macros + conditionals"] --> Processor[xacro processor]
+    Processor --> URDF[Plain expanded URDF]
+    URDF --> RSP[robot_state_publisher]
+    URDF --> RViz[RViz2 / Gazebo Sim]
+```
+
 ## Basics of using Xacro
 
 Xacro is a preprocessor: you write a `.urdf.xacro` file using an extended XML vocabulary (properties, macros, conditionals, math expressions), and a Xacro processor expands it into plain URDF before anything else (RViz2, `robot_state_publisher`, Gazebo) ever sees it. Nothing downstream needs to know Xacro exists — it only ever consumes the final expanded URDF.

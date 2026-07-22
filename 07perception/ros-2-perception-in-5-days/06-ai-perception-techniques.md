@@ -2,6 +2,18 @@
 
 Everything up to this unit used classical, hand-designed algorithms (color thresholds, Haar cascades, RANSAC). This unit switches to a learned deep-learning detector — YOLO — and shows how the same "detect, then act" pattern from earlier units extends naturally to a much more capable model.
 
+The diagram below shows one YOLO forward pass fanning out into the three task heads this unit covers.
+
+```mermaid
+flowchart TD
+    A["sensor_msgs/Image"] --> B["cv_bridge -> frame"]
+    B --> C["Single YOLO forward pass"]
+    C --> D["Detection: boxes + classes + scores"]
+    C --> E["Pose: per-person keypoints"]
+    C --> F["Segmentation: per-instance masks"]
+    D --> G["/detections topic"]
+```
+
 ## How YOLO works
 YOLO ("You Only Look Once") reframes object detection as a single regression problem instead of the classical "propose regions, then classify each one" pipeline: the whole image passes through one convolutional network exactly once, and the network directly outputs a set of bounding boxes with class labels and confidence scores in one forward pass. That's the source of its main advantage — speed — which is what makes it practical to run on a live robot camera feed rather than only on static images.
 

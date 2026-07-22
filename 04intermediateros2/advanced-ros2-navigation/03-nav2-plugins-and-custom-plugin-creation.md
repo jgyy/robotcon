@@ -2,6 +2,16 @@
 
 Nearly every algorithmic piece of Nav2 — how a costmap layer marks obstacles, how a global path is computed, how a robot is steered along it — is a swappable plugin loaded at runtime, not something you edit and recompile Nav2 itself for. This unit covers how that plugin system works and walks through building one of each kind: a costmap plugin, a planner plugin, and a controller plugin.
 
+The diagram below is the five-step recipe this unit keeps returning to — every custom costmap, planner, or controller plugin walks the same path from bare package to a loaded, tested plugin.
+
+```mermaid
+flowchart TD
+    S1[1. Create ROS 2 package] --> S2[2. Subclass base class in source/header]
+    S2 --> S3[3. Write plugin description XML]
+    S3 --> S4[4. Wire up CMakeLists.txt & package.xml]
+    S4 --> S5[5. Build, configure via YAML, test]
+```
+
 ## Plugins in Nav2: the pluginlib pattern
 
 Nav2 builds on ROS's `pluginlib`: each server (`costmap_2d`, `planner_server`, `controller_server`, ...) defines a C++ base class with a fixed interface, and plugins are concrete subclasses compiled into their own shared library, registered by name, and selected purely through YAML parameters at launch time — no changes to Nav2's own source. This is exactly the same mechanism `rviz2` uses for display types and `gazebo`/similar simulators use for sensor/physics plugins, so if you've touched either before the pattern will feel familiar.

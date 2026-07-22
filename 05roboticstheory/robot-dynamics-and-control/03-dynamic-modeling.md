@@ -2,6 +2,18 @@
 
 Unit 2 gave you the physics of one rigid body. This unit shows how to combine that across a chain of connected links to get the full equations of motion for a simple robotic system — the model that every controller in this course (and most controllers you'll meet outside it) is built on top of.
 
+The flowchart below traces the Euler-Lagrange derivation from generalized coordinates to the final manipulator equation of motion.
+
+```mermaid
+flowchart LR
+    Q["Generalized coordinates<br/>q, q_dot"] --> KE["Kinetic energy K(q, q_dot)"]
+    Q --> PE["Potential energy P(q)"]
+    KE --> L["Lagrangian L = K - P"]
+    PE --> L
+    L --> EL["Euler-Lagrange:<br/>d/dt(dL/dq_dot) - dL/dq = tau"]
+    EL --> EOM["M(q)q_ddot + C(q,q_dot)q_dot + G(q) = tau"]
+```
+
 ## The Euler-Lagrange approach
 Rather than tracking forces and torques link by link (Newton-Euler, from Unit 2), the Lagrangian approach derives equations of motion from a single scalar function, the Lagrangian `L = K - P` (total kinetic energy minus total potential energy of the whole system, both expressed in terms of the generalized coordinates `q` and their derivatives `q_dot`). The equations of motion drop out of:
 

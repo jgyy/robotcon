@@ -2,6 +2,18 @@
 
 Topics are great for streams, but not every interaction is a stream — sometimes you need a request that gets exactly one response, like "take a photo now" or "compute a path." That's what ROS 2 services are for. This unit covers writing service servers and clients, the sync/async tradeoff, and custom service interfaces, using a small "NASA mission" scenario as the running example.
 
+The sequence below shows the one request, one response shape of a service call, contrasted with a topic's ongoing stream — this is the core distinction the rest of the unit builds on.
+
+```mermaid
+sequenceDiagram
+    participant C as TaskClient
+    participant S as TaskServer
+    C->>S: SetTask request (task_name: "drill")
+    Note right of S: handle() processes the request
+    S-->>C: SetTask response (accepted, message)
+    Note over C,S: Interaction complete — no ongoing stream
+```
+
 ## What makes a service different from a topic?
 
 A service is a **request/response** call, not a stream: one client sends a request, one server processes it and sends back exactly one response, then the interaction is done. Where a topic is many-to-many and asynchronous by nature, a service is typically one-to-one and — from the client's point of view — often used synchronously, like a remote function call. Use a service when you need a result back and a clear success/failure per call (e.g., "reset the odometry," "compute inverse kinematics for this pose"); use a topic when you're streaming ongoing state or events nobody needs to acknowledge.

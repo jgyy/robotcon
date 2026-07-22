@@ -2,6 +2,19 @@
 
 Color blob tracking is the simplest useful perception pipeline you can build, and it teaches the two ideas every later unit reuses: isolating a region of interest with thresholding, and turning a pixel location into a decision your robot can act on.
 
+The diagram below traces the blob-tracking pipeline from a raw frame to the proportional-control command that keeps the blob centered.
+
+```mermaid
+flowchart TD
+    A[Camera frame BGR] --> B[Convert to HSV]
+    B --> C[cv2.inRange threshold]
+    C --> D[Erode / Dilate noise removal]
+    D --> E[findContours]
+    E --> F["Largest contour centroid (cx, cy)"]
+    F --> G[error = cx - image_center_x]
+    G --> H["Twist angular.z = -gain * error"]
+```
+
 ## Why HSV instead of RGB
 RGB mixes color and brightness together, so the same red ball looks like a different RGB triple under different lighting. HSV (Hue, Saturation, Value) separates color (Hue) from brightness (Value), which makes thresholding far more robust to lighting changes. OpenCV's `cvtColor` converts between spaces:
 ```python

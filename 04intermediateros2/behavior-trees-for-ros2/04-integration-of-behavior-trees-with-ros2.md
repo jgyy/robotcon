@@ -2,6 +2,24 @@
 
 Everything so far has been abstract tree structure. This unit makes it concrete: writing custom BehaviorTree.CPP nodes that call ROS2 actions, services, and topics, loading and ticking a tree from a ROS2 node, and visualizing execution live with Groot2.
 
+The sequence diagram below shows one tick cycle end-to-end: the wall timer driving the tree, the tree ticking a `RosActionNode`, and that node talking to a real ROS2 action server over goal/feedback/result.
+
+```mermaid
+sequenceDiagram
+    participant Timer as Wall Timer (10 Hz)
+    participant Tree as BT::Tree
+    participant Node as RosActionNode
+    participant Server as ROS2 Action Server
+    Timer->>Tree: tickOnce()
+    Tree->>Node: tick()
+    Node->>Server: send_goal()
+    Server-->>Node: feedback
+    Node-->>Tree: RUNNING
+    Server-->>Node: result
+    Node-->>Tree: SUCCESS / FAILURE
+    Tree-->>Timer: tree status
+```
+
 ## Custom action nodes that call ROS2 actions
 
 Most robot behaviors of any duration — navigation, arm trajectories, grippers — are already exposed as ROS2 **actions**, so the natural BT leaf node wraps an action client. BehaviorTree.CPP provides `BT::RosActionNode` as a base class specifically for this:

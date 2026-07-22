@@ -2,6 +2,16 @@
 
 This closing unit isn't a new topic — it's a map of where to go next, now that you have the core ROS 2 vocabulary (nodes, topics, services, actions, callbacks, multithreading, debugging) under your belt.
 
+The diagram below shows how the specialized follow-on courses this unit describes all branch off the same shared foundation:
+
+```mermaid
+flowchart LR
+    Foundation[ROS 2 Core Foundation: nodes, topics, services, actions, callbacks] --> Perception[Perception: OpenCV, point clouds]
+    Foundation --> Manipulation[Manipulation: MoveIt]
+    Foundation --> Navigation[Navigation: costmaps, planning, localization]
+    Foundation --> Simulation[Simulation: Gazebo]
+```
+
 ## What you now have
 You can scaffold and build a package, write nodes that publish and subscribe, expose and call services, run and monitor long-running actions, reason about when a slow callback needs its own callback group, and diagnose a broken graph with `ros2 doctor`, RViz2, and TF tools. That's a genuinely complete foundation — it's the same vocabulary used in navigation stacks, manipulation pipelines, and perception systems; those courses will introduce *domain* concepts (costmaps, planning scenes, point cloud filters) on top of mechanics you already know.
 

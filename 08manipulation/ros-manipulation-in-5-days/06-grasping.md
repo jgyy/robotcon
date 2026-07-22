@@ -2,6 +2,19 @@
 
 Motion planning gets the end effector to a pose; grasping is what makes the trip worthwhile. This unit covers how to define a grasp, sequence a pick-and-place task around it, and tell the planning scene that an object is now attached to (and later detached from) the robot.
 
+The state diagram below shows the pick-and-place task as the state machine it actually is:
+
+```mermaid
+stateDiagram-v2
+    [*] --> PreGrasp
+    PreGrasp --> Grasp: approach object
+    Grasp --> Attached: close gripper
+    Attached --> Retreat
+    Retreat --> Place: transit with object
+    Place --> Detached: open gripper
+    Detached --> [*]: retreat home
+```
+
 ## What defines a grasp
 
 A grasp is more than one target pose — it's typically a small sequence: a **pre-grasp** pose (approach point, gripper open, offset from the object along the approach axis), the **grasp** pose itself (gripper positioned around the object), a gripper-close action, and a **retreat** pose (usually straight back along the approach axis, to avoid dragging the object through other geometry). MoveIt models this with the `moveit_msgs/Grasp` message, which bundles the grasp pose plus pre-grasp/grasp posture (gripper joint states) and approach/retreat directions in one structure that the `pick()` planning call consumes directly.

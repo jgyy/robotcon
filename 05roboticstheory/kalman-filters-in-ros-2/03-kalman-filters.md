@@ -2,6 +2,19 @@
 
 The Bayes filter from Unit 2 works on any distribution but is expensive: a fine grid over a 6D robot state (x, y, theta, and their velocities) is computationally hopeless. A Kalman filter is the same predict/correct recursion restricted to **Gaussian** beliefs, which collapses "update a whole distribution" into "update a mean and a covariance matrix with matrix algebra" — cheap enough to run at hundreds of Hz on real hardware.
 
+The diagram below shows the same predict/correct recursion from Unit 2, now expressed as matrix updates to a mean/covariance pair `(x, P)` with the Kalman gain deciding how much a new measurement moves the estimate.
+
+```mermaid
+flowchart TD
+    State["(x, P): mean & covariance"] --> Predict["Predict: x = Fx + Bu, P = FPFᵀ + Q"]
+    U[Motion input u] --> Predict
+    Predict --> State2["Predicted (x, P)"]
+    State2 --> Gain["Kalman gain K = P Hᵀ S⁻¹"]
+    Z[Measurement z] --> Gain
+    Gain --> Correct["Correct: x = x + Ky, P = (I - KH)P"]
+    Correct -->|next timestep| Predict
+```
+
 ## From histograms to Gaussians
 
 A histogram belief needs one number per grid cell. A Gaussian belief needs only two numbers, mean `μ` and variance `σ²`, regardless of how fine you'd want the grid to be — and crucially, the sum or product of two Gaussians is itself a Gaussian, so the predict and correct steps stay closed-form forever instead of needing renormalization over an ever-larger grid. The tradeoff: a Gaussian belief can only represent one "hump" of confidence. If the robot might genuinely be in one of two rooms, a single Gaussian can't represent that — you'd need a particle filter (Unit 5) for that case.

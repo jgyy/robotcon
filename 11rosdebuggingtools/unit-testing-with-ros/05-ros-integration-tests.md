@@ -2,6 +2,25 @@
 
 Unit 4 tested one node in isolation, inside a single test process. Real robot bugs frequently live *between* nodes: a topic name mismatch, incompatible QoS profiles, a message field one node fills in differently than another expects. This unit brings up actual separate node processes via a launch file and tests the system as a whole.
 
+The sequence diagram below shows the process boundary this unit adds on top of Unit 4: the node under test now runs as its own launched process, separate from the test driver.
+
+```mermaid
+sequenceDiagram
+    participant Launch as launch_testing
+    participant Proc as goal_checker_node (separate process)
+    participant Driver as test_driver node
+
+    Launch->>Proc: start process with parameters
+    Launch->>Launch: ReadyToTest()
+    loop spin_once until received
+        Driver->>Proc: publish current_position (DDS)
+        Proc-->>Driver: publish goal_reached (DDS)
+    end
+    Driver->>Driver: assertTrue(received[0].data)
+    Launch->>Proc: shut down process
+    Launch->>Launch: post_shutdown_test: assertExitCodes
+```
+
 ## Why integration tests are a separate, smaller layer
 Launching real processes is slow (seconds, not milliseconds) and can be flaky if timing isn't handled carefully, so you write far fewer of these than library or node-level tests. Their job isn't to re-verify logic you already covered — it's to catch the specific class of bugs that *only* exist when independent processes actually talk to each other over the wire: wrong topic name in one node's config, a QoS mismatch that silently drops messages, launch argument wiring that's wrong.
 

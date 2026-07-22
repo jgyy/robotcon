@@ -2,6 +2,18 @@
 
 States are just Python classes, which means you can — and should — test them without ever launching a robot, a simulator, or even a ROS master. This unit covers how to isolate state logic and test it the same way you'd test any other class.
 
+The flowchart below shows the decision this unit walks through: test simple state logic directly, but mock the action client for Actionlib-backed states, before ever touching a simulator or robot.
+
+```mermaid
+flowchart TD
+    A[New FlexBE state] --> B{Calls an action server?}
+    B -- No --> C[Instantiate state directly,<br/>call on_enter / execute]
+    B -- Yes --> D[Mock ProxyActionClient<br/>with unittest.mock.patch]
+    C --> E[Assert returned outcome]
+    D --> E
+    E --> F[Wire into behavior,<br/>test on simulator / robot]
+```
+
 ## Why test states in isolation
 
 Behaviors fail in layers: the state logic can be wrong, the wiring between states can be wrong, or the real hardware/action server can misbehave. If your only test is "run the whole behavior on the robot," a bug in state logic and a flaky action server look identical from the outside, and every debug cycle costs you a robot (or simulator) boot. Unit testing a state in isolation collapses that to a fast, deterministic, no-robot-required check.

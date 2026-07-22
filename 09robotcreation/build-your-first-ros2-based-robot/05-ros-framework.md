@@ -2,6 +2,24 @@
 
 This is where the robot becomes software-controllable: you'll create a proper ROS 2 workspace, write the packages that turn velocity commands into wheel motion, and wrap it all in a single bringup entry point.
 
+The sequence diagram below traces a single velocity command from publication on `/cmd_vel` through the motor driver node and serial link to the microcontroller that actually turns the wheels.
+
+```mermaid
+sequenceDiagram
+    participant Pub as Publisher (teleop/CLI)
+    participant Topic as /cmd_vel
+    participant Node as motor_driver_node
+    participant Serial as Serial Link
+    participant MCU as Microcontroller
+
+    Pub->>Topic: Twist(linear.x, angular.z)
+    Topic->>Node: cmd_vel_callback(msg)
+    Node->>Node: compute v_left, v_right
+    Node->>Serial: "L:0.35,R:0.35\n"
+    Serial->>MCU: forward command
+    MCU-->>Serial: "l:0.34,r:0.36\n" (measured)
+```
+
 ## ROS 2 workspace
 ROS 2 code lives in a *workspace* — a directory tree that `colcon` (the standard ROS 2 build tool) knows how to build and that, once built, gets *sourced* to put its packages on your ROS 2 environment path.
 ```bash

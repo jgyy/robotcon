@@ -2,6 +2,18 @@
 
 This unit orients you to what "ROS Manipulation" actually means, the toolchain you'll be using all week (MoveIt on top of ROS), and how the next six units build on each other so you always know where a given skill fits into the bigger pick-and-place picture.
 
+The diagram below shows the set-goal-plan-execute loop that every unit in this course, and every MoveIt-driven robot, repeats:
+
+```mermaid
+flowchart LR
+    A[Set Goal in RViz] --> B[Planner computes collision-free path]
+    B --> C{Valid plan found?}
+    C -->|Yes| D[Execute on controller]
+    C -->|No| A
+    D --> E[Robot animates the path]
+    E --> A
+```
+
 ## What "manipulation" means in ROS
 
 In robotics, manipulation is any task where a robot changes the state of its environment through contact — picking up a part, turning a valve, inserting a peg, opening a door. In ROS terms, that almost always means: a kinematic chain (the arm), an end effector (gripper, sucker, or hand), a planner that computes a collision-free path from the current state to a goal state, and a controller that executes that path on real or simulated joints. Manipulation sits on top of everything you already know about ROS nodes, topics, and TF — it adds motion planning and collision checking as the new pieces.

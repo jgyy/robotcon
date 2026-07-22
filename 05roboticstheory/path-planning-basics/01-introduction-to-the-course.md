@@ -2,6 +2,17 @@
 
 This unit sets the frame for everything that follows: what path planning actually is, where it sits inside the larger autonomous-navigation stack, and why the four algorithm families covered later (Dijkstra, A*, RRT, potential fields) each earn a place in a robot's toolbox.
 
+The diagram below shows where path planning sits between perception/localization and control, and how it splits into the global and local planning families covered later in the course.
+```mermaid
+flowchart TD
+    P[Perception and Localization: where am I, what does the world look like] --> PP[Path Planning]
+    PP --> C[Control: drive wheels and joints to follow the path]
+    PP --> G[Global Planning: full map, computed once before moving]
+    PP --> L[Local Planning: live sensor data, continuously refined]
+    G --> G2[Units 2-4: Dijkstra, A*, RRT]
+    L --> L2[Unit 5: Artificial Potential Fields]
+```
+
 ## What is path planning?
 Given a robot's current pose, a goal pose, and a representation of the environment (occupied vs. free space), path planning is the problem of computing a sequence of positions (or configurations) that takes the robot from start to goal without colliding with anything. That's distinct from *control*, which is the separate problem of actually driving the wheels/joints to follow the planned path, and from *localization*, which is figuring out where the robot currently is. Path planning sits between "where am I and what does the world look like" (perception + localization) and "how do I move my actuators to get there" (control).
 

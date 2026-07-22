@@ -2,6 +2,18 @@
 
 Navigation gets the robot moving; this unit gives it a reason to react to what it finds. You'll detect people with two independent sensors — laser and camera — recognize who they are, and turn a detection into a pose the robot can act on.
 
+The diagram below shows how the two independent sensor pipelines both converge on a single localized, permission-checked pose.
+
+```mermaid
+flowchart LR
+    Laser[Hokuyo LaserScan] --> LegDet[Leg-cluster detector]
+    Cam[PTZ camera image] --> HOG[HOG person detector]
+    HOG --> Recog[Face recognition]
+    Recog --> Perm[Permission check]
+    LegDet --> Pose[Pose in map frame via TF]
+    Perm --> Pose
+```
+
 ## Detecting legs in the laser scan
 
 A 2D laser scan sees people as a pair of small, roughly circular clusters near leg-width apart, moving relative to the static background. A simple leg detector doesn't need machine learning — it's a clustering pass over the scan:

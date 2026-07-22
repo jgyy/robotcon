@@ -2,6 +2,15 @@
 
 This course teaches `openai_ros`, a package originally built by The Construct that wraps ROS/Gazebo robot simulations behind the OpenAI Gym API, so you can point standard reinforcement-learning (RL) algorithms at a simulated robot exactly as you would at any Gym environment. This unit previews the architecture you'll be building against for the rest of the course and gets your workspace ready.
 
+The diagram below shows how the three `openai_ros` layers inherit from each other and where the Gym-facing contract sits on top.
+
+```mermaid
+flowchart TD
+    A["RobotGazeboEnv<br/>pause/unpause Gazebo, reset world"] --> B["RobotEnv (e.g. CartPoleEnv, FetchEnv)<br/>sensor topics and actuator commands"]
+    B --> C["TaskEnv (e.g. CartPoleStayUpEnv)<br/>action_space, observation_space, reward, done"]
+    C --> D["gym.make(...) / env.reset() / env.step()<br/>the only contract the RL algorithm sees"]
+```
+
 ## Why bridge ROS and Gym-style RL
 
 ROS is built around asynchronous topics, services, and callbacks — a good fit for real-time robot control, but a poor fit for RL libraries, which expect a synchronous `env.reset()` / `env.step(action)` loop that blocks until the next observation and reward are ready. `openai_ros` is the adapter layer: it drives Gazebo (pause/unpause physics, reset the world) and the robot's ROS interfaces underneath, while exposing the clean, synchronous Gym contract on top. Every algorithm you use later in this course — tabular Q-learning, DeepQ, HER — is written against that Gym contract and has no idea ROS exists underneath it.

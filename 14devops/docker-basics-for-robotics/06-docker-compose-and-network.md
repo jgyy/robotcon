@@ -2,6 +2,18 @@
 
 Real robotics systems are rarely a single container: a perception node, a controller, a database, and a visualization tool might all need to run and talk to each other. This unit covers Docker's networking model and Compose, the tool for defining and launching multi-container systems as one unit.
 
+The diagram below shows the multi-container Compose stack from this unit's example: three services discoverable by name on one shared network.
+
+```mermaid
+flowchart LR
+    subgraph robot-net[robot-net network]
+        Controller[controller] --> SensorSim[sensor-sim]
+        Visualizer[visualizer] --> Controller
+    end
+    SensorSim --> Vol[(sim-data volume)]
+    Visualizer -->|"8080:8080"| Host[Host machine]
+```
+
 ## Docker networking basics
 By default, `docker run` attaches a container to the `bridge` network, where it gets a private IP address and can reach the outside world through NAT, but is not reachable from the host without explicit port publishing (`-p`). Containers on the same **user-defined** bridge network can resolve each other by container name via Docker's built-in DNS — this is the mechanism Compose relies on.
 

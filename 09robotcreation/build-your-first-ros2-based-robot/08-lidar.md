@@ -2,6 +2,16 @@
 
 Your robot can now move and knows its own shape; this unit gives it its first real sense of the world outside — a 2D LiDAR that measures distance to obstacles in a full sweep around itself.
 
+The diagram below traces the LiDAR's data from raw serial hardware, through the stable udev symlink and ROS 2 driver, to the `/scan` topic the rest of the stack consumes.
+
+```mermaid
+flowchart LR
+    Lidar[LSLiDAR N-10] -->|USB serial| Udev["udev rule: /dev/lidar"]
+    Udev --> Driver[ROS 2 LiDAR driver]
+    Driver -->|"sensor_msgs/LaserScan"| Scan["/scan"]
+    Scan --> Downstream[Mapping / Navigation]
+```
+
 ## LSLiDAR N-10
 A 2D LiDAR like the LSLiDAR N-10 spins a laser rangefinder and reports distance measurements at many angles per revolution, producing exactly the kind of data ROS 2's `sensor_msgs/LaserScan` message is built for: a starting angle, an angular step, and an array of ranges. When evaluating any LiDAR (this one or another), the specs that matter for a small indoor robot are:
 - **Range** (minimum and maximum reliable distance) — determines how early it sees obstacles and how close it can safely get.

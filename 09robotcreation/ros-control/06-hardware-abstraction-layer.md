@@ -2,6 +2,18 @@
 
 Every unit so far has used a simulator's hardware interface without asking what's underneath it. This unit opens that box: the Hardware Abstraction Layer (HAL) is the piece that actually talks to motors and sensors, and it's what you'll need to write yourself to move `ros_control`/`ros2_control` off simulation and onto real hardware.
 
+The diagram below shows the HAL's bridging role in both directions: controllers only ever see named interfaces, while the HAL translates those into whatever protocol the real (or simulated) hardware speaks.
+
+```mermaid
+flowchart LR
+    Ctrl[Controller] -->|writes| CI[command_interfaces_]
+    CI --> HAL["Hardware Interface (SystemInterface)"]
+    HAL -->|write| Dev[Real actuators / CAN / serial / sim API]
+    Dev -->|read| HAL
+    HAL --> SI[state_interfaces_]
+    SI -->|reads| Ctrl
+```
+
 ## What the HAL's job actually is
 Controllers (Unit 4) only ever read and write named state/command interfaces — they have no idea whether those interfaces are backed by a CAN bus, a serial-connected motor controller, or a Gazebo physics engine. The HAL is the translation layer that makes that true: it exports the same interface names (`position`, `velocity`, `effort`, ...) that controllers expect, and internally converts reads/writes into whatever protocol the real actuators speak.
 

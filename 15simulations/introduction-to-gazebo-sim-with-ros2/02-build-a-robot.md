@@ -2,6 +2,17 @@
 
 This unit moves from touring Gazebo Sim to authoring your own robot description in URDF, and getting that description to appear as a spawned entity inside a simulated world.
 
+The diagram below shows how a URDF file reaches a spawned entity through either the one-off service-call path or the repeatable launch-file path.
+
+```mermaid
+flowchart LR
+    URDF[URDF/xacro file<br/>links, joints, meshes] --> RSP[robot_state_publisher<br/>publishes /robot_description]
+    URDF -->|"-file my_robot.urdf"| SVC["ros2 run ros_gz_sim create<br/>(one-off, interactive)"]
+    RSP -->|"-topic robot_description"| LC["ros_gz_sim create node<br/>(in launch file)"]
+    SVC --> WORLD[Spawned entity in Gazebo world]
+    LC --> WORLD
+```
+
 ## Why URDF Instead of SDF?
 URDF (Unified Robot Description Format) is the description language used across the rest of ROS 2 tooling — `robot_state_publisher`, `tf2`, `rviz2`, `MoveIt` all expect a robot's links and joints as URDF (or its templated superset, xacro, covered in Unit 3). SDF (Simulation Description Format) is Gazebo's own, more expressive format, capable of describing an entire simulation — worlds, physics, lighting, multiple models — not just one robot.
 

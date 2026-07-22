@@ -2,6 +2,19 @@
 
 Now that LIMO can build a map and localize on it, it's time to actually get it moving toward a goal. This unit breaks down the Nav2 stack's three cooperating pieces — the global planner, the local controller, and the behavior tree navigator that orchestrates them — and shows how to send LIMO a navigation goal.
 
+The diagram below shows how a navigation goal flows through Nav2's three components down to `/cmd_vel`, and how a stuck controller reports back up to the BT Navigator.
+
+```mermaid
+flowchart LR
+    GOAL["Goal pose"] --> BT["BT Navigator"]
+    BT --> PLANNER["Planner Server (NavFn / SmacPlanner2D)"]
+    PLANNER --> PATH["Global path /plan"]
+    PATH --> CONTROLLER["Controller Server (DWB / RegulatedPurePursuit)"]
+    BT --> CONTROLLER
+    CONTROLLER --> CMD["/cmd_vel (continuous, reactive)"]
+    CONTROLLER -.stuck / no progress.-> BT
+```
+
 ## Nav2's layered architecture
 
 Nav2 deliberately separates "where should I go, roughly" from "how do I move right now" — these operate at very different timescales and with different information. The **planner** computes a full path from start to goal against the static map, running relatively infrequently (once per goal, or when the goal changes). The **controller** (sometimes called the local planner) converts the next stretch of that path into actual velocity commands tens of times a second, reacting to obstacles the global path doesn't know about. A **behavior tree** ties both together with recovery logic, deciding things like "if the controller reports it's stuck, trigger a recovery behavior, then retry planning."

@@ -2,6 +2,16 @@
 
 This short course takes the Timed Elastic Band (TEB) local planner from "installed plugin" to "tuned and understood," covering how it fits into an existing ROS Navigation Stack, how its trajectory-optimization parameters actually shape robot behavior, how to visualize what it's doing in RViz, and how to configure it for car-like (Ackermann) robots that can't rotate in place — finishing with a hands-on mini project that ties all of it together.
 
+The diagram below shows how the five units build on each other in sequence, from first concepts to a fully tuned setup.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Introduction to TEB] --> U2[Unit 2: Set up Navigation Stack]
+    U2 --> U3[Unit 3: Customize Parameters and Optimization]
+    U3 --> U4[Unit 4: Set up for Car-Like Robots]
+    U4 --> U5[Unit 5: Mini Project]
+```
+
 1. [Introduction to the Course](01-introduction-to-the-course.md) — A brief introduction to the contents of the course. It contains a practical demo.
 2. [Set up the Navigation Stack](02-set-up-the-navigation-stack.md) — Set up the Navigation Stack.
 3. [Customize parameters and Optimization](03-customize-parameters-and-optimization.md) — Learn how to launch the Optimization node, how to customize the planner parameters, and how to visualize the trajectories in RVIZ.

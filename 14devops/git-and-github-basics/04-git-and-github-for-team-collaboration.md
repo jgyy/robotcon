@@ -2,6 +2,24 @@
 
 Everything so far has been local. This unit connects your repository to GitHub — a hosting service for Git repositories — and covers the workflow that makes team robotics development possible: pushing, pulling, pull requests, and issue tracking.
 
+The sequence diagram below shows the timing of a full pull-request review cycle: who acts when, from the first push to the final merge.
+
+```mermaid
+sequenceDiagram
+    participant Dev as Developer (local)
+    participant GH as GitHub (origin)
+    participant Rev as Reviewer
+
+    Dev->>GH: git push -u origin feature/nav-tuning
+    Dev->>GH: Open pull request
+    GH->>Rev: Notify: review requested
+    Rev->>GH: Comment on lines / request changes
+    Dev->>GH: git commit + git push (address feedback)
+    GH->>Rev: Show updated PR
+    Rev->>GH: Approve
+    GH->>GH: Merge PR into main
+```
+
 ## Git vs. GitHub, and setting up a remote
 
 Git is the version control *tool*; GitHub is a *hosted service* built around Git that adds a web UI, access control, pull requests, issue tracking, and CI integration. You could use Git your entire career without GitHub (many teams self-host with GitLab or Bitbucket instead, or run a bare server), but GitHub is the de facto hub for open-source robotics code — ROS 2, MoveIt, and Nav2 all live there.

@@ -2,6 +2,25 @@
 
 This unit ties together perception (Unit 3), navigation (Unit 4), and multi-agent coordination (Unit 5) into one system: a lidar-equipped agent that follows language instructions and leads a small multi-agent team. The goal is integration, not new concepts — every building block here was covered in an earlier unit.
 
+The sequence below shows the order of communication in one loop iteration, complementing the static architecture diagram in the next section.
+
+```mermaid
+sequenceDiagram
+    participant H as Human operator
+    participant L as Lead agent
+    participant N as Nav stack
+    participant Li as Lidar
+    participant F as Follower agents
+
+    H->>L: language instruction
+    L->>L: instruction_to_goal_safe
+    L->>N: send_goal(x, y)
+    Li->>L: cluster_obstacles (perception)
+    L->>L: check nearest_obstacle_m, replan if needed
+    L->>F: publish leader_position, goal, status
+    F->>F: track waypoint, avoid local obstacles
+```
+
 ## System architecture
 The capstone is one lead agent plus two or more follower agents, structured as a leader-follower topology (Unit 5). The lead agent is the only one that talks to the language interface and the only one that plans a global path; followers track the leader's published trajectory and handle their own local obstacle avoidance.
 

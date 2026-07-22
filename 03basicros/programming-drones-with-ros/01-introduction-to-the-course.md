@@ -2,6 +2,17 @@
 
 This unit previews the whole course: the platform you'll be flying, the software stack you'll assemble around it, and how the next three units build on each other — from raw velocity commands, to mapping and 2D navigation, to full 3D motion planning.
 
+The diagram below shows how the drone's sensors feed through the driver node into the ROS topics that the simulator, mapping, and planning layers of this course all build on:
+
+```mermaid
+flowchart TD
+    S[AR Drone Sensors<br/>camera, downward camera, altimeter, IMU] --> D[Driver/Bridge Node]
+    D --> SIM[Simulator<br/>safe dev & testing]
+    D --> T[ROS Topics<br/>cmd_vel, odom, image]
+    T --> R[RTABMap SLAM<br/>Unit 3]
+    T --> M[MoveIt 3D Planning<br/>Unit 4]
+```
+
 ## Why a drone, and why the Parrot AR Drone specifically
 The Parrot AR Drone is a quadrotor that was cheap, crash-tolerant, and — critically for this course — controllable entirely over Wi-Fi using a lightweight UDP/AT-command protocol, with no flight controller SDK lock-in. That makes it a good teaching platform: a ROS driver node can sit between your code and the aircraft, exposing takeoff/land/velocity control as ordinary topics and services instead of a proprietary API. Everything you learn here — command interfaces, sensor topics, SLAM, planning — transfers to other multirotor platforms (PX4- or ArduPilot-based drones, other ROS-driven UAVs); the AR Drone just keeps the hardware/firmware complexity out of your way.
 

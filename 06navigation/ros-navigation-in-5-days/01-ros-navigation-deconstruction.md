@@ -2,6 +2,21 @@
 
 Before touching a single parameter file, you need a mental model of what "ROS Navigation" actually is: not one node, but a pipeline of cooperating pieces that turn raw sensor data into wheel commands. This unit takes that pipeline apart so the rest of the course has somewhere to hang its details.
 
+The diagram below traces how sensor and map data flow through the five numbered pieces of the pipeline described next, ending in a velocity command:
+
+```mermaid
+flowchart LR
+    Sensors[/scan, /odom/] --> Loc[2. Localization]
+    Map[1. Map] --> Loc
+    Loc --> CM[5. Costmaps]
+    Map --> CM
+    Sensors --> CM
+    CM --> GP[3. Global Planner]
+    CM --> LP[4. Local Planner]
+    GP --> LP
+    LP --> CmdVel[/cmd_vel/]
+```
+
 ## The Navigation Stack is a pipeline, not a black box
 
 When people say "just launch the nav stack," they mean bringing up a coordinated set of nodes that each solve one narrow problem:

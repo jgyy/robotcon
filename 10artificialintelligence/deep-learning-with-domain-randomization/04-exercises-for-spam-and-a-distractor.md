@@ -2,6 +2,16 @@
 
 So far the model has only ever seen one object in the scene, so it never had to decide *which* object to point at — it just pointed at "the thing." This unit adds a second, similarly-shaped object that also moves, forcing the model to actually discriminate the target from a lookalike.
 
+The diagram below shows how the two-headed model shares backbone features but branches into a classification output and a localization output.
+
+```mermaid
+flowchart LR
+    Img[Camera Frame] --> Base["MobileNetV2 Backbone<br/>(frozen)"]
+    Base --> Shared[Shared Dense Features]
+    Shared --> Cls["Classification Head<br/>target vs distractor"]
+    Shared --> Loc["Localization Head<br/>x, y, z"]
+```
+
 ## The distractor problem in object detection
 A pure regression model trained on scenes with a single object will happily learn "predict the centroid of whatever's salient in this frame" without ever learning what makes the target *the target*. Add a second object and that shortcut breaks immediately — the model has no signal telling it which one to track, and its predictions become an average of both, or it locks onto whichever object happens to be more visually prominent. This is a general pitfall in supervised perception: a model is only as discriminative as the hardest examples in its training set, so a dataset without confusable near-misses (hard negatives) systematically overstates how good the model actually is.
 

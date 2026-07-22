@@ -2,6 +2,16 @@
 
 Every kinematic model you'll write in later units is really just a statement about how one rigid body's pose relates to another's. This unit builds the mathematical vocabulary — frames, rotations, and homogeneous transforms — that makes those statements precise and composable.
 
+The diagram below shows how the frames used in this unit chain together via homogeneous transforms, exactly as `tf2` composes them under the hood.
+
+```mermaid
+flowchart LR
+    World["World frame (fixed)"] -->|T_world_base| Base["base_link frame"]
+    Odom["Odom frame (drifts slowly, no jumps)"] -.locally consistent with.-> Base
+    Base -->|T_base_sensor| Sensor["Sensor frame, e.g. LIDAR"]
+    World -->|"T_world_sensor = T_world_base · T_base_sensor"| Sensor
+```
+
 ## Frame of reference
 A **frame** is a coordinate system attached to something: the world, the robot's chassis, a wheel, a sensor, a goal location. Every position or orientation you ever compute is only meaningful *relative to a frame* — "the robot is at (2, 3)" is meaningless until you say (2, 3) in which frame. Mobile robotics conventionally uses at least:
 - a **world/map frame** — fixed, the map you navigate against,

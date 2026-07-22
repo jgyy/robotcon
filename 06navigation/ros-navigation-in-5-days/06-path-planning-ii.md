@@ -2,6 +2,23 @@
 
 Unit 5 got you a global path. This unit closes the loop: turning that path into actual motor commands via the local planner, recovering when the robot gets stuck, and tuning the motion limits that determine how confidently — or cautiously — your robot drives.
 
+The diagram below shows the recovery behaviors described later in this unit as an escalating state machine, fired in order when the local planner can't find a valid trajectory:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Following: local planner finds valid trajectory
+    Following --> Stuck: no valid trajectory found
+    Stuck --> ClearCostmap: attempt 1
+    ClearCostmap --> Following: recovered
+    ClearCostmap --> RotateInPlace: still stuck
+    RotateInPlace --> Following: recovered
+    RotateInPlace --> BackUp: still stuck
+    BackUp --> Following: recovered
+    BackUp --> Aborted: retries exhausted
+    Following --> [*]: goal reached
+    Aborted --> [*]
+```
+
 ## The local planner's job
 
 The local planner (called the "controller" in Nav2's terminology) runs at a high frequency — typically 10–20 Hz — and on every cycle it must produce a `cmd_vel` that:

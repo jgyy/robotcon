@@ -2,6 +2,21 @@
 
 This unit generalizes from tracking a face (Unit 6) to tracking a whole person's position over time and across sensors — the capability behind "follow me" robot behaviors, and the last building block before the capstone project in Unit 9.
 
+The diagram below shows how laser and vision detections feed a fused estimate, which the predict-associate-correct Kalman loop keeps stable frame to frame.
+
+```mermaid
+flowchart TD
+    L[Laser scan] --> LD["leg_detector: leg pairs"]
+    V[Camera frame] --> HOG[HOG person detector]
+    LD --> FUSE[Fused position estimate]
+    HOG --> FUSE
+    FUSE --> ASSOC[Nearest-neighbor data association]
+    PRED[Kalman predict from velocity] --> ASSOC
+    ASSOC --> COR[Kalman correct]
+    COR --> PRED
+    COR --> FOLLOW[Follow-me motion command]
+```
+
 ## Full-body vs. face-only tracking
 A face detector only works while the person faces the camera; a person who turns sideways or walks away disappears from a face-only pipeline. Full-body (or upper-body/legs) detection keeps tracking through those cases. ROS 1 commonly pairs a laser-based leg detector with vision:
 - `leg_detector` clusters 2D laser scan returns into leg-shaped pairs and publishes candidate person positions — robust to lighting, works even with the person's back turned.

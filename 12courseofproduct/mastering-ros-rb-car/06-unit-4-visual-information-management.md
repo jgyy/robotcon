@@ -2,6 +2,19 @@
 
 Navigation and planning get RB-CAR from A to B; this unit gives it eyes. You'll build a perception pipeline that turns raw camera frames into structured information — detected pedestrians, vehicles, and traffic signals, plus lane geometry — that the rest of the stack can react to.
 
+The diagram below shows the three-stage perception pipeline: independent detection and lane-finding nodes feed structured messages into a behavior node that turns them into a driving decision.
+
+```mermaid
+flowchart LR
+    CAM[Camera: sensor_msgs/Image] --> DET[Detection node: YOLO/SSD]
+    CAM --> LANE[Lane estimation node: Canny + Hough]
+    DET --> DETMSG[vision_msgs/Detection2DArray]
+    LANE --> LANEMSG[Lane polynomial message]
+    DETMSG --> BEHAVIOR[Behavior node]
+    LANEMSG --> BEHAVIOR
+    BEHAVIOR --> STOP[Stop / drivable-corridor decision]
+```
+
 ## The perception pipeline for autonomous driving
 
 A useful way to think about this unit is as three stages, each a ROS node subscribing to the camera topic and publishing structured output:

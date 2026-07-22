@@ -2,6 +2,17 @@
 
 Probability and statistics tell you what's likely; decision theory tells you what to *do* about it. This unit turns posterior probabilities from Units 2–4 into optimal actions, and gives you the standard tools for evaluating whether a classifier is actually good.
 
+The diagram below shows how a posterior and a loss matrix combine into the risk-minimizing action at the heart of Bayesian decision theory.
+
+```mermaid
+flowchart LR
+    Post["Posterior P(s|x)"] --> Risk["Compute Risk R(a|x) per action"]
+    Loss["Loss Matrix L(s,a)"] --> Risk
+    Risk --> Min["Pick action minimizing risk"]
+    Min --> Class["Class label"]
+    Min --> Reject["Reject option"]
+```
+
 ## Bayesian decision theory: actions, states, and loss
 The formal framework has three pieces: a set of possible **actions** A, a set of possible **states of nature** S (the true, unobserved fact), and a **loss function** L(s, a) — the cost of taking action a when the true state is s. Given a posterior P(s | x) over states from your observations x, the **posterior expected loss (risk)** of an action is:
 

@@ -2,6 +2,16 @@
 
 With the vocabulary from Unit 2 in hand, this unit is about the practical mechanics of wiring stock controllers onto a robot in simulation: the URDF tag that declares the hardware interface, the YAML file that configures controllers, and the commands that bring them to life.
 
+The flowchart below traces the practical steps from declaring interfaces in URDF to a spawned, active controller.
+
+```mermaid
+flowchart TD
+    A[Declare interfaces in URDF ros2_control block] --> B[Write controller_manager YAML: controller types & params]
+    B --> C[Launch controller_manager]
+    C --> D["ros2 run controller_manager spawner ..."]
+    D --> E[Controller loaded, configured, and activated]
+```
+
 ## Declaring the hardware interface in URDF
 `ros2_control` expects a `<ros2_control>` block inside (or included from) your robot's URDF/XACRO, describing each joint's available command and state interfaces and which hardware plugin backs them:
 

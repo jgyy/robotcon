@@ -2,6 +2,23 @@
 
 With a working MoveIt2 config package in place, this unit moves you from clicking targets in RViz to commanding the mycobot arm programmatically using the `moveit_cpp`/`MoveGroupInterface` C++ API — the interface your pick-and-place code will actually be built on.
 
+The sequence below shows the round trip a single `plan()`/`execute()` call makes between your node, the `move_group` node, the planner, and the controllers.
+
+```mermaid
+sequenceDiagram
+    participant N as Your Node (MoveGroupInterface)
+    participant MG as move_group node
+    participant PL as OMPL Planner
+    participant C as ros2_control Controllers
+    N->>MG: setPoseTarget() / setNamedTarget()
+    MG->>PL: request trajectory (checks PlanningScene for collisions)
+    PL-->>MG: planned trajectory or failure
+    MG-->>N: Plan + MoveItErrorCode
+    N->>MG: execute(plan)
+    MG->>C: dispatch trajectory
+    C-->>N: motion complete
+```
+
 ## The MoveGroupInterface and where it sits
 
 `MoveGroupInterface` is a client-side C++ class that talks to the `move_group` node over ROS2 actions and services — it doesn't do any planning itself, it packages up your request (a target pose, joint values, or constraints) and sends it to `move_group`, which runs the OMPL (or another) planner and returns a trajectory. Because it's just a client, you can build it into any node: a dedicated "pick and place" node, a behavior tree leaf, or a test script. A minimal node looks like this:

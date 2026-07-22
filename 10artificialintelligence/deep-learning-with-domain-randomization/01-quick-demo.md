@@ -2,6 +2,17 @@
 
 This unit is a preview, not a lesson in the usual sense: you'll run a finished perception pipeline end to end before building any piece of it yourself, so the rest of the course has a concrete target to build toward.
 
+The diagram below traces the five-stage pipeline you're running today, from simulated camera frame to robot motion.
+
+```mermaid
+flowchart LR
+    Sim[Gazebo Simulation] --> Cam["camera_bridge node<br/>/camera/image_raw"]
+    Cam --> Model["object_detector node<br/>Keras model"]
+    Model --> Pose["/detected_object/pose"]
+    Pose --> Ctrl[Controller]
+    Ctrl --> Robot[Robot Arm / Base]
+```
+
 ## The pipeline you're about to run
 The finished system in this course is a chain of five stages: a Gazebo simulation renders a scene containing a target object (a can of "SPAM", used as a stand-in for any small graspable item), a camera topic publishes RGB frames, a trained Keras model consumes each frame and regresses the object's 3D position, a ROS node republishes that position as a pose message, and a simple controller drives a robot arm or base toward it. By the end of the course you will have built every one of those stages yourself. Today you only run the last two — inference and control — against a model that's already trained, so you can see what "done" looks like.
 

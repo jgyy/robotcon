@@ -2,6 +2,17 @@
 
 This is where everything from Units 2 and 3 pays off. You'll chain DH transforms into full forward kinematics, then tackle the harder inverse problem — given a target end-effector pose, solve for the joint angles that produce it — for a simple planar arm, ending with a working Python IK solver driving a simulated trajectory.
 
+The diagram below shows how the three per-link DH transforms chain into forward kinematics, and how inverse kinematics closes the loop back to joint angles:
+
+```mermaid
+flowchart LR
+    T1[T0_1: theta1] --> T2[T1_2: theta2]
+    T2 --> T3[T2_3: theta3]
+    T3 --> FK[Forward Kinematics: chained transform]
+    FK --> Pose[End-effector pose x, y]
+    Pose -->|Inverse Kinematics| Angles[theta1, theta2, theta3]
+```
+
 ## Forward Kinematics
 Forward kinematics (FK) answers: given all joint values, where is the end effector? With the per-link DH matrices from Unit 3, FK is just matrix multiplication down the chain:
 

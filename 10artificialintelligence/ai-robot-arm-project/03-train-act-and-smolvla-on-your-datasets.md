@@ -2,6 +2,18 @@
 
 With a validated dataset from Unit 2, this unit turns raw demonstrations into a trained policy. You'll train two different model families — ACT and SmolVLA — on the same data and understand why they behave differently.
 
+The flowchart below contrasts the two training paths from the same dataset through to a side-by-side comparison.
+
+```mermaid
+flowchart LR
+    DS[Validated dataset<br/>from Unit 2] --> ACT[Train ACT:<br/>CVAE encoder + chunked decoder]
+    DS --> SVLA[Train SmolVLA:<br/>VLM backbone + language instruction]
+    ACT -->|small, fast,<br/>single local GPU| CKPT_ACT[ACT checkpoint]
+    SVLA -->|larger, often<br/>bursts to Vast.ai| CKPT_SVLA[SmolVLA checkpoint]
+    CKPT_ACT --> Compare[Compare loss, rollout<br/>smoothness, wall-clock time]
+    CKPT_SVLA --> Compare
+```
+
 ## ACT: Action Chunking Transformer
 
 ACT is a transformer-based policy that predicts a short *chunk* of future actions (e.g. the next 50-100 joint-position targets) from a single observation, rather than predicting one action at a time. This matters because raw teleoperation data is noisy — humans hesitate, correct, and jitter — and predicting a whole chunk lets the model smooth over that noise while still reacting to new observations frequently (a technique called temporal ensembling, where overlapping chunk predictions are averaged at execution time). ACT uses a CVAE (conditional variational autoencoder) encoder during training to model the multi-modality of human demonstrations, but at inference time only the decoder is used, conditioned on the current camera images and robot state. It is comparatively small, trains fast on a single GPU, and is a strong first policy to get a task working end to end.

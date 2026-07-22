@@ -2,6 +2,22 @@
 
 Robots are increasingly operated and monitored through a browser rather than a terminal or a joystick. This unit lays out the pieces you'll assemble over the course — HTML, CSS, JavaScript, and React — and how they connect to a running robot through Rosbridge, so you know where each later unit fits before you start typing code.
 
+The diagram below shows how the page's three layers combine with the Rosbridge pipeline to get live robot data onto the screen.
+
+```mermaid
+flowchart LR
+    subgraph Page[Web Page]
+        HTML[HTML: structure]
+        CSS[CSS: presentation]
+        JS[JavaScript: behavior]
+    end
+    ROS[ROS 2 Node] -->|publishes topic| Bridge[rosbridge_server]
+    Bridge -->|WebSocket JSON| JS
+    HTML --> JS
+    CSS --> JS
+    JS --> Screen[Rendered Dashboard]
+```
+
 ## Why a browser for robot interfaces
 A web page runs on any device with a browser: a lab tablet, an operator's laptop, a phone on the shop floor. You don't ship an app, you don't manage installs, and updates are just a redeploy of static files. For robotics specifically this matters because your "client" is often a non-technical operator who needs a big red STOP button and a live camera feed, not a command line. The trade-off is that a browser can't directly open a serial port or subscribe to a ROS topic — it needs a bridge, which is where Rosbridge comes in later in the course.
 

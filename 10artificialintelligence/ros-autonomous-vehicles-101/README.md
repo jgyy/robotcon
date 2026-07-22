@@ -2,6 +2,18 @@
 
 An introduction to programming autonomous cars in ROS at SAE Level 3 (conditional automation): the vehicle drives itself under known conditions but must be able to hand control back to a human when it can't. This course walks through the sensor suite an autonomous car needs and how to read it in ROS, using GPS for navigation, detecting and avoiding obstacles, and finally interfacing ROS with a real vehicle's electronics over CAN-Bus and a Drive-By-Wire (DBW) interface — closing with a small mission that ties all four pieces together.
 
+The diagram below shows how each unit builds directly on the one before it, from orientation through to the closing recommendations.
+
+```mermaid
+flowchart LR
+    U0["Unit 0: Introduction"] --> U1["Unit 1: Sensors"]
+    U1 --> U2["Unit 2: GPS Navigation"]
+    U2 --> U3["Unit 3: Obstacles and Security"]
+    U3 --> U4["Unit 4: CAN-Bus"]
+    U4 --> U5["Unit 5: Microproject"]
+    U5 --> FR["Final Recommendations"]
+```
+
 1. [Unit 0: Introduction](01-unit-0-introduction.md) — What Level 3 autonomy commits you to, a tour of the car's ROS stack, and driving it manually before anything autonomous.
 2. [Unit 1: Sensors](02-unit-1-sensors.md) — The camera/LiDAR/GPS/IMU/odometry sensor suite, their ROS message types, and visualizing them in RViz.
 3. [Unit 2: GPS Navigation](03-unit-2-gps-navigation.md) — Reading NavSatFix, converting GPS to local coordinates, fusing it with odometry, and following a waypoint.

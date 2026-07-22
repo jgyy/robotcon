@@ -2,6 +2,16 @@
 
 This is the core unit of the course: you'll learn the actual XML vocabulary of URDF — links, joints, materials, meshes — and how to see your model come alive in RViz2.
 
+The diagram below shows how the links and joints you write in a URDF actually reach the screen, from joint angles all the way to the RViz2 display.
+
+```mermaid
+flowchart LR
+    URDF[URDF: links + joints] --> RSP[robot_state_publisher]
+    JSP[joint_state_publisher_gui] --> RSP
+    RSP --> TF[tf2 transform tree]
+    TF --> RViz[RViz2 RobotModel display]
+```
+
 ## What is a URDF file, and what is a LINK
 
 A URDF file is an XML document, conventionally saved with a `.urdf` extension, that describes a robot as a **tree** (no cycles) of `<link>` elements connected by `<joint>` elements. A `<link>` represents one rigid body — a wheel, an arm segment, a sensor housing — and can carry up to three kinds of information:

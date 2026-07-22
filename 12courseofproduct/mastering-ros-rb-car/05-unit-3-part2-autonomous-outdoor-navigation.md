@@ -2,6 +2,22 @@
 
 Unit 3 built and used a map with LIDAR-only localization. That works well in bounded, feature-rich areas, but RB-CAR is meant to operate in open outdoor terrain where LIDAR-based localization can drift or fail. This unit fixes that by fusing GPS, IMU, and wheel odometry into a single, much more robust odometry estimate.
 
+The diagram below shows the two-EKF fusion pipeline: wheel odometry and IMU feed a fast local filter, whose output is fused with GPS in a second filter to correct drift against the map frame.
+
+```mermaid
+flowchart LR
+    ODOM["/rbcar/odom"] --> EKF1[EKF: odom frame]
+    IMU["/rbcar/imu/data"] --> EKF1
+    EKF1 --> ODOMFILT["/odometry/filtered_odom"]
+    GPSFIX["/rbcar/gps/fix"] --> NAVSAT[navsat_transform_node]
+    IMU --> NAVSAT
+    ODOMFILT --> NAVSAT
+    NAVSAT --> GPSODOM["/odometry/gps"]
+    ODOMFILT --> EKF2[EKF: map frame]
+    GPSODOM --> EKF2
+    EKF2 --> MAPCORR[map -> odom correction]
+```
+
 ## The odometry drift problem outdoors
 
 Wheel odometry alone accumulates error from wheel slip, uneven terrain, and integration drift — the longer RB-CAR drives, the further its believed position wanders from its true position, with no way to self-correct. Indoors, AMCL corrects this drift by matching LIDAR scans against a map. Outdoors, especially in open or repetitive terrain, scan matching can be ambiguous or simply unavailable. GPS gives you the opposite trade-off: it's globally accurate (no long-term drift) but noisy and low-rate compared to wheel/IMU data, and it can degrade or drop out entirely near buildings, trees, or bridges. The fix used throughout the ROS ecosystem is to fuse all three sources — wheel odometry, IMU, and GPS — so each compensates for the others' weaknesses.

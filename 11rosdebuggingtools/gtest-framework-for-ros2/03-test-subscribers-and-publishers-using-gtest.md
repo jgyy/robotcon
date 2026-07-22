@@ -2,6 +2,25 @@
 
 Plain unit tests from Unit 2 do not touch the ROS graph at all. Real nodes, though, live and die by whether they publish the right message at the right time and react correctly to what they subscribe to. This unit shows how to bring a live (but isolated) ROS2 node into a GTest test.
 
+The sequence diagram below shows why the test must spin the executor in a bounded loop instead of asserting immediately after publishing.
+
+```mermaid
+sequenceDiagram
+    participant Test as TEST() body
+    participant HarnessPub as harness node (publisher)
+    participant Scaler as ScalerNode
+    participant HarnessSub as harness node (subscriber)
+
+    Test->>HarnessPub: publish raw = 21.0
+    loop spin_some() until got_msg or timeout
+        Test->>Scaler: executor.spin_some()
+        Scaler->>Scaler: callback: out.data = msg->data * 2.0
+        Scaler->>HarnessSub: publish scaled = 42.0
+    end
+    HarnessSub-->>Test: got_msg = true
+    Test->>Test: ASSERT_TRUE(got_msg); EXPECT_DOUBLE_EQ(42.0)
+```
+
 ## Why pub/sub testing is harder than plain unit testing
 
 A publisher/subscriber interaction is asynchronous: calling `publish()` does not guarantee a subscriber's callback has run by the next line of your test. If you write `EXPECT_EQ(received_msg.data, 42)` immediately after publishing, you have a race condition, not a test — it may pass on your laptop and fail intermittently in CI. Testing nodes correctly means being deliberate about spinning the executor and giving messages time to arrive before asserting anything.

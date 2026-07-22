@@ -2,6 +2,20 @@
 
 Part 1 relied on a lidar map and walls to localize against — outdoors, RB-Vogui+ often has neither. This unit covers the outdoor-navigation half of the platform's dual indoor/outdoor design: fusing GPS into a global localization estimate, and following a sequence of GPS waypoints instead of a single map-frame goal.
 
+The diagram below shows how GPS, IMU, and odometry data flow through the two EKF stages into the global estimate that the waypoint follower consumes.
+
+```mermaid
+flowchart LR
+    GPS[GPS NavSatFix] --> NST[navsat_transform_node]
+    IMU[IMU] --> EKF1[EKF: odom -> base_link]
+    ODOM[Wheel odometry] --> EKF1
+    NST --> EKF2[EKF: map -> odom]
+    EKF1 --> EKF2
+    EKF2 --> GLOBAL[/odometry/global/]
+    GLOBAL --> WF[GPS waypoint follower]
+    WF --> LOCAL[Local costmap + planner per leg]
+```
+
 ## Why outdoor navigation is a different problem
 
 Indoors, AMCL matches lidar returns against a static map to correct drift. Outdoors, open fields and roads give the lidar little to match against, maps are impractical to maintain at scale, and GPS becomes the primary source of *global* position instead. But GPS alone is noisy and updates slowly (often 1–10 Hz, with meter-level jitter), so it's fused with the *high-rate, locally-accurate* sensors (wheel odometry, IMU) rather than used on its own. That fusion is the core new idea in this unit — everything else (costmaps, the planner, `cmd_vel`) is the same machinery as Part 1.

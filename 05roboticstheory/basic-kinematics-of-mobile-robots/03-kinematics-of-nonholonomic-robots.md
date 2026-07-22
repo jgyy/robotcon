@@ -2,6 +2,16 @@
 
 Most wheeled robots you'll actually work with — differential-drive bases, cars, tricycles — can't slide sideways. This unit derives the kinematic models that capture that constraint and connects them to the ROS messages and tools you'll use to drive and monitor a real robot.
 
+The diagram below shows how the unit's three wheeled-robot models all collapse into the same canonical `(v, ω)` model that gets integrated into a pose.
+
+```mermaid
+flowchart LR
+    Uni["Unicycle model (v, ω)"] --> Can["Canonical model: ẋ=v cosθ, ẏ=v sinθ, θ̇=ω"]
+    Diff["Differential-drive model (ω_l, ω_r)"] --> Can
+    Car["Car-like / Ackermann model (v, φ)"] --> Can
+    Can --> Pose["Integrated pose: x, y, θ"]
+```
+
 ## What is kinematics?
 Kinematics describes motion purely in terms of position, velocity, and acceleration, with no reference to the forces or torques producing it. For a mobile robot, the central kinematic question is: given the actuator velocities (wheel spin rates, steering angle), what is the resulting body-frame velocity `(v, ω)`, and how does the pose `(x, y, θ)` evolve over time? This is exactly the "forward kinematics" problem; the inverse (given a desired `(v, ω)`, what wheel commands produce it) is what your control code sends to hardware.
 

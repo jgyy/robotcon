@@ -2,6 +2,16 @@
 
 The final section evaluates whether an alternative middleware (Zenoh) or enhanced tooling (Vulcanexus) would have avoided the Section 1 problem entirely, and closes the project with a short comparative writeup.
 
+The diagram below shows how the three approaches tested across the project feed into the final comparative recommendation.
+
+```mermaid
+flowchart LR
+  S1[Section 1: Baseline DDS] --> Cmp[Comparative Table]
+  S2[Section 2: DDS + XML Fix] --> Cmp
+  S3[Section 3: Zenoh] --> Cmp
+  Cmp --> Rec[Recommendation: tuned DDS vs Zenoh]
+```
+
 ## Re-run the baseline scenario under Zenoh
 Take your *original* Section 1 topology (same two hosts/containers, same publisher/subscriber code, same network conditions — do not carry over the Section 2 XML fix) and switch middleware instead of hand-tuning DDS:
 

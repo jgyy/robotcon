@@ -2,6 +2,21 @@
 
 An ordinary ROS 2 node is either running or not — there's no standard way to ask it to "get ready but don't start moving the robot yet" or to cleanly hand it back to an idle state. Lifecycle (managed) nodes add that missing state machine, and they're the mechanism behind how Nav2 and other large stacks bring themselves up safely.
 
+The state diagram below shows the primary states a managed lifecycle node moves through and the callback that drives each transition.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Unconfigured
+    Unconfigured --> Inactive: on_configure
+    Inactive --> Unconfigured: on_cleanup
+    Inactive --> Active: on_activate
+    Active --> Inactive: on_deactivate
+    Unconfigured --> Finalized: on_shutdown
+    Inactive --> Finalized: on_shutdown
+    Active --> Finalized: on_shutdown
+    Finalized --> [*]
+```
+
 ## Why you need managed nodes
 
 Consider a controller node that starts publishing motor commands the instant it's constructed. If it comes up before the motor driver is ready, or before another node has finished configuring itself, you get commands going nowhere or, worse, garbage values reaching real hardware. A managed node solves this by separating "constructed" from "actively doing its job": it can be built, configured, and verified while inactive, and only moved to active — and start publishing, subscribing, or actuating — once the rest of the system is confirmed ready.

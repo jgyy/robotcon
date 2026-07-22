@@ -2,6 +2,18 @@
 
 The standard Kalman filter from Unit 3 requires linear motion and measurement models. Real robots almost never satisfy that — a differential-drive robot's heading turns `cos`/`sin` into the motion model, and range-bearing sensors involve `atan2` and square roots. This unit covers the two standard ways to keep using Kalman-style filtering anyway.
 
+The diagram below contrasts the two fixes this unit covers — linearizing (EKF) versus sampling (UKF) — before both rejoin the same linear KF update math.
+
+```mermaid
+flowchart TD
+    N["Nonlinear motion/sensor model f, h"] --> D{"Linearize or sample?"}
+    D -->|EKF| J["Compute Jacobian F = df/dx, H = dh/dx at current estimate"]
+    D -->|UKF| SP["Generate sigma points, push each through f or h directly"]
+    J --> KF["Run linear KF predict/update equations"]
+    SP --> KF
+    KF --> G["Updated Gaussian estimate (mu, P)"]
+```
+
 ## Why nonlinearity breaks the Kalman filter
 
 The Kalman filter's exactness relies on a Gaussian passed through a *linear* function staying Gaussian. Push a Gaussian through a nonlinear function (like a rotation by an uncertain angle) and the result is generally *not* Gaussian — it can skew, curve, or develop multiple lobes. If you naively apply the linear KF equations anyway, the mean and covariance estimates become biased and can diverge, especially under large uncertainty or strong nonlinearity (sharp turns, close-range bearing measurements).

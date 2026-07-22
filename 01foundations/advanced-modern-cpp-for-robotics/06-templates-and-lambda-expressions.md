@@ -2,6 +2,15 @@
 
 Templates let you write one piece of code that works across many types without sacrificing compile-time type safety or runtime performance — think of a hexapod robot whose six legs each run the same inverse-kinematics logic but might use `float` on an embedded controller and `double` in simulation. Lambdas give you a lightweight, inline way to pass behavior around, which STL algorithms and ROS 2 callbacks both depend on constantly.
 
+The diagram below shows the compiler instantiating one function template into several distinct, type-specific functions depending on how it's called.
+
+```mermaid
+flowchart LR
+    Template["template&lt;typename T&gt; T clamp(T, T, T)"] -->|"clamp(1.7, 0.0, 1.0)"| InstDouble["clamp&lt;double&gt; (compiled)"]
+    Template -->|"clamp(150, 0, 100)"| InstInt["clamp&lt;int&gt; (compiled)"]
+    Template -->|"clamp&lt;float&gt;(...)"| InstFloat["clamp&lt;float&gt; (compiled)"]
+```
+
 ## Why templates, and function templates
 Without templates, you'd need a separate `clamp` function for every numeric type (`clampInt`, `clampDouble`, ...). A **function template** is a blueprint the compiler instantiates on demand for whatever type you actually call it with — you get type-specific, fully optimized code without writing it by hand.
 

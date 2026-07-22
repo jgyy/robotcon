@@ -2,6 +2,16 @@
 
 This unit sets the stage for the whole course: what RViz actually is, why markers are the language you use to make a robot's internal state visible, and how to get a working RViz session talking to your own nodes before you touch any marker code.
 
+The diagram below shows how RViz's architecture fits together: robot nodes and the TF tree feed data into display plugins, which render it into one common 3D scene.
+
+```mermaid
+flowchart LR
+    Nodes[Robot Nodes] -->|publish topics:<br/>PointCloud2, OccupancyGrid, Marker...| Displays[RViz Displays<br/>pluginlib plugins]
+    TF[TF Tree] -->|frame transforms| Displays
+    FixedFrame[Fixed Frame<br/>Global Options] -.common reference frame.-> Displays
+    Displays --> Scene[RViz 3D Scene]
+```
+
 ## Why visualize robot state at all
 A robot's "mind" — sensor data, planned paths, detected objects, cost maps — is a pile of numbers flowing through topics. None of that is inspectable by eye until something renders it. RViz is that renderer: a 3D viewer that subscribes to standard ROS message types (`sensor_msgs/PointCloud2`, `nav_msgs/OccupancyGrid`, `visualization_msgs/Marker`, TF frames, and more) and draws them in a shared 3D scene. Debugging "why did the robot stop" or "why did the planner pick that path" is dramatically faster when you can see the cost map, the goal, and the planned trajectory overlaid on each other instead of grepping log lines.
 

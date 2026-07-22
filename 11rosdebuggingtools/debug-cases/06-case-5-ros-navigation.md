@@ -2,6 +2,21 @@
 
 Navigation stacks (such as Nav2) tie together nearly everything from the earlier units — topics, TF, and often actions — into one system, which makes navigation bugs some of the hardest to root-cause: is it a bad sensor topic, a broken transform, a misconfigured parameter, or the planner itself? This closing unit gives you a triage order so you check the cheap, common causes before the expensive, rare ones.
 
+The flowchart below is this unit's triage order made explicit as a decision path, from cheapest check to most expensive.
+
+```mermaid
+flowchart TD
+    A[Navigation broken] --> B{TF tree complete<br/>& current?}
+    B -- No --> B1[Fix TF: view_frames,<br/>check map to base_link chain]
+    B -- Yes --> C{Sensor topics<br/>flowing at rate?}
+    C -- No --> C1[Fix sensor driver,<br/>check topic hz]
+    C -- Yes --> D{Costmaps<br/>populated?}
+    D -- No --> D1[Fix costmap sensor-source<br/>parameters]
+    D -- Yes --> E{Parameters match<br/>what you expect?}
+    E -- No --> E1[ros2 param get/set,<br/>restart the node]
+    E -- Yes --> F[Investigate planner/controller<br/>logic itself]
+```
+
 ## Triage order for a broken navigation stack
 
 When the robot won't plan, won't move, or moves somewhere wrong, check in this order — each step rules out an entire category of causes cheaply:

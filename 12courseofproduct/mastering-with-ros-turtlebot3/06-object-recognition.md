@@ -2,6 +2,20 @@
 
 Blob tracking found "a colored thing" without knowing what it was. This unit moves from color-based detection to actual recognition — identifying *what* an object is, which is the perception capability the manipulation and project units later in the course will depend on.
 
+The diagram below shows how a detection flows from the camera through the detector to the downstream nodes that consume it.
+
+```mermaid
+flowchart LR
+    A["Camera /image"] --> B[DNN inference: net.forward]
+    B --> C[Parse detections: label, confidence, bbox]
+    C --> D{confidence >= threshold?}
+    D -->|No| E[Discard - false positive]
+    D -->|Yes| F["Publish Detection2DArray"]
+    F --> G[Navigation node]
+    F --> H[Manipulation node]
+    F --> I[Logging node]
+```
+
 ## Why color thresholding stops being enough
 
 Color-based detection breaks down the moment you need to tell two same-colored objects apart, or find an object regardless of lighting or orientation, or recognize something whose color varies (a face, a specific product, a person). Object recognition solves a different, harder problem: given an image, output what classes of object are present and, usually, where — a bounding box or a segmentation mask per detection.

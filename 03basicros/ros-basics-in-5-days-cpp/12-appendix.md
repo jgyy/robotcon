@@ -2,6 +2,18 @@
 
 The rest of this course assumed a working ROS install and an existing workspace. This appendix fills in that gap: how to actually get ROS onto your machine, and how a workspace is created and grown from nothing.
 
+The flowchart below shows the end-to-end sequence from a bare machine to a built, sourced workspace ready to run nodes from.
+
+```mermaid
+flowchart TD
+    A[Add ROS repo & signing key] --> B[Install distro meta-package]
+    B --> C["Install build tool<br/>colcon / catkin"]
+    C --> D["Source /opt/ros/distro/setup.bash"]
+    D --> E["Create workspace: mkdir src/"]
+    E --> F["Build: colcon build / catkin build"]
+    F --> G["Source install/setup.bash<br/>overlay on base install"]
+```
+
 ## Installing ROS on your local machine
 ROS distributions are released on a roughly yearly-to-biennial cadence, each targeting specific Linux distro versions (most commonly Ubuntu LTS releases); check docs.ros.org for the current supported distro/OS pairings before installing, since installation instructions genuinely differ by distro. The general shape of installation is always: add the ROS package repository and signing key to your system's package manager, install the distro's meta-package (which pulls in the core libraries, build tools, and common packages), and install your build tool (`python3-catkin-tools` for ROS 1, `python3-colcon-common-extensions` for ROS 2). Prefer a native Linux install or a well-supported VM over exotic setups (WSL, Docker-only) while you're still learning — you'll hit enough real ROS problems without also debugging your environment.
 

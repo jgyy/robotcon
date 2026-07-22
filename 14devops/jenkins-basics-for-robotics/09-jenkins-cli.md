@@ -2,6 +2,22 @@
 
 Clicking through the web UI works for learning, but scripting Jenkins itself — triggering builds from a terminal, checking status from another automation tool, managing jobs in bulk — needs the command-line interface. This unit covers `jenkins-cli.jar` and the equivalent REST API.
 
+The sequence below shows why the `-s` flag matters: it makes the CLI block until the build finishes and hand back the build's own result as its exit code.
+
+```mermaid
+sequenceDiagram
+    participant U as User/Script
+    participant CLI as jenkins-cli.jar
+    participant J as Jenkins Controller
+
+    U->>CLI: build hello-jenkins -p TARGET=simulation -s
+    CLI->>J: HTTP request with -auth user:API_TOKEN
+    J->>J: Queue and run the build
+    J-->>CLI: Stream console output
+    J-->>CLI: Build result (Success/Failed)
+    CLI-->>U: Process exits with build's own exit code
+```
+
 ## Getting the CLI client
 Jenkins ships its own CLI as a jar file, downloadable directly from your running instance:
 

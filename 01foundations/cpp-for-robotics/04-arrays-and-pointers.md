@@ -2,6 +2,17 @@
 
 Pointers are the C++ feature that scares newcomers most, but they're unavoidable in robotics code: sensor drivers, ROS message buffers, and performance-critical loops all lean on direct memory access. This unit demystifies pointers by connecting them to how memory actually works, then shows the modern, safer alternatives you should prefer in day-to-day code.
 
+The diagram below shows how a pointer variable and the variable it points to relate to each other in memory, using the `wheel_ticks` / `ticks_ptr` example:
+
+```mermaid
+flowchart LR
+    subgraph Memory["Memory"]
+        W["wheel_ticks (int)\naddress 0x1000\nvalue 1500"]
+    end
+    TP["ticks_ptr (int*)\naddress 0x2000\nvalue 0x1000"] -- "*ticks_ptr dereferences to" --> W
+    W -- "&wheel_ticks address-of" --> TP
+```
+
 ## Arrays: fixed-size contiguous storage
 A C-style array is a fixed-length block of same-typed elements laid out contiguously in memory — this is what makes iterating over it fast (great cache locality, which matters when processing e.g. a LIDAR scan of thousands of range values).
 

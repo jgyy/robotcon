@@ -2,6 +2,20 @@
 
 Line following extracted a position from a thin strip of the image; this unit generalizes that to tracking an arbitrary colored object (a "blob") anywhere in the full frame, and uses its position and apparent size to drive the robot toward it — the direct predecessor to the object-recognition and manipulation work later in the course.
 
+The diagram below shows the blob-tracking decision flow, from a raw frame to a search-or-approach drive command.
+
+```mermaid
+flowchart LR
+    A[Camera frame] --> B[HSV mask + erode/dilate]
+    B --> C[Find contours, keep largest]
+    C --> D{Blob found & area > threshold?}
+    D -->|No| E[Rotate in place to search]
+    D -->|Yes| F[minEnclosingCircle: x, y, radius]
+    F --> G{radius >= target_radius?}
+    G -->|No| H[Steer toward blob + move forward]
+    G -->|Yes| I[Stop - close enough]
+```
+
 ## What makes something a "blob"
 
 A blob detector looks for a connected region of pixels sharing some property — here, color — and reports it as a single entity with a centroid, an area, and often a bounding shape. Unlike line following's fixed horizontal strip, blob tracking searches the whole frame and must cope with the blob appearing at any size and position, or not at all.

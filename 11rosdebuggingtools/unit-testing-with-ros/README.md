@@ -2,6 +2,17 @@
 
 Robots fail in expensive, hard-to-reproduce ways, so this course builds up a practical testing discipline in three layers: plain Python unit tests for your logic, ROS-node-level tests that exercise a single node as a ROS citizen, and multi-node integration tests that catch the bugs that only appear once separate processes actually talk to each other. Each unit builds on the same running example, culminating in a small end-to-end project that wires all three layers into one `colcon test` suite.
 
+The diagram below shows how each unit builds directly on the one before it, from course framing through to the capstone project.
+
+```mermaid
+flowchart LR
+    U1[Unit 1: Introduction] --> U2[Unit 2: Basic Concepts]
+    U2 --> U3[Unit 3: Library Unit Tests]
+    U3 --> U4[Unit 4: ROS-Node Level Tests]
+    U4 --> U5[Unit 5: ROS Integration Tests]
+    U5 --> U6[Unit 6: MicroProject]
+```
+
 1. [Introduction to the Course](01-introduction-to-the-course.md) — Why robotics needs automated testing and how the course's three testing levels fit together.
 2. [Basic Concepts](02-basic-concepts.md) — Core testing vocabulary and the example Python module used throughout the course.
 3. [Library Unit Tests](03-library-unit-tests.md) — Testing plain Python logic with `unittest`/`pytest`, no ROS involved.

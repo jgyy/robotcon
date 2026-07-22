@@ -2,6 +2,19 @@
 
 Everything from Unit 6's QoS policies down to how two ROS 2 nodes find each other on a network is implemented by DDS, the middleware ROS 2 is built on top of. This unit pulls back the last layer of the stack: what DDS actually is, how to inspect and swap the implementation your system is using, and the daemon process that helps ROS 2 CLI tools work quickly.
 
+The diagram below shows how `rclcpp` sits on the `rmw` abstraction layer, which can be backed by any interchangeable DDS vendor, all scoped by the same domain-ID discovery mechanism.
+
+```mermaid
+flowchart TD
+    App["rclcpp / ROS 2 API"] --> RMW["rmw interface"]
+    RMW --> Fast["Fast DDS"]
+    RMW --> Cyclone["Cyclone DDS"]
+    RMW --> Connext["Connext"]
+    Fast --> Domain["Discovery scoped by ROS_DOMAIN_ID"]
+    Cyclone --> Domain
+    Connext --> Domain
+```
+
 ## What DDS is
 
 DDS (Data Distribution Service) is an OMG-standardized middleware for real-time, distributed publish/subscribe communication, originally designed for domains like defense and industrial control that predate ROS 2 by years. Rather than inventing its own transport layer, ROS 2 is built as a thin layer (`rmw`, the ROS middleware interface) on top of DDS, which is why concepts like QoS, "domains," and discovery in ROS 2 map directly onto DDS concepts rather than being ROS-specific inventions.

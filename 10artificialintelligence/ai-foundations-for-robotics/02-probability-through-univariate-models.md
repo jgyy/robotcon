@@ -2,6 +2,18 @@
 
 Every downstream unit — statistics, decision theory, information theory, logistic regression — is built on the probability vocabulary introduced here. Running example: a cleaning robot searching a building room by room for debris, where "does this room have debris?" and "how many rooms until I find some?" are the questions probability answers.
 
+The diagram below traces how this unit's concepts build on each other, from raw sample spaces up to the distributions you'll reuse throughout the course.
+
+```mermaid
+flowchart LR
+    A["Sample Space & Events"] --> B["Algebra of Events"]
+    B --> C["Conditional Probability"]
+    C --> D["Product Rule & Total Probability"]
+    D --> E["Bayes' Rule"]
+    E --> F["Random Variables & Moments"]
+    F --> G["Common Distributions"]
+```
+
 ## Sample spaces, events, and two views of probability
 An **experiment** is any process with an uncertain outcome (searching one room). The **sample space** Ω is the set of all possible outcomes; an **event** is any subset of Ω you care about — e.g. `A = "room contains debris"`. Two outcomes on what a probability *means*:
 

@@ -2,6 +2,19 @@
 
 With the platform and sensors covered in Unit 0, this unit turns the Hokuyo laser into a full indoor navigation stack: building a map of a space, localizing the robot inside it, and sending it to goals autonomously.
 
+The diagram below traces the full pipeline from mapping through to an executed navigation goal.
+
+```mermaid
+flowchart TD
+    A[Drive robot manually] --> B[slam_toolbox builds occupancy grid]
+    B --> C[Save map: map_saver_cli]
+    C --> D[Relaunch in localization mode]
+    D --> E[AMCL: particle filter estimates pose]
+    E --> F[Global + local costmaps]
+    F --> G[Planner computes path]
+    G --> H[NavigateToPose action goal]
+```
+
 ## Building a map with SLAM
 
 Indoors, walls and furniture give the laser plenty of stable features to map against, which is exactly what Simultaneous Localization and Mapping (SLAM) needs. Drive the robot around the space (teleop is fine) while a SLAM node — `slam_toolbox` is the standard modern choice, `gmapping` the older ROS 1 equivalent — builds an occupancy grid from the incoming `LaserScan` and odometry:

@@ -2,6 +2,17 @@
 
 Before you can build or drive a MoveIt package, you need the vocabulary and data structures MoveIt itself reasons about: how a robot's geometry and joints are described, how frames relate to each other over time, and what a "planning group" actually is. This unit gives you that foundation so the rest of the course reads as configuration rather than magic.
 
+The diagram below shows how these concepts relate to each other, from the robot description down to what actually moves the joints:
+
+```mermaid
+flowchart LR
+    URDF[URDF: links + joints] --> TF[TF2: frame tree]
+    URDF --> PG[Planning Group: arm + gripper]
+    PG --> IK[IK Solver]
+    PG --> Ctrl[Controller: ros2_control]
+    TF -. pose queries .-> IK
+```
+
 ## URDF and kinematic chains
 
 A manipulator is described to ROS as a **URDF** (Unified Robot Description Format) — an XML tree of `<link>` elements (rigid bodies) connected by `<joint>` elements (revolute, prismatic, fixed, continuous). MoveIt parses this tree to know which links move relative to which, what the joint limits are, and what the arm's kinematic chain looks like from base to end effector.

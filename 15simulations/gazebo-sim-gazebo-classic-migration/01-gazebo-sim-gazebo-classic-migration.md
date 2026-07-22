@@ -2,6 +2,22 @@
 
 This unit is a practical field guide for the migration you'll eventually run in the opposite direction of most tutorials: taking a project built on modern Gazebo Sim (formerly "Ignition Gazebo") + ROS 2 and porting it back to Gazebo Classic + ROS 1. You'll hit this scenario when a lab, employer, or downstream package still pins Classic, and you need your model, plugins, and launch files to behave identically on both stacks.
 
+The flowchart below traces the migration pipeline this unit teaches, including the regression check that sends you back to fix a stage if the ported robot doesn't match the original.
+
+```mermaid
+flowchart TD
+    A[Gazebo Sim + ROS 2 project] --> B[Capture baseline: topics, TF, joint behavior]
+    B --> C[Stand up parallel ROS 1 workspace]
+    C --> D[Migrate URDF: rewrite gazebo tags]
+    D --> E[Migrate materials and friction]
+    E --> F[Map ROS plugins: ros_gz to gazebo_ros_pkgs]
+    F --> G[Translate launch files by intent]
+    G --> H[Gazebo Classic + ROS 1 project]
+    H --> I{Matches ROS 2 baseline?}
+    I -- No --> D
+    I -- Yes --> J[Migration complete]
+```
+
 ## Introduction: what you'll learn
 
 Gazebo Sim and Gazebo Classic share a name and a lot of vocabulary (SDF, models, worlds, plugins) but they are different codebases with different plugin APIs, different transport layers (Gazebo Transport vs. the old `gazebo::transport`), and different ROS integration packages (`ros_gz` vs. `gazebo_ros_pkgs`). Migrating "backward" from Sim to Classic means you can't just swap a version number — you're re-targeting an API. By the end of this unit you'll be able to take a working Gazebo Sim + ROS 2 package and produce a Gazebo Classic + ROS 1 equivalent that spawns the same robot, keeps the same physical behavior, and exposes the same topics to the rest of your stack.

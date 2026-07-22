@@ -2,6 +2,20 @@
 
 QoS policies (Unit 7) are ROS 2's exposed surface of a much larger system underneath: DDS, the Data Distribution Service, an OMG industry standard for real-time, peer-to-peer publish-subscribe networking that ROS 2 uses as its default middleware. Understanding DDS itself — not just the ROS 2 API on top of it — explains a lot of ROS 2 behavior that otherwise looks arbitrary: automatic peer discovery, why there's no `roscore` anymore, and why network configuration matters more than it did in ROS 1.
 
+The diagram below shows how peer-to-peer discovery connects nodes that share both an RMW implementation and a domain ID, while isolating those that don't.
+
+```mermaid
+flowchart LR
+    subgraph "Domain ID 0 — rmw_fastrtps"
+        A[Node A] <-->|multicast discovery| B[Node B]
+    end
+    subgraph "Domain ID 42 — rmw_fastrtps"
+        C[Node C]
+    end
+    B -.no discovery.-> C
+    C -.no discovery.-> B
+```
+
 ## Why ROS 2 has no master
 
 ROS 1 required a `roscore` process that every node registered with, and through which nodes discovered each other. ROS 2 has no equivalent: DDS implementations do **peer-to-peer discovery** using multicast (by default) — every DDS participant on the network periodically announces itself, and every other participant listens. Two nodes on the same network with compatible QoS and matching topic names/types will find each other and connect automatically, with no central process to start, and no single point of failure to lose.

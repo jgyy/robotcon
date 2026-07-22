@@ -2,6 +2,16 @@
 
 Before any deep learning enters the picture, Ignisbot needs to move on command. This unit covers the JetBot motor API, how to wrap it as a proper ROS driver node, and how to drive the robot the same way regardless of whether it's simulated or physical.
 
+This shows how a Twist command published by any upstream node flows through the driver's conversion step down to the motors, in either simulation or hardware.
+
+```mermaid
+flowchart LR
+    T["teleop_twist_keyboard / joystick / Nav2"] -->|"Twist on cmd_vel"| D[IgnisbotDriver node]
+    D -->|twist_to_wheel_speeds| M[left/right motor speeds]
+    M --> R["JetBot Robot() API"]
+    R --> W[Physical or simulated motors]
+```
+
 ## The JetBot hardware API
 
 JetBot-style robots expose a small Python class (commonly `jetbot.robot.Robot`) that talks to the onboard motor driver over I2C. It's deliberately low-level — it knows nothing about ROS, coordinate frames, or velocities, only raw per-motor speed:

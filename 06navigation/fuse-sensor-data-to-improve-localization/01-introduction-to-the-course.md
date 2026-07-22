@@ -2,6 +2,25 @@
 
 This unit previews the whole course: why any single localization sensor eventually lets you down, and how the `robot_localization` package lets you combine several imperfect sensors into one trustworthy pose estimate. Everything that follows builds on the concepts introduced here.
 
+The diagram below shows how sensors with complementary failure modes — smooth-but-drifting versus bounded-but-noisy — are combined by `robot_localization` into one fused estimate.
+
+```mermaid
+flowchart LR
+    subgraph Smooth_but_drifts["Smooth, high-rate, drifts"]
+        OD[Wheel Odometry]
+        IMU[IMU]
+    end
+    subgraph Bounded_but_noisy["Bounded, but noisy / low-rate / discontinuous"]
+        GPS[GPS]
+        AMCL[AMCL]
+    end
+    OD --> RL["robot_localization<br/>(EKF / UKF)"]
+    IMU --> RL
+    GPS --> RL
+    AMCL --> RL
+    RL --> POSE[Trustworthy fused<br/>pose estimate]
+```
+
 ## Why one sensor is never enough
 
 Every localization sensor has a failure mode. Wheel odometry drifts unboundedly over distance because small per-step errors (wheel slip, uneven flooring, calibration error) accumulate. IMUs give you excellent short-term orientation and angular velocity, but their position estimate (from double-integrating acceleration) drifts even faster than odometry. GPS gives you a bounded, drift-free global position, but it is noisy, low-rate, and unusable indoors or under tree canopy. A map-based localizer like AMCL gives you a globally consistent pose, but it depends on having an accurate map and can jump discontinuously when it re-localizes.

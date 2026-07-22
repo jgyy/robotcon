@@ -2,6 +2,17 @@
 
 With Ignisbot able to move, this unit teaches it not to crash — using a small trained classifier rather than geometric obstacle detection (no lidar, no depth camera required, just a single RGB camera and a neural net). It's the first unit where the Jetson Nano's GPU actually earns its keep.
 
+The pipeline below traces data from dataset collection through training, TensorRT optimization, and the resulting blocked signal published for a downstream behavior node.
+
+```mermaid
+flowchart TD
+    A[Collect free/blocked images] --> B[Fine-tune ResNet18 classifier]
+    B --> C[Convert model with TensorRT]
+    C --> D[Run inference at fixed rate]
+    D --> E{Blocked?}
+    E -->|publish blocked topic| F[Behavior node decides: stop / back up / turn]
+```
+
 ## Framing collision avoidance as classification
 
 Instead of detecting and localizing every possible obstacle, the classic JetBot approach reframes the problem as a binary classification: given the current camera frame, is the path ahead `free` or `blocked`? This sidesteps the need for depth sensing or object detectors and trains in minutes on a small dataset, at the cost of being reactive rather than predictive — it tells you "stop now," not "there's a chair two meters ahead."

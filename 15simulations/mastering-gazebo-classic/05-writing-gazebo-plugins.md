@@ -2,6 +2,16 @@
 
 Every ROS plugin you attached in Unit 3 is just C++ compiled against Gazebo's plugin API. This unit pulls back the curtain and has you write two plugin types from scratch — one that acts on the world, one that acts on a single model — without relying on `gazebo_ros_pkgs` at all.
 
+The diagram below shows the plugin lifecycle both `WorldPlugin` and `ModelPlugin` follow: a one-time `Load()` that registers a callback, then `OnUpdate()` firing every physics step.
+
+```mermaid
+flowchart TD
+    A["gzserver dlopen()s plugin .so"] --> B["Load() called once"]
+    B --> C[ConnectWorldUpdateBegin registers callback]
+    C --> D["OnUpdate() runs"]
+    D -->|every physics step| D
+```
+
 ## Preparing the Environment
 
 Gazebo plugins are ordinary shared libraries (`.so`) that Gazebo `dlopen`s at load time and calls into through a small set of well-known entry points. You need Gazebo's development headers and its pkg-config metadata, then a minimal CMake project:

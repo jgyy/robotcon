@@ -2,6 +2,19 @@
 
 Every subscriber, service handler, timer, and action goal you've written so far has been a callback. This unit steps back to explain the execution model behind them — why ROS 2 is callback-driven and what actually causes a callback to run — so multithreading (Unit 6) makes sense afterward.
 
+The flowchart below shows how a ready event reaches your callback, and the branch point between `spin` (loop forever) and `spin_once` (handle at most one, then return control to you):
+
+```mermaid
+flowchart TD
+    A[Event occurs: message / timer / service request] --> B[Executor queue]
+    B --> C{spin or spin_once?}
+    C -->|spin: loop forever| D[Dispatch next ready callback]
+    C -->|spin_once: one pass| E[Dispatch at most one callback, then return]
+    D --> F[Callback runs on executor thread]
+    E --> F
+    F --> B
+```
+
 ## Functions vs. callbacks
 A regular function is something *you* call, at a point in your code you choose. A callback is a function you *register* with some other system, which calls it for you when a condition is met — a message arrives, a timer fires, a service request comes in. You already write callbacks in most event-driven code (GUI handlers, `asyncio` coroutine callbacks, HTTP route handlers); ROS 2's model is the same idea applied to robot events. The key mental shift: you don't write "wait for a message, then process it" — you write "when a message arrives, do this," and hand control to the ROS 2 executor.
 

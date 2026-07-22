@@ -2,6 +2,18 @@
 
 This final unit closes the loop: taking everything you've learned about building, composing, and running containers, and applying it to the problem of reliably bringing up a real robot's software stack every time it powers on.
 
+The diagram below traces a robot deployment from cross-building on a dev laptop to the systemd + Compose bringup that keeps it running after every boot.
+
+```mermaid
+flowchart LR
+    Dev[x86 dev laptop] -->|docker buildx --platform linux/arm64| Build[Multi-stage build]
+    Build --> Push[docker push to registry]
+    Push --> Robot[Robot pulls pinned image]
+    Robot --> Systemd[systemd unit at boot]
+    Systemd --> Compose[docker compose up -d]
+    Compose -->|restart: unless-stopped| Running[Bringup stack running]
+```
+
 ## Building for the target architecture
 A robot's onboard computer is often ARM-based (Raspberry Pi, NVIDIA Jetson) while you likely develop on an x86 laptop. `docker buildx` lets you build multi-architecture images, or cross-build directly for the robot's architecture, without needing the target hardware in hand:
 

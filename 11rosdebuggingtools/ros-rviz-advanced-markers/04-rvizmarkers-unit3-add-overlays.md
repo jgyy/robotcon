@@ -2,6 +2,17 @@
 
 3D markers place data *in* the world, but sometimes you want a heads-up-display element that stays fixed on screen regardless of camera angle — status text, a live plot, a menu, or an arrow showing a velocity command. This unit covers RViz's screen-space overlay tools.
 
+The diagram below shows how each data source in this unit is routed to its corresponding screen-space or in-scene overlay.
+
+```mermaid
+flowchart LR
+    Status[Robot Status String] --> OverlayText[OverlayText HUD Panel]
+    Metric[Numeric Time Series] --> OverlayGraph[Overlay Plot]
+    RightClick[Operator Right-Click] --> Menu[InteractiveMarker MENU Control]
+    Menu --> Feedback[feedback_callback dispatches on menu_entry_id]
+    TwistCmd[TwistStamped /cmd_vel] --> Arrow[ARROW Markers: linear + angular]
+```
+
 ## OverlayText: HUD-style text panels
 Plain `TEXT_VIEW_FACING` markers still live in 3D and shrink/move with the camera. For a genuine 2D HUD panel (think "battery: 87%, state: NAVIGATING" pinned to a screen corner), you need an overlay display rather than a 3D marker. Community overlay plugin packages (for example `rviz_2d_overlay_plugins` and, historically on ROS 1, `jsk_rviz_plugins`) add an `OverlayText` display type that subscribes to a custom string/formatted message and draws it as fixed 2D text with configurable position, font size, and background color:
 

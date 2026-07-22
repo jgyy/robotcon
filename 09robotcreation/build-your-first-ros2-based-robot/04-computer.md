@@ -2,6 +2,18 @@
 
 The onboard computer is where ROS 2 actually runs, so this unit gets a single-board computer flashed, networked, and running ROS 2, then powered cleanly from the robot's battery system.
 
+The diagram below walks through this unit's steps in order, from flashing an image to a computer that runs reliably on the robot's own power.
+
+```mermaid
+flowchart TD
+    A[Flash Ubuntu Server image] --> B[Boot board & SSH in]
+    B --> C[apt update && apt upgrade]
+    C --> D[Install ROS 2 ros-base]
+    D --> E["Run ros2 doctor --report"]
+    E --> F[Wire to DF power module]
+    F --> G[Verify stable under CPU load]
+```
+
 ## Install Ubuntu Server
 ROS 2 has first-class support for Ubuntu, so flashing an Ubuntu Server image (headless — no desktop environment, which saves CPU and memory for actual robot workloads) to your single-board computer's SD card or eMMC is the usual starting point. The general flow:
 ```bash

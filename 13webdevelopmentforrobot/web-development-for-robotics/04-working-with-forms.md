@@ -2,6 +2,18 @@
 
 Dashboards aren't just for watching a robot — you need to send it commands: a target velocity, a named waypoint, a mode switch. HTML forms are the standard way to collect structured input from a user before your JavaScript turns it into a command.
 
+The flow below shows why validation sits before the value ever reaches JavaScript or the robot.
+
+```mermaid
+flowchart TD
+    Operator[Operator enters values] --> Validate{HTML5 validation<br/>min / max / required / step}
+    Validate -->|invalid| Block[Browser blocks submit<br/>input:invalid style shown]
+    Block --> Operator
+    Validate -->|valid| Submit[submit event fires]
+    Submit --> Read[JS reads form.elements values]
+    Read --> Command["Unit 7: becomes a robot command"]
+```
+
 ## Form basics and input types
 A `<form>` groups related inputs and, in a traditional web app, submits them to a server. In a robotics dashboard you'll usually intercept the submit event with JavaScript instead of letting the browser navigate away (more on that in Unit 7), but the markup is the same either way:
 
