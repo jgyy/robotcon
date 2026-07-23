@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { NavBar } from '../components/NavBar';
 import 'highlight.js/styles/github-dark.css';
 import './globals.css';
 
@@ -10,7 +11,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <NavBar />
+        {children}
+      </body>
     </html>
   );
 }
