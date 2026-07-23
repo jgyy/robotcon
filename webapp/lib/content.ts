@@ -3,6 +3,15 @@ import path from 'node:path';
 
 const CONTENT_ROOT = path.join(process.cwd(), '..');
 
+const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
+
+function assertSlug(slug: string): string {
+  if (!SLUG_RE.test(slug)) {
+    throw new Error(`Invalid slug: ${slug}`);
+  }
+  return slug;
+}
+
 export interface TopicSummary {
   slug: string;
   title: string;
@@ -32,10 +41,12 @@ export function getTopics(): TopicSummary[] {
 }
 
 export function getTopicMarkdown(topicSlug: string): string {
+  assertSlug(topicSlug);
   return fs.readFileSync(path.join(CONTENT_ROOT, `${topicSlug}.md`), 'utf8');
 }
 
 export function getCourses(topicSlug: string): CourseSummary[] {
+  assertSlug(topicSlug);
   const topicDir = path.join(CONTENT_ROOT, topicSlug);
   return fs
     .readdirSync(topicDir, { withFileTypes: true })
@@ -48,10 +59,14 @@ export function getCourses(topicSlug: string): CourseSummary[] {
 }
 
 export function getCourseMarkdown(topicSlug: string, courseSlug: string): string {
+  assertSlug(topicSlug);
+  assertSlug(courseSlug);
   return fs.readFileSync(path.join(CONTENT_ROOT, topicSlug, courseSlug, 'README.md'), 'utf8');
 }
 
 export function getUnits(topicSlug: string, courseSlug: string): UnitSummary[] {
+  assertSlug(topicSlug);
+  assertSlug(courseSlug);
   const courseDir = path.join(CONTENT_ROOT, topicSlug, courseSlug);
   return fs
     .readdirSync(courseDir)
@@ -68,6 +83,9 @@ export function getUnitMarkdown(
   courseSlug: string,
   unitSlug: string,
 ): string {
+  assertSlug(topicSlug);
+  assertSlug(courseSlug);
+  assertSlug(unitSlug);
   return fs.readFileSync(
     path.join(CONTENT_ROOT, topicSlug, courseSlug, `${unitSlug}.md`),
     'utf8',

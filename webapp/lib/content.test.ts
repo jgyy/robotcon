@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   getAdjacentUnits,
   getCourses,
+  getCourseMarkdown,
+  getTopicMarkdown,
   getTopics,
   getUnitMarkdown,
   getUnits,
@@ -43,5 +45,15 @@ describe('content', () => {
     );
     expect(prev).toBeNull();
     expect(next?.slug).toBe('02-linux-essentials');
+  });
+
+  it('rejects path-traversal slugs instead of escaping the content root', () => {
+    expect(() => getTopicMarkdown('../../etc/passwd')).toThrow('Invalid slug');
+    expect(() => getCourses('..')).toThrow('Invalid slug');
+    expect(() => getCourseMarkdown('01foundations', '..')).toThrow('Invalid slug');
+    expect(() => getUnits('01foundations', '../../..')).toThrow('Invalid slug');
+    expect(() => getUnitMarkdown('01foundations', 'linux-for-robotics', '../../../etc/passwd')).toThrow(
+      'Invalid slug',
+    );
   });
 });
