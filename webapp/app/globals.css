@@ -1,0 +1,53 @@
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1rem;
+  line-height: 1.6;
+}
+
+.nav-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.5rem;
+}
+
+.mermaid-diagram {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.unit-pager {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+pre {
+  overflow-x: auto;
+  padding: 0.75rem;
+  border-radius: 6px;
+}
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+}
+
+.quiz-options button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.quiz-options button.correct {
+  background: #d4f7d4;
+}
+
+.quiz-options button.wrong {
+  background: #f7d4d4;
+}
